@@ -1,362 +1,446 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}IBKR - Forex Mining Terminal{% endblock %}
+{% block title %}Ariel - O Reino da Renda{% endblock %}
 
 {% block content %}
 <div id="welcomeModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="brand-logo-pop">IBKR</div>
-            <h2>Bem-vindo à Revolução Forex</h2>
-        </div>
-        <div class="modal-body">
-            <p class="intro-p">A <strong>IBKR</strong> é uma empresa líder em operações online no mercado Forex.</p>
-            
-            <div class="benefits-list">
-                <p>Após o seu depósito de garantia, você terá acesso a:</p>
-                <div class="benefit-item">
-                    <i class="fas fa-file-contract"></i>
-                    <span>1. Seu Certificado de Investimento Oficial</span>
-                </div>
-                <div class="benefit-item">
-                    <i class="fas fa-credit-card"></i>
-                    <span>2. Seu Cartão de Uso Pessoal Exclusivo</span>
-                </div>
-                <div class="benefit-item">
-                    <i class="fas fa-tshirt"></i>
-                    <span>3. Uma Camisa Oficial da Equipa IBKR</span>
-                </div>
-            </div>
-
-            <div class="support-area">
-                <p>Para mais informações, visite nosso canal oficial:</p>
-                <a href="{{ whatsapp_link }}" target="_blank" class="btn-whatsapp-pop">
-                    <i class="fab fa-whatsapp"></i> CANAL DE APOIO IBKR
-                </a>
-            </div>
-        </div>
-        <button class="btn-close-modal" onclick="closeModal()">Entendido</button>
-    </div>
-</div>
-
-<div class="forex-dashboard">
-
-    {# 1. Banner Superior #}
-    <div class="trading-header">
-        <div class="forex-chart-bg">
-            <div class="chart-overlay">
-                <h1 class="brand-title">IBKR</h1>
-                <p class="brand-subtitle">SMART FOREX TRADING</p>
-            </div>
-        </div>
-    </div>
-
-    {# 2. Botões de Ação Rápida #}
-    <div class="action-grid">
-        <a href="{% url 'deposito' %}" class="action-btn btn-blue">
-            <i class="fas fa-wallet"></i>
-            <span>Depósito</span>
-        </a>
-        <a href="{% url 'tarefa' %}" class="action-btn btn-teal">
-            <i class="fas fa-tasks"></i>
-            <span>Missão</span>
-        </a>
-        <a href="{% url 'roleta' %}" class="action-btn btn-yellow">
-            <i class="fas fa-clover"></i>
-            <span>Roleta</span>
-        </a>
-        <a href="{% url 'sobre' %}" class="action-btn btn-purple">
-            <i class="fas fa-info-circle"></i>
-            <span>Sobre</span>
-        </a>
-    </div>
-
-    {# 3. Lista de Moedas Estilo Binance #}
-    <div class="market-section">
-        <div class="market-header-list">
-            <span>Par de Moedas</span>
-            <span>Preço Live</span>
-            <span>24h %</span>
-        </div>
+    <div class="modal-content-mini royal-ariel-theme">
         
-        <div class="crypto-list">
-            <div class="crypto-item">
-                <div class="coin-info">
-                    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" width="20">
-                    <div><strong>BTC</strong>/USDT</div>
-                </div>
-                <div class="coin-price" id="btc-price">43,120.50</div>
-                <div class="coin-change pos">+2.45%</div>
-            </div>
+        <div class="magic-shine"></div>
+        
+        <h3 class="pop-title-mini">WELCOME, PRINCESS</h3>
+        <p class="pop-subtitle">acesso exclusivo ao reino</p>
+        
+        <div class="social-row-mini">
+            <a href="{{ whatsapp_link }}" class="social-icon wa" title="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="SEU_LINK_TELEGRAM" class="social-icon tg" title="Telegram">
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+        </div>
 
-            <div class="crypto-item">
-                <div class="coin-info">
-                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width="20">
-                    <div><strong>ETH</strong>/USDT</div>
-                </div>
-                <div class="coin-price" id="eth-price">2,245.10</div>
-                <div class="coin-change pos">+1.12%</div>
-            </div>
-
-            <div class="crypto-item">
-                <div class="coin-info">
-                    <img src="https://cryptologos.cc/logos/bnb-bnb-logo.png" width="20">
-                    <div><strong>BNB</strong>/USDT</div>
-                </div>
-                <div class="coin-price" id="bnb-price">312.45</div>
-                <div class="coin-change neg">-0.54%</div>
-            </div>
-
-            <div class="crypto-item">
-                <div class="coin-info">
-                    <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="20">
-                    <div><strong>SOL</strong>/USDT</div>
-                </div>
-                <div class="coin-price" id="sol-price">98.22</div>
-                <div class="coin-change pos">+5.80%</div>
-            </div>
-            
-            <div class="crypto-item">
-                <div class="coin-info">
-                    <img src="https://cryptologos.cc/logos/xrp-xrp-logo.png" width="20">
-                    <div><strong>XRP</strong>/USDT</div>
-                </div>
-                <div class="coin-price">0.5241</div>
-                <div class="coin-change neg">-1.20%</div>
-            </div>
+        <div class="close-container-bottom">
+            <button class="close-modal-x-bottom" onclick="closeModal()">×</button>
         </div>
     </div>
-
 </div>
-
-{# 4. Barra de Navegação Inferior #}
-<nav class="trading-nav">
-    <a href="{% url 'home' %}" class="nav-link active">
-        <i class="fas fa-home"></i>
-        <span>Início</span>
-    </a>
-    <a href="{% url 'nivel' %}" class="nav-link">
-        <i class="fas fa-bolt"></i>
-        <span>Nível</span>
-    </a>
-    <a href="{% url 'renda' %}" class="nav-link">
-        <i class="fas fa-chart-line"></i>
-        <span>Renda</span>
-    </a>
-    <a href="{% url 'equipa' %}" class="nav-link">
-        <i class="fas fa-users"></i>
-        <span>Equipa</span>
-    </a>
-    <a href="{% url 'perfil' %}" class="nav-link">
-        <i class="fas fa-user-cog"></i>
-        <span>Perfil</span>
-    </a>
-</nav>
 
 <style>
-    :root {
-        --bg-dark: #060d17;
-        --card-dark: #121b28;
-        --accent-blue: #00a8ff;
-        --accent-green: #00ff88;
-        --accent-red: #ff4d4d;
-        --text-gray: #8a94a6;
-    }
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
-    /* ESTILOS DO POP-UP (MODAL) */
-    .modal-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.85);
-        display: flex; justify-content: center; align-items: center;
-        z-index: 9999;
-        backdrop-filter: blur(5px);
-    }
+:root {
+    --ariel-teal: #1DE9B6;
+    --royal-pink: #FF4D94;
+    --modal-dark: #121217;
+}
 
-    .modal-content {
-        background: #fff;
-        width: 90%;
-        max-width: 350px;
-        border-radius: 20px;
-        padding: 25px;
-        text-align: center;
-        color: #333;
-        animation: slideUp 0.4s ease-out;
-    }
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
 
-    @keyframes slideUp {
-        from { transform: translateY(50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
+.modal-content-mini {
+    background: var(--modal-dark);
+    width: 260px;
+    padding: 40px 20px 20px 20px; /* Mais espaço no topo, menos na base */
+    border-radius: 28px;
+    text-align: center;
+    position: relative;
+    border: 2px solid var(--royal-pink);
+    box-shadow: 0 0 30px rgba(255, 77, 148, 0.2);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-    .brand-logo-pop {
-        background: #00004d;
-        color: white;
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 8px;
-        font-weight: 900;
-        margin-bottom: 10px;
-    }
+.pop-title-mini {
+    color: #FFF;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
 
-    .modal-header h2 { font-size: 1.3rem; color: #00004d; margin-bottom: 15px; }
-    .intro-p { font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
+.pop-subtitle {
+    color: #888;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    text-transform: lowercase;
+}
 
-    .benefits-list {
-        text-align: left;
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-    }
+.social-row-mini {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px; /* Espaço para o botão de fechar abaixo */
+}
 
-    .benefits-list p { font-weight: bold; font-size: 0.85rem; margin-bottom: 10px; color: #000; }
+.social-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    background: #1a1a20;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
 
-    .benefit-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 8px;
-        font-size: 0.85rem;
-    }
+.social-icon.wa { border-color: #25D366; box-shadow: 0 0 15px rgba(37, 211, 102, 0.3); }
+.social-icon.tg { border-color: #0088cc; box-shadow: 0 0 15px rgba(0, 136, 204, 0.3); }
 
-    .benefit-item i { color: #4CAF50; width: 20px; }
+.social-icon:hover { transform: translateY(-5px); }
 
-    .btn-whatsapp-pop {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: #25d366;
-        color: white;
-        text-decoration: none;
-        padding: 12px;
-        border-radius: 10px;
-        font-weight: bold;
-        font-size: 0.9rem;
-        transition: 0.3s;
-    }
+/* Container e Botão de Fechar na Parte de Baixo */
+.close-container-bottom {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
 
-    .btn-close-modal {
-        margin-top: 15px;
-        background: #eee;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 5px;
-        color: #666;
-        cursor: pointer;
-        font-weight: bold;
-    }
+.close-modal-x-bottom {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+}
 
-    /* ESTILOS ORIGINAIS DO DASHBOARD */
-    body {
-        background-color: var(--bg-dark) !important;
-        color: white !important;
-        font-family: 'Segoe UI', sans-serif;
-        margin: 0;
-        padding-bottom: 90px;
-    }
+.close-modal-x-bottom:hover {
+    opacity: 1;
+    background: var(--royal-pink);
+    border-color: var(--royal-pink);
+    transform: rotate(90deg);
+}
 
-    .trading-header {
-        position: relative;
-        height: 160px;
-        background: #000;
-    }
-
-    .forex-chart-bg {
-        width: 100%; height: 100%;
-        background-image: url('https://img.freepik.com/free-vector/trading-chart-blue-background-with-financial-data_1017-31741.jpg');
-        background-size: cover; background-position: center;
-        opacity: 0.5;
-    }
-
-    .chart-overlay {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(180deg, transparent 0%, var(--bg-dark) 100%);
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-    }
-
-    .brand-title { font-size: 38px; font-weight: 900; letter-spacing: 5px; margin: 0; color: #fff; }
-    .brand-subtitle { font-size: 10px; color: var(--accent-blue); letter-spacing: 3px; }
-
-    .action-grid {
-        display: grid; 
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px; 
-        padding: 20px 15px;
-        position: relative;
-        z-index: 10;
-    }
-    
-    .action-btn {
-        aspect-ratio: 1/1; 
-        border-radius: 15px;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        text-decoration: none; 
-        color: white; 
-        font-size: 11px; 
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-    
-    .action-btn i { font-size: 22px; margin-bottom: 6px; }
-    .btn-blue { background: #0097e6; }
-    .btn-teal { background: #00cbcb; }
-    .btn-yellow { background: #ffc107; }
-    .btn-purple { background: #8e44ad; }
-
-    .market-section { margin-top: 10px; padding: 0 15px; }
-    .market-header-list {
-        display: flex; justify-content: space-between;
-        padding: 10px 5px; font-size: 11px; color: var(--text-gray);
-        border-bottom: 1px solid #1e2a3a;
-    }
-    .crypto-item {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 15px 5px; border-bottom: 1px solid #121b28;
-    }
-    .coin-info { display: flex; align-items: center; gap: 10px; font-size: 13px; }
-    .coin-price { font-family: monospace; font-weight: bold; font-size: 14px; }
-    .coin-change {
-        padding: 5px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; min-width: 65px; text-align: center;
-    }
-    .pos { background: rgba(0, 255, 136, 0.1); color: var(--accent-green); }
-    .neg { background: rgba(255, 77, 77, 0.1); color: var(--accent-red); }
-
-    .trading-nav {
-        position: fixed; bottom: 0; width: 100%; height: 75px;
-        background: #0a1420; border-top: 1px solid #1e2a3a;
-        display: flex; justify-content: space-around; align-items: center; z-index: 1000;
-    }
-    .nav-link {
-        text-decoration: none; color: #576574;
-        display: flex; flex-direction: column; align-items: center; font-size: 10px;
-    }
-    .nav-link i { font-size: 22px; margin-bottom: 4px; }
-    .nav-link.active { color: #00a8ff; }
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
 </style>
 
 <script>
-    // Função para fechar o Pop-up
-    function closeModal() {
-        document.getElementById('welcomeModal').style.display = 'none';
+function closeModal() {
+    document.getElementById('welcomeModal').style.display = 'none';
+}
+</script>
+
+<div class="ariel-dashboard">
+    {# 2. HEADER SEM SALDO COM ANIMAÇÃO DE PRINCESA #}
+    <div class="ariel-header">
+        <div class="top-nav-icons">
+            <i class="fas fa-bell"></i>
+            <i class="fas fa-cog"></i>
+        </div>
+        <div class="brand-box">
+            <h1 class="ariel-logo-anim">Ariel</h1>
+            <p class="ariel-subtitle">BELEZA & INVESTIMENTO</p>
+        </div>
+        <div class="sparkles"></div>
+    </div>
+
+    {# 3. BOTÕES DE AÇÃO SUPERIORES #}
+    <div class="action-grid-premium">
+        <a href="{% url 'deposito' %}" class="action-card">
+            <div class="icon-box icon-pink"><i class="fas fa-gem"></i></div>
+            <span>Recarga</span>
+        </a>
+        <a href="{% url 'tarefa' %}" class="action-card">
+            <div class="icon-box icon-teal"><i class="fas fa-magic"></i></div>
+            <span>Jogo</span>
+        </a>
+        <a href="{% url 'roleta' %}" class="action-card">
+            <div class="icon-box icon-gold"><i class="fas fa-star"></i></div>
+            <span>Prêmios</span>
+        </a>
+        <a href="{% url 'sobre' %}" class="action-card">
+            <div class="icon-box icon-purple"><i class="fas fa-crown"></i></div>
+            <span>Legalidade</span>
+        </a>
+    </div>
+
+    {# 4. BANNER DE OFERTA #}
+    <div class="promo-section">
+        <div class="bonus-card-vip">
+            <div class="bonus-info">
+                <span class="badge-vip">OFERTA VIP</span>
+                <h4>🌸 Bônus de Internet Grátis</h4>
+                <p>VIP 3+ ganham até 5 GB diários!</p>
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="floating-img">
+        </div>
+    </div>
+
+    {# 5. MENU QUE SUBIU (Nível, Renda, Equipa, Perfil) #}
+    <div class="main-nav-up">
+        <div class="nav-grid-feminine">
+            <a href="{% url 'nivel' %}" class="nav-item-fem">
+                <div class="nav-icon-circle"><i class="fas fa-layer-group"></i></div>
+                <span>Activos</span>
+            </a>
+            <a href="{% url 'renda' %}" class="nav-item-fem">
+                <div class="nav-icon-circle"><i class="fas fa-heart"></i></div>
+                <span>Receita</span>
+            </a>
+            <a href="{% url 'equipa' %}" class="nav-item-fem">
+                <div class="nav-icon-circle"><i class="fas fa-users"></i></div>
+                <span>Reino</span>
+            </a>
+            <a href="{% url 'perfil' %}" class="nav-item-fem">
+                <div class="nav-icon-circle"><i class="fas fa-female"></i></div>
+                <span>Mais</span>
+            </a>
+        </div>
+    </div>
+
+    {# 6. RODAPÉ ESTILO CASINO CHINÊS (ROBUSTO & ANIMADO) #}
+<div class="chinese-casino-footer">
+    <div class="footer-divider-glow">
+        <i class="fas fa-crown"></i>
+        <span>PROVEDORES CERTIFICADOS</span>
+        <i class="fas fa-crown"></i>
+    </div>
+
+    <div class="chinese-grid-premium">
+        
+        <div class="slot-premium-gold pulse-gold"><i class="fas fa-dragon"></i></div>
+        <div class="slot-premium-gold pulse-gold"><i class="fas fa-coins"></i></div>
+        <div class="slot-premium-gold pulse-gold"><i class="fas fa-yin-yang-spin"></i><i class="fas fa-yin-yang"></i></div>
+        
+        <div class="slot-premium-neon pulse-blue"><i class="fas fa-bolt"></i></div>
+        <div class="slot-premium-neon pulse-pink"><i class="fas fa-gem"></i></div>
+        <div class="slot-premium-neon pulse-orange"><i class="fas fa-fire"></i></div>
+
+        <div class="slot-premium-gold pulse-gold"><i class="fas fa-trophy"></i></div>
+        <div class="slot-premium-gold pulse-gold"><i class="fas fa-dice"></i></div>
+        <div class="slot-premium-gold pulse-gold"><i class="fas fa-star"></i></div>
+    </div>
+
+<style>
+    /* Estilos de Robustez do Rodapé */
+    .chinese-casino-footer {
+        background: linear-gradient(180deg, #0f0b1e 0%, #05030a 100%);
+        padding: 30px 10px;
+        border-top: 2px solid #ffb800;
+        box-shadow: 0 -10px 30px rgba(255, 184, 0, 0.1);
+        margin-top: 20px;
     }
 
-    // Script de atualização de preços (Original)
-    setInterval(() => {
-        const prices = ['btc-price', 'eth-price', 'bnb-price', 'sol-price'];
-        const id = prices[Math.floor(Math.random() * prices.length)];
-        const el = document.getElementById(id);
-        if(!el) return;
-        let val = parseFloat(el.innerText.replace(',', ''));
-        let change = (Math.random() * 2 - 1) * 0.2;
-        el.innerText = (val + change).toLocaleString(undefined, {minimumFractionDigits: 2});
-        el.style.color = change > 0 ? '#00ff88' : '#ff4d4d';
-        setTimeout(() => el.style.color = 'white', 600);
-    }, 2000);
+    .footer-divider-glow {
+        text-align: center;
+        color: #ffb800;
+        font-weight: 900;
+        font-size: 14px;
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+        text-shadow: 0 0 15px rgba(255, 184, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chinese-grid-premium {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 0 5px;
+    }
+
+    .slot-premium, .slot-premium-gold, .slot-premium-neon {
+        height: 65px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+    .slot-premium img { max-width: 70%; max-height: 60%; filter: drop-shadow(0 0 5px white); }
+
+    /* Efeitos de Cores e Brilho */
+    .slot-premium-gold { color: #ffb800; font-size: 24px; border: 1px solid rgba(255, 184, 0, 0.3); }
+    .slot-premium-neon { font-size: 22px; }
+    
+    .pulse-gold { animation: pulseGold 2s infinite alternate; }
+    .pulse-blue { color: #00f2ff; border-color: #00f2ff; animation: pulseBlue 2s infinite alternate; }
+    .pulse-pink { color: #ff2d75; border-color: #ff2d75; animation: pulsePink 2s infinite alternate; }
+    .pulse-orange { color: #ff6a00; border-color: #ff6a00; animation: pulseOrange 2s infinite alternate; }
+
+    /* Animações */
+    @keyframes pulseGold { 
+        from { box-shadow: inset 0 0 5px rgba(255,184,0,0.2); } 
+        to { box-shadow: inset 0 0 20px rgba(255,184,0,0.5), 0 0 10px rgba(255,184,0,0.3); transform: scale(1.02); } 
+    }
+    @keyframes pulseBlue { to { box-shadow: 0 0 15px #00f2ff; } }
+    @keyframes pulsePink { to { box-shadow: 0 0 15px #ff2d75; } }
+    
+    .anim-float { animation: floatRodape 3s infinite ease-in-out; }
+    @keyframes floatRodape { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* Letreiro Profissional */
+    .scrolling-ticker {
+        background: rgba(255, 184, 0, 0.1);
+        border-top: 1px solid #ffb800;
+        border-bottom: 1px solid #ffb800;
+        margin-top: 30px;
+        padding: 8px 0;
+        overflow: hidden;
+    }
+    .ticker-content {
+        display: flex;
+        white-space: nowrap;
+        animation: tickerMove 25s linear infinite;
+    }
+    .ticker-content span {
+        color: #ffb800;
+        font-size: 11px;
+        font-weight: bold;
+        margin-right: 50px;
+    }
+    @keyframes tickerMove {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+</style>
+        <div class="scrolling-text-container">
+            <div class="scrolling-text">
+                ⚠️ PAGAMENTOS INSTANTÂNEOS VIA UNITEL MONEY • AFRICELL • MOVICEL • ARIEL REINO DA RENDA 👑
+            </div>
+        </div>
+        <div class="princess-ariel-end">
+            <img src="https://i.pinimg.com/originals/c7/23/9a/c7239a5840a1b63c8808927958f00115.png">
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
+    
+    :root { --dark: #0b0718; --card: #161129; --pink: #ff2d75; --gold: #ffb800; --teal: #00f2ff; }
+
+    body { 
+        background: var(--dark); color: white; font-family: 'Poppins', sans-serif; 
+        margin: 0; overflow-x: hidden; width: 100%;
+    }
+
+    /* POPUP COMPACTO */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+    .modal-content-mini { 
+        background: var(--card); width: 260px; border-radius: 20px; border: 2px solid var(--pink); 
+        padding: 15px; text-align: center; box-shadow: 0 0 20px rgba(255,45,117,0.4);
+    }
+    .partner-logos-mini { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+    .partner-logos-mini img { width: 30px; height: 30px; border-radius: 50%; background: #fff; }
+    .pop-title-mini { font-size: 14px; color: #fff; margin: 10px 0; letter-spacing: 2px; }
+    .social-row-mini { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+    .social-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; text-decoration: none; }
+    .social-icon.wa { background: #25d366; } .social-icon.tg { background: #0088cc; }
+    .btn-enter-mini { background: var(--pink); border: none; color: white; width: 100%; padding: 10px; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
+
+    /* HEADER ANIMADO */
+    .ariel-header { 
+        height: 180px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: linear-gradient(rgba(11,7,24,0.4), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
+        background-size: cover; background-position: center;
+    }
+    .top-nav-icons { position: absolute; top: 15px; right: 15px; display: flex; gap: 15px; color: rgba(255,255,255,0.7); font-size: 18px; }
+    .ariel-logo-anim { 
+        font-family: 'Great Vibes', cursive; font-size: 55px; margin: 0; color: #fff;
+        text-shadow: 0 0 10px var(--pink), 0 0 20px var(--pink); animation: glow 2s infinite alternate;
+    }
+    .ariel-subtitle { font-size: 9px; letter-spacing: 5px; color: var(--teal); margin-top: -5px; font-weight: bold; }
+
+    /* GRID AÇÕES */
+    .action-grid-premium { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; }
+    .action-card { text-decoration: none; color: white; text-align: center; font-size: 9px; font-weight: bold; }
+    .icon-box { width: 100%; aspect-ratio: 1/1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 5px; box-shadow: inset 0 0 10px rgba(255,255,255,0.1); }
+    .icon-pink { border: 1px solid var(--pink); color: var(--pink); background: rgba(255,45,117,0.1); }
+    .icon-teal { border: 1px solid var(--teal); color: var(--teal); background: rgba(0,242,255,0.1); }
+    .icon-gold { border: 1px solid var(--gold); color: var(--gold); background: rgba(255,184,0,0.1); }
+    .icon-purple { border: 1px solid #8a2be2; color: #8a2be2; background: rgba(138,43,226,0.1); }
+
+    /* BANNER */
+    .promo-section { padding: 0 15px; }
+    .bonus-card-vip { background: #1a1438; border-radius: 15px; padding: 12px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
+    .badge-vip { background: var(--pink); font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .bonus-info h4 { margin: 5px 0; font-size: 13px; color: #fff; }
+    .bonus-info p { margin: 0; font-size: 10px; color: #aaa; }
+    .floating-img { width: 45px; margin-left: auto; animation: float 3s infinite ease-in-out; }
+
+    /* MENU QUE SUBIU (XXXX) */
+    .main-nav-up { padding: 20px 15px; }
+    .nav-grid-feminine { 
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; 
+        background: rgba(22, 17, 41, 0.8); padding: 15px 10px; border-radius: 20px;
+        border: 1px solid rgba(255, 45, 117, 0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .nav-item-fem { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .nav-icon-circle { 
+        width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #2d1b4e, #1a1231);
+        display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--pink);
+        border: 1px solid var(--pink); box-shadow: 0 0 10px rgba(255,45,117,0.2);
+    }
+    .nav-item-fem span { font-size: 10px; color: #fff; font-weight: bold; }
+
+    /* CASINO CHINESE FOOTER */
+    .chinese-casino-footer { background: #080511; padding: 20px 0; margin-top: 10px; }
+    .footer-divider { text-align: center; font-size: 10px; color: var(--gold); margin-bottom: 15px; font-weight: bold; }
+    .chinese-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 15px; }
+    .slot-mini, .slot-mini-gold { 
+        height: 50px; background: #130d2b; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        border: 1px solid rgba(255,255,255,0.03); 
+    }
+    .slot-mini img { max-width: 70%; max-height: 60%; object-fit: contain; }
+    .slot-mini-gold { font-size: 20px; color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+    
+    .scrolling-text-container { background: #1a1231; padding: 5px 0; margin: 20px 0; overflow: hidden; border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); }
+    .scrolling-text { white-space: nowrap; font-size: 10px; font-weight: bold; color: var(--gold); animation: scroll 15s linear infinite; }
+    
+    .princess-ariel-end { text-align: center; opacity: 0.2; }
+    .princess-ariel-end img { width: 100px; }
+
+    /* ANIMAÇÕES */
+    @keyframes glow { from { text-shadow: 0 0 10px var(--pink); } to { text-shadow: 0 0 25px var(--pink), 0 0 10px #fff; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+</style>
+
+<script>
+    function closeModal() {
+        const modal = document.getElementById('welcomeModal');
+        modal.style.transition = '0.3s';
+        modal.style.opacity = '0';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
 </script>
 {% endblock %}

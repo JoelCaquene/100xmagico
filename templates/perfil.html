@@ -1,285 +1,311 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Meu Perfil{% endblock %}
+{% block title %}Meu Perfil | Princesa Ariel{% endblock %}
 
 {% block content %}
-<div class="profile-main-container">
-    
-    {# HEADER #}
-    <div class="profile-header">
-        <a href="{% url 'menu' %}" class="btn-back">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-        <h1 class="header-title">Meu Perfil</h1>
-        <div style="width: 40px;"></div>
-    </div>
-
-    {# MENSAGENS #}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="custom-alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    {# CARD DE IDENTIDADE #}
-    <div class="identity-card">
-        <div class="avatar-wrapper">
-            <i class="fas fa-user-shield"></i>
-        </div>
-        <div class="identity-info">
-            <span class="id-label">Conta Verificada</span>
-            <span class="id-number">{{ request.user.phone_number }}</span>
-        </div>
-    </div>
-
-    {# MENU DE NAVEGAÇÃO POR ABAS #}
-    <div class="action-grid">
-        <button class="action-item active" onclick="openTab(event, 'bank-tab')">
-            <div class="action-icon"><i class="fas fa-university"></i></div>
-            <span>Agência</span>
-        </button>
-        
-        <a href="{% url 'saque' %}" class="action-item">
-            <div class="action-icon" style="background: #e8f5e9; color: #2e7d32;"><i class="fas fa-wallet"></i></div>
-            <span>Sacar</span>
-        </a>
-
-        <button class="action-item" onclick="openTab(event, 'history-tab')">
-            <div class="action-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-            <span>Extrato</span>
-        </button>
-
-        <button class="action-item" onclick="openTab(event, 'password-tab')">
-            <div class="action-icon"><i class="fas fa-key"></i></div>
-            <span>Senha</span>
-        </button>
-    </div>
-
-    {# ÁREA DE CONTEÚDO DINÂMICO #}
-    <div class="content-body">
-        
-        {# ABA: BANCO #}
-        <div id="bank-tab" class="tab-pane active">
-            <div class="pane-header">
-                <i class="fas fa-piggy-bank"></i>
-                <span>Dados Bancários</span>
-            </div>
-            <form method="post" class="modern-form">
-                {% csrf_token %}
-                <div class="field-box">
-                    <label>Nome do Titular</label>
-                    {{ form.account_holder_name }}
-                </div>
-                <div class="field-box">
-                    <label>Instituição Bancária</label>
-                    {{ form.bank_name }}
-                </div>
-                <div class="field-box">
-                    <label>IBAN da Conta</label>
-                    {{ form.IBAN }}
-                </div>
-                <button type="submit" name="update_bank" class="btn-primary">ATUALIZAR DADOS</button>
-            </form>
-        </div>
-
-        {# ABA: HISTÓRICO COM INFORMAÇÕES DE SAQUE #}
-        <div id="history-tab" class="tab-pane">
-            
-            {# BOX DE REGRAS DE SAQUE #}
-            <div class="withdrawal-rules-container">
-                <div class="rule-card">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <div class="rule-txt">
-                        <strong>Taxa de Saque</strong>
-                        <span>Fixada em 15%</span>
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <i class="fas fa-clock"></i>
-                    <div class="rule-txt">
-                        <strong>Horário</strong>
-                        <span>09:00h às 17:00h</span>
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <i class="fas fa-calendar-check"></i>
-                    <div class="rule-txt">
-                        <strong>Dias Úteis</strong>
-                        <span>Segunda a Sábado</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pane-header" style="margin-top: 20px;">
-                <i class="fas fa-list-ul"></i>
-                <span>Últimas Transações</span>
-            </div>
-            
-            <div class="transaction-list">
-                {% if withdrawal_records %}
-                    {% for record in withdrawal_records %}
-                    <div class="history-card-item status-{{ record.status|lower|slugify }}">
-                        <div class="h-card-icon">
-                            {% if record.status == 'Aprovado' or record.status == 'Approved' %}
-                                <i class="fas fa-check-circle"></i>
-                            {% elif record.status == 'Pendente' or record.status == 'Pending' %}
-                                <i class="fas fa-hourglass-half"></i>
-                            {% else %}
-                                <i class="fas fa-times-circle"></i>
-                            {% endif %}
-                        </div>
-                        <div class="h-card-info">
-                            <span class="h-amount">- {{ record.amount }} KZ</span>
-                            <span class="h-date">{{ record.created_at|date:"d/m/Y - H:i" }}</span>
-                        </div>
-                        <div class="h-card-status">
-                            <span class="status-badge">{{ record.status }}</span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state-container">
-                        <i class="fas fa-search-dollar"></i>
-                        <p>Nenhum registro de saque encontrado.</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        {# ABA: SENHA #}
-        <div id="password-tab" class="tab-pane">
-            <div class="pane-header">
-                <i class="fas fa-lock"></i>
-                <span>Segurança</span>
-            </div>
-            <form method="post" class="modern-form">
-                {% csrf_token %}
-                <div class="field-box">
-                    <label>Senha Atual</label>
-                    {{ password_form.old_password }}
-                </div>
-                <div class="field-box">
-                    <label>Nova Senha</label>
-                    {{ password_form.new_password1 }}
-                </div>
-                <div class="field-box">
-                    <label>Confirmar Nova Senha</label>
-                    {{ password_form.new_password2 }}
-                </div>
-                <button type="submit" name="change_password" class="btn-primary" style="background: #333;">ALTERAR SENHA</button>
-            </form>
-        </div>
-
-    </div>
-
-    <a href="{% url 'logout' %}" class="btn-logout">
-        <i class="fas fa-power-off"></i> Encerrar Sessão
-    </a>
-</div>
-
 <style>
-    /* RESET PARA OCUPAR TODO O ESPAÇO */
-    body, html { margin: 0; padding: 0; width: 100%; overflow-x: hidden; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
     
-    .profile-main-container { 
-        width: 100%; 
-        max-width: 100%; 
-        margin: 0; 
-        padding: 10px 15px 50px 15px; 
-        background: #fdfdfd; 
+    :root { 
+        --dark: #0b0718; 
+        --card: #161129; 
+        --pink: #ff2d75; 
+        --gold: #ffb800; 
+        --teal: #00f2ff; 
+        --glass: rgba(255, 255, 255, 0.05);
+    }
+
+    body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
+
+    /* FUNDO IDÊNTICO AO DEPÓSITO */
+    .profile-bg {
+        background: radial-gradient(circle at top, #1a1140 0%, var(--dark) 100%);
         min-height: 100vh;
-        box-sizing: border-box;
-    }
-
-    /* HEADER */
-    .profile-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
-    .btn-back { font-size: 1.2rem; color: #333; text-decoration: none; }
-    .header-title { font-size: 1.3rem; font-weight: 800; color: #1a1a1a; margin: 0; }
-
-    /* ALERTAS */
-    .custom-alert { padding: 15px; border-radius: 12px; margin-bottom: 20px; background: #e3f2fd; color: #0d47a1; text-align: center; font-weight: 500; border: 1px solid #bbdefb; }
-
-    /* CARD PRINCIPAL (FULL WIDTH) */
-    .identity-card { 
-        background: #1a237e; 
-        border-radius: 15px; 
-        padding: 20px; 
-        display: flex; 
-        align-items: center; 
-        gap: 15px; 
-        color: white; 
-        box-shadow: 0 8px 15px rgba(26,35,126,0.2); 
-        margin-bottom: 25px;
         width: 100%;
-        box-sizing: border-box;
+        padding-bottom: 80px;
     }
-    .avatar-wrapper { width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-    .id-label { display: block; font-size: 0.65rem; opacity: 0.8; text-transform: uppercase; }
-    .id-number { font-size: 1.1rem; font-weight: bold; }
 
-    /* GRID DE BOTÕES (RESPONSIVO) */
-    .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; width: 100%; }
-    .action-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; cursor: pointer; padding: 0; }
-    .action-icon { width: 100%; max-width: 60px; aspect-ratio: 1/1; background: #f1f3f6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #444; transition: 0.3s; }
-    .action-item span { font-size: 0.7rem; font-weight: 700; color: #777; }
-    .action-item.active .action-icon { background: #1a237e; color: white; }
-
-    /* BOX DE REGRAS DE SAQUE */
-    .withdrawal-rules-container { 
-        background: #fff; 
-        border: 1px solid #eee; 
-        border-radius: 15px; 
-        padding: 15px; 
+    /* HEADER ROYAL */
+    .ariel-header { 
+        height: 160px; 
         display: flex; 
         flex-direction: column; 
-        gap: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        align-items: center; 
+        justify-content: center;
+        background: linear-gradient(rgba(11,7,24,0.7), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
+        background-size: cover; background-position: center;
+        border-bottom: 1px solid var(--pink);
     }
-    .rule-card { display: flex; align-items: center; gap: 12px; }
-    .rule-card i { font-size: 1rem; color: #1a237e; background: #e8eaf6; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-    .rule-txt { display: flex; flex-direction: column; }
-    .rule-txt strong { font-size: 0.8rem; color: #222; }
-    .rule-txt span { font-size: 0.75rem; color: #666; }
 
-    /* FORMULÁRIO */
-    .modern-form .field-box { margin-bottom: 15px; }
-    .modern-form label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 5px; font-weight: 600; }
-    .modern-form input { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 10px; background: #f9f9f9; font-size: 0.9rem; box-sizing: border-box; }
-    .btn-primary { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
+    .back-nav { position: absolute; top: 20px; left: 15px; }
+    .back-arrow {
+        color: white; font-size: 18px; background: var(--pink);
+        width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; box-shadow: 0 0 10px var(--pink); text-decoration: none;
+    }
 
-    /* HISTÓRICO */
-    .history-card-item { display: flex; align-items: center; padding: 12px; background: #fff; border-radius: 12px; margin-bottom: 10px; border: 1px solid #f0f0f0; border-left: 5px solid #ccc; box-sizing: border-box; }
-    .h-card-icon { width: 35px; font-size: 1.2rem; color: #999; }
-    .h-card-info { flex: 1; display: flex; flex-direction: column; }
-    .h-amount { font-weight: 800; font-size: 0.95rem; color: #222; }
-    .h-date { font-size: 0.65rem; color: #aaa; }
-    .status-badge { font-size: 0.6rem; font-weight: 900; padding: 4px 8px; border-radius: 6px; background: #eee; }
+    /* IDENTITY CARD (AVATAR + ID) */
+    .user-identity {
+        margin: -40px 15px 20px;
+        background: var(--card);
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid var(--glass);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
 
-    /* STATUS COLORS */
-    .status-aprovado { border-left-color: #2e7d32 !important; }
-    .status-aprovado .status-badge { background: #e8f5e9; color: #2e7d32; }
-    .status-pendente { border-left-color: #f9a825 !important; }
-    .status-pendente .status-badge { background: #fff9c4; color: #f9a825; }
+    .avatar-container { position: relative; width: 90px; height: 90px; margin: 0 auto 10px; }
+    .user-avatar {
+        width: 100%; height: 100%; border-radius: 50%;
+        border: 3px solid var(--pink); object-fit: cover;
+        background: var(--dark);
+    }
+    .edit-avatar-btn {
+        position: absolute; bottom: 0; right: 0;
+        background: var(--teal); color: var(--dark);
+        width: 28px; height: 28px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; cursor: pointer; border: 2px solid var(--card);
+    }
 
-    .btn-logout { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 30px; color: #c62828; text-decoration: none; font-weight: 800; padding: 15px; border-radius: 10px; background: #fff5f5; width: 100%; box-sizing: border-box; }
+    .id-text { font-size: 18px; font-weight: bold; color: white; margin: 5px 0; }
+    .badge-vip { background: var(--gold); color: var(--dark); font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: bold; }
 
-    .tab-pane { display: none; animation: fadeIn 0.3s ease; }
-    .tab-pane.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    /* BOTÕES NUMERADOS */
+    .menu-grid { padding: 0 15px; display: grid; gap: 12px; }
+    .menu-btn {
+        background: var(--card);
+        border: 1px solid var(--glass);
+        padding: 15px; border-radius: 15px;
+        display: flex; align-items: center;
+        text-decoration: none; color: white;
+        transition: 0.3s; position: relative;
+    }
+    .btn-num {
+        width: 25px; height: 25px; background: var(--glass);
+        border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; font-size: 11px; margin-right: 15px; color: var(--teal);
+    }
+    .menu-btn i { font-size: 18px; margin-right: 15px; color: var(--pink); width: 20px; text-align: center; }
+    .menu-btn span { flex: 1; font-size: 14px; font-weight: 500; }
+    .menu-btn .chevron { font-size: 12px; opacity: 0.3; }
+
+    /* LÓGICA DE MODAL (JANELA SOBREPOSTA) */
+    .royal-modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--dark); z-index: 1000;
+        display: none; flex-direction: column;
+        animation: slideUp 0.4s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    .modal-header {
+        padding: 20px; display: flex; align-items: center;
+        border-bottom: 1px solid var(--glass); background: var(--card);
+    }
+    .close-modal { font-size: 20px; margin-right: 20px; color: var(--pink); }
+    .modal-content { padding: 20px; flex: 1; overflow-y: auto; }
+
+    /* FORMS NO MODAL */
+    .field-box { margin-bottom: 20px; }
+    .field-box label { display: block; font-size: 12px; color: var(--teal); margin-bottom: 8px; }
+    .field-box input {
+        width: 100%; background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+        padding: 12px; border-radius: 10px; color: white; box-sizing: border-box;
+    }
+    .btn-save {
+        width: 100%; background: var(--pink); color: white; border: none;
+        padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 10px;
+    }
+
+    /* STATUS NO EXTRATO */
+    .transaction-item {
+        background: var(--glass); padding: 12px; border-radius: 12px;
+        margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .status-badge { font-size: 10px; padding: 3px 8px; border-radius: 5px; }
+    .badge-approved { background: #28a74522; color: #28a745; }
+    .badge-pending { background: #ffc10722; color: #ffc107; }
+
 </style>
 
+<div class="profile-bg">
+    <div class="ariel-header">
+        <div class="back-nav">
+            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
+        </div>
+        <h1 style="font-family: 'Great Vibes'; font-size: 30px; margin: 0; text-shadow: 0 0 10px var(--pink);">Princesa Ariel</h1>
+    </div>
+
+    <div class="user-identity">
+        <div class="avatar-container">
+            <img src="https://ui-avatars.com/api/?name={{ request.user.phone_number }}&background=ff2d75&color=fff" id="currentAvatar" class="user-avatar">
+            <div class="edit-avatar-btn" onclick="openModal('modalAvatar')"><i class="fas fa-camera"></i></div>
+        </div>
+        <div class="id-text">{{ request.user.phone_number }}</div>
+        <span class="badge-vip">ID: {{ request.user.id }}</span>
+    </div>
+
+    <div class="menu-grid">
+        <a href="javascript:void(0)" class="menu-btn" onclick="openModal('modalBank')">
+            <div class="btn-num">1</div>
+            <i class="fas fa-university"></i>
+            <span>Banco</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="javascript:void(0)" class="menu-btn" onclick="openModal('modalHistory')">
+            <div class="btn-num">2</div>
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Extrato</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="{% url 'saque' %}" class="menu-btn">
+            <div class="btn-num">3</div>
+            <i class="fas fa-wallet" style="color: var(--teal);"></i>
+            <span>Sacar</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="{% static 'app/app-release.apk' %}" class="menu-btn">
+            <div class="btn-num">4</div>
+            <i class="fas fa-download"></i>
+            <span>Download do App</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="javascript:void(0)" class="menu-btn" onclick="openModal('modalPassword')">
+            <div class="btn-num">5</div>
+            <i class="fas fa-key"></i>
+            <span>Senha</span>
+            <i class="fas fa-chevron-right chevron"></i>
+        </a>
+
+        <a href="{% url 'logout' %}" class="menu-btn" style="border-color: rgba(255,45,117,0.3);">
+            <div class="btn-num">6</div>
+            <i class="fas fa-sign-out-alt" style="color: var(--pink);"></i>
+            <span style="color: var(--pink);">Sair</span>
+        </a>
+    </div>
+</div>
+
+<div id="modalBank" class="royal-modal">
+    <div class="modal-header">
+        <i class="fas fa-times close-modal" onclick="closeModal('modalBank')"></i>
+        <span>Dados Bancários</span>
+    </div>
+    <div class="modal-content">
+        <form method="post">
+            {% csrf_token %}
+            <div class="field-box">
+                <label>Nome do Titular</label>
+                {{ form.account_holder_name }}
+            </div>
+            <div class="field-box">
+                <label>Instituição Bancária</label>
+                {{ form.bank_name }}
+            </div>
+            <div class="field-box">
+                <label>IBAN</label>
+                {{ form.IBAN }}
+            </div>
+            <button type="submit" name="update_bank" class="btn-save">SALVAR ALTERAÇÕES</button>
+        </form>
+    </div>
+</div>
+
+<div id="modalHistory" class="royal-modal">
+    <div class="modal-header">
+        <i class="fas fa-times close-modal" onclick="closeModal('modalHistory')"></i>
+        <span>Histórico de Saques</span>
+    </div>
+    <div class="modal-content">
+        {% if withdrawal_records %}
+            {% for record in withdrawal_records %}
+            <div class="transaction-item">
+                <div>
+                    <div style="font-size: 14px; font-weight: bold;">- {{ record.amount }} KZ</div>
+                    <div style="font-size: 10px; color: #888;">{{ record.created_at|date:"d/m/Y H:i" }}</div>
+                </div>
+                <span class="status-badge {% if record.status == 'Aprovado' %}badge-approved{% else %}badge-pending{% endif %}">
+                    {{ record.status }}
+                </span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: #666; margin-top: 50px;">Nenhum registro encontrado.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div id="modalPassword" class="royal-modal">
+    <div class="modal-header">
+        <i class="fas fa-times close-modal" onclick="closeModal('modalPassword')"></i>
+        <span>Alterar Senha</span>
+    </div>
+    <div class="modal-content">
+        <form method="post">
+            {% csrf_token %}
+            <div class="field-box">
+                <label>Senha Atual</label>
+                {{ password_form.old_password }}
+            </div>
+            <div class="field-box">
+                <label>Nova Senha</label>
+                {{ password_form.new_password1 }}
+            </div>
+            <div class="field-box">
+                <label>Confirmar Nova Senha</label>
+                {{ password_form.new_password2 }}
+            </div>
+            <button type="submit" name="change_password" class="btn-save">ATUALIZAR SENHA</button>
+        </form>
+    </div>
+</div>
+
+<div id="modalAvatar" class="royal-modal">
+    <div class="modal-header">
+        <i class="fas fa-times close-modal" onclick="closeModal('modalAvatar')"></i>
+        <span>Escolher Avatar</span>
+    </div>
+    <div class="modal-content" style="text-align: center;">
+        <p style="font-size: 12px; color: #888;">Escolha um estilo ou carregue sua foto</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
+            <img src="https://ui-avatars.com/api/?name=User&background=00f2ff&color=000" class="user-avatar" onclick="setAvatar(this.src)" style="width: 80px; height: 80px; cursor:pointer;">
+            <img src="https://ui-avatars.com/api/?name=Admin&background=ff2d75&color=fff" class="user-avatar" onclick="setAvatar(this.src)" style="width: 80px; height: 80px; cursor:pointer;">
+            <div style="width: 80px; height: 80px; background: var(--glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <i class="fas fa-plus"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-pane");
-        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].classList.remove("active"); }
-        tablinks = document.getElementsByClassName("action-item");
-        for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Impede rolar a página atrás
     }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function setAvatar(src) {
+        document.getElementById('currentAvatar').src = src;
+        closeModal('modalAvatar');
+    }
+
+    // Fecha modais com a tecla ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            const modals = document.querySelectorAll('.royal-modal');
+            modals.forEach(m => m.style.display = 'none');
+            document.body.style.overflow = 'auto';
+        }
+    });
 </script>
 {% endblock %}

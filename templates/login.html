@@ -4,294 +4,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Login Profissional - IBKR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Login - Ariel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #00a859; /* Verde Vibrante */
-            --secondary: #ffcc00; /* Dourado */
-            --dark: #1a1a1a;
-            --light-bg: #ffffff;
-            --glass-white: rgba(255, 255, 255, 0.8);
+            --ariel-teal: #20b2aa;
+            --ariel-pink: #ff85a2;
+            --ariel-gold: #ffd700;
+            --ariel-purple: #9370db;
+            --glass-white: rgba(255, 255, 255, 0.95);
         }
 
-        /* REMOVE APENAS A ROLAGEM HORIZONTAL, MANTÉM A VERTICAL LIVRE */
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden; /* Trava o balanço lateral */
-            overflow-y: auto;   /* Garante a roleta vertical */
-            position: relative;
+            margin: 0; padding: 0; width: 100%; min-height: 100vh;
+            overflow-x: hidden; position: relative;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background: radial-gradient(circle at top right, #ffffff, #f1f1f1);
-            color: var(--dark);
+            display: flex; flex-direction: column; align-items: center;
+            background: linear-gradient(135deg, #a1887f 0%, #ff85a2 20%, #20b2aa 100%);
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        /* Efeito de Brilhos no Fundo */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.3; z-index: 0; pointer-events: none;
         }
 
         /* BARRA SUPERIOR */
         .top-nav {
-            width: 100%;
-            max-width: 100vw;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            box-sizing: border-box;
-            position: relative; 
-            top: 0;
+            width: 100%; display: flex; justify-content: space-between;
+            align-items: center; padding: 15px 20px; box-sizing: border-box; z-index: 10;
         }
 
-        .logo-img {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        .logo-ariel {
+            font-family: 'Great Vibes', cursive; font-size: 35px; color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .nav-link-register {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.9em;
-            padding: 8px 16px;
-            border: 1px solid var(--primary);
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+        .language-selector {
+            background: var(--glass-white); padding: 5px 12px; border-radius: 20px;
+            display: flex; align-items: center; gap: 8px; border: 2px solid var(--ariel-pink);
         }
 
-        .nav-link-register:hover {
-            background: var(--primary);
-            color: white;
+        .language-selector select {
+            border: none; background: transparent; font-weight: 700;
+            color: var(--ariel-teal); outline: none; cursor: pointer; font-size: 0.9rem;
         }
 
-        /* CONTAINER PRINCIPAL COMPACTO */
+        /* CONTAINER PRINCIPAL */
         .login-container {
-            margin-top: 40px;
-            margin-bottom: 40px;
-            background: var(--glass-white);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.5);
-            text-align: center;
-            box-sizing: border-box;
+            position: relative; z-index: 5; margin-top: 20px; margin-bottom: 100px;
+            background: var(--glass-white); padding: 35px 25px; border-radius: 30px;
+            width: 92%; max-width: 420px; box-shadow: 0 15px 35px rgba(255, 133, 162, 0.4);
+            border: 3px solid white; text-align: center; box-sizing: border-box;
+        }
+
+        .login-container::after {
+            content: "✨"; position: absolute; top: -25px; left: 50%;
+            transform: translateX(-50%); font-size: 40px;
         }
 
         h2 {
-            font-weight: 700;
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            color: #333;
+            font-family: 'Great Vibes', cursive; font-size: 2.8rem;
+            margin-bottom: 20px; color: var(--ariel-teal);
         }
 
         /* FORMULÁRIO */
-        .form-group {
-            position: relative;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
+        .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            color: #666;
-            margin-left: 5px;
+            font-size: 0.75rem; font-weight: 700; margin-left: 10px;
+            display: block; color: var(--ariel-purple); text-transform: uppercase;
         }
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+
+        /* Seletor de País no Login */
+        .country-select {
+            position: absolute; left: 10px; display: flex; align-items: center;
+            border-right: 1px solid #eee; padding-right: 5px; height: 100%; z-index: 5;
+        }
+
+        .country-select select {
+            background: transparent; border: none; font-size: 0.85rem;
+            font-weight: 600; outline: none; cursor: pointer; color: var(--ariel-teal);
         }
 
         .input-wrapper i.main-icon {
-            position: absolute;
-            left: 15px;
-            color: #aaa;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            z-index: 5;
+            position: absolute; left: 15px; color: var(--ariel-teal); font-size: 1.1rem;
         }
 
+        /* Estilização dos Inputs do Django */
         .auth-form input {
-            width: 100%;
-            padding: 14px 15px 14px 45px;
-            border: 1.5px solid #eee;
-            border-radius: 12px;
-            background: #f9f9f9;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            outline: none;
-            box-sizing: border-box;
+            width: 100%; padding: 14px 15px 14px 45px; border: 2px solid #ffdae3;
+            border-radius: 25px; background: #fff; font-size: 0.95rem;
+            outline: none; box-sizing: border-box; transition: 0.3s;
         }
 
-        .auth-form input:focus {
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(0, 168, 89, 0.1);
-        }
+        .auth-form input:focus { border-color: var(--ariel-teal); }
 
-        .auth-form input:focus + i.main-icon {
-            color: var(--primary);
-        }
+        /* Espaço extra para o input de telefone com DDI */
+        .phone-input-field { padding-left: 85px !important; }
 
         .toggle-password {
-            position: absolute;
-            right: 15px;
-            cursor: pointer;
-            color: #bbb;
-            z-index: 5;
+            position: absolute; right: 15px; cursor: pointer; color: #ccc;
         }
 
-        /* BOTÃO ENTRAR */
-        .submit-button {
-            width: 100%;
-            padding: 16px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #00a859 0%, #008f4c 100%);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 10px 20px rgba(0, 168, 89, 0.2);
+        /* BARRA INFERIOR (REPETINDO O PADRÃO) */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            background: white; display: flex; justify-content: space-around;
+            align-items: center; border-top: 3px solid var(--ariel-pink);
+            z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
         }
 
-        .submit-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(0, 168, 89, 0.3);
+        .nav-item {
+            text-decoration: none; color: #888; display: flex;
+            flex-direction: column; align-items: center; font-size: 0.75rem; font-weight: 700;
+            flex: 1; transition: 0.3s; border: none; background: none; cursor: pointer;
         }
 
-        /* ERROS */
+        .nav-item i { font-size: 1.5rem; margin-bottom: 4px; }
+        .nav-item.active { color: var(--ariel-teal); }
+
         .errorlist {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-            color: #ff4d4f;
-            font-size: 0.85rem;
-            text-align: left;
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 480px) {
-            .top-nav { padding: 15px 20px; }
-            .login-container { 
-                padding: 30px 20px; 
-                width: 92%;
-                margin-top: 20px;
-            }
-            .logo-img { font-size: 22px; }
+            list-style: none; padding: 0; color: #ff4d4f; font-size: 0.8rem; font-weight: 600;
         }
     </style>
 </head>
 <body>
 
     <nav class="top-nav">
-        <div class="logo-img">IBKR</div>
-        <a href="{% url 'cadastro' %}" class="nav-link-register">Criar Conta</a>
+        <div class="logo-ariel">Ariel</div>
+        
+        <div class="language-selector">
+            <i class="fa-solid fa-globe"></i>
+            <select id="langSelect" onchange="translatePage(this.value)">
+                <option value="pt">PT</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+                <option value="fr">FR</option>
+                <option value="ar">AR</option>
+                <option value="zh">ZH</option>
+            </select>
+        </div>
     </nav>
 
     <div class="login-container">
-        <div class="header">
-            <h2>Bem-vindo de volta</h2>
-        </div>
+        <h2 id="txt-title">Entrar</h2>
         
-        <form method="post" class="auth-form">
+        <form method="post" class="auth-form" id="login-form">
             {% csrf_token %}
 
             {% if form.non_field_errors %}
                 <ul class="errorlist">
                     {% for error in form.non_field_errors %}
-                        <li><i class="fas fa-circle-exclamation"></i> {{ error }}</li>
+                        <li><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
 
             <div class="form-group">
-                <label>Telefone</label>
+                <label id="lbl-phone">TELEFONE</label>
                 <div class="input-wrapper">
-                    <i class="fa-solid fa-phone-flip main-icon"></i>
+                    <div class="country-select">
+                        <select name="ddi">
+                            <option value="+244">🇦🇴</option>
+                            <option value="+55">🇧🇷</option>
+                            <option value="+351">🇵🇹</option>
+                            <option value="+1">🇺🇸</option>
+                        </select>
+                    </div>
                     {{ form.username }}
                 </div>
-                {% if form.username.errors %}
-                    <ul class="errorlist">
-                        {% for error in form.username.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
             </div>
-            
+
             <div class="form-group">
-                <label>Senha</label>
+                <label id="lbl-pass">SENHA</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-shield-halved main-icon"></i>
                     {{ form.password }}
-                    <i class="fa-regular fa-eye toggle-password" id="togglePassword"></i>
+                    <i class="fa-solid fa-eye toggle-password" id="btn-toggle"></i>
                 </div>
-                {% if form.password.errors %}
-                    <ul class="errorlist">
-                        {% for error in form.password.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
             </div>
-            
-            <button type="submit" class="submit-button">
-                <span>Entrar</span>
-                <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            </button>
         </form>
+    </div>
+
+    <div class="bottom-nav">
+        <button type="button" onclick="document.getElementById('login-form').submit()" class="nav-item active">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span id="nav-login">ENTRAR</span>
+        </button>
+
+        <a href="{% url 'cadastro' %}" class="nav-item">
+            <i class="fa-solid fa-user-plus"></i>
+            <span id="nav-reg">CRIAR CONTA</span>
+        </a>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const togglePassword = document.querySelector('#togglePassword');
-            const passwordInput = document.querySelector('input[name="password"]');
+            // Ajuste dos inputs do Django para o nosso CSS
+            const userInput = document.querySelector('input[name="username"]');
+            const passInput = document.querySelector('input[name="password"]');
 
-            if (togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
+            if (userInput) {
+                userInput.classList.add('phone-input-field');
+                userInput.placeholder = "9xx xxx xxx";
+            }
+            if (passInput) {
+                passInput.placeholder = "••••••";
+                passInput.id = "id_password_field";
+            }
+
+            // Alternar Visibilidade da Senha
+            const btnToggle = document.getElementById('btn-toggle');
+            if (btnToggle && passInput) {
+                btnToggle.addEventListener('click', function() {
+                    const isPass = passInput.type === "password";
+                    passInput.type = isPass ? "text" : "password";
                     this.classList.toggle('fa-eye');
                     this.classList.toggle('fa-eye-slash');
                 });
             }
-
-            const phoneInput = document.querySelector('input[name="username"]');
-            if (phoneInput) phoneInput.setAttribute('placeholder', '941 000 000');
-            
-            const passInput = document.querySelector('input[name="password"]');
-            if (passInput) passInput.setAttribute('placeholder', '••••••••');
         });
+
+        // Sistema de Idiomas Unificado
+        const translations = {
+            pt: { title: "Entrar", phone: "Telefone", pass: "Senha", login: "ENTRAR", reg: "CRIAR CONTA" },
+            en: { title: "Login", phone: "Phone", pass: "Password", login: "LOGIN", reg: "REGISTER" },
+            es: { title: "Entrar", phone: "Teléfono", pass: "Contraseña", login: "ENTRAR", reg: "REGISTRO" },
+            fr: { title: "Connexion", phone: "Téléphone", pass: "Mot de passe", login: "CONNEXION", reg: "S'INSCRIRE" },
+            ar: { title: "تسجيل الدخول", phone: "الهاتف", pass: "كلمة المرور", login: "تسجيل الدخول", reg: "تسجيل" },
+            zh: { title: "登录", phone: "电话", pass: "密码", login: "登录", reg: "注册" }
+        };
+
+        function translatePage(lang) {
+            const t = translations[lang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('lbl-phone').innerText = t.phone;
+            document.getElementById('lbl-pass').innerText = t.pass;
+            document.getElementById('nav-login').innerText = t.login;
+            document.getElementById('nav-reg').innerText = t.reg;
+            document.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        }
     </script>
 </body>
 </html>

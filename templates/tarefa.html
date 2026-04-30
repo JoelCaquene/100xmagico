@@ -1,379 +1,483 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Forex Mining - Trading Terminal{% endblock %}
+{% block title %}Tesouros Reais - Palácio das Pérolas de Ariel{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 
-<div class="forex-terminal">
-    {# A. HEADER PROFISSIONAL #}
-    <div class="terminal-header">
-        <div class="status-indicator">
-            <span class="live-dot"></span>
-            <span class="status-text">LIVE MARKET DATA</span>
-        </div>
-        <div class="market-info">
-            <span class="pair">EUR/USD <i class="fa-solid fa-chart-line"></i></span>
-            <span class="price" id="live-price">1.08420</span>
-        </div>
-    </div>
-
-    {% if not has_active_level %}
-    {# B. ESTADO BLOQUEADO (NÍVEL INATIVO) #}
-    <div class="locked-container">
-        <div class="lock-card">
-            <i class="fa-solid fa-shield-halved lock-icon"></i>
-            <h2>Terminal Desconectado</h2>
-            <p>Seu acesso ao mercado global está restrito. Adquira um plano de mineração para iniciar operações.</p>
-            <div class="alert-box">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>STATUS: NÃO TENS AUTORIZAÇÃO, CONTACTA PRIMEIRO ADMINISTRADOR</span>
-            </div>
+<div class="ariel-casino-body">
+    
+    {# 1. HEADER CHIQUE E COMPACTO #}
+    <div class="casino-header">
+        <a href="{% url 'menu' %}" class="btn-back-magic">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        <h2 class="magic-title">Tesouros Reais</h2>
+        <div class="balance-tag">
+            <i class="fas fa-gem"></i> {{ user.available_balance }} KZ
         </div>
     </div>
-    {% else %}
-        
-        {# C. AREA DE ANALISE (GRAFICOS) #}
-        <div class="analysis-section">
-            <div id="chart-timeline"></div>
-        </div>
 
-        {# D. CONTAINER DE MINERAÇÃO (A TAREFA) #}
-        <div class="mining-card">
-            <div class="mining-stats">
-                <div class="stat-item">
-                    <span class="label">VOLATILIDADE</span>
-                    <span class="value high">ALTA</span>
-                </div>
-                <div class="stat-item">
-                    <span class="label">CONEXÃO</span>
-                    <span class="value secure">ENCRIPTADA</span>
-                </div>
-            </div>
-
-            <div class="display-screen">
-                <div class="scan-line"></div>
-                <p id="task-message">SISTEMA PRONTO PARA MINERAÇÃO FOREX</p>
-                <div class="progress-container" id="progress-bar-container" style="display: none;">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
-            </div>
-
-            <div class="control-panel">
-                <div class="status-lights">
-                    <div class="light" id="light-red" title="Aguardando"></div>
-                    <div class="light" id="light-yellow" title="Processando"></div>
-                    <div class="light" id="light-green" title="Concluído"></div>
-                </div>
+    {# 2. ÁREA DO JOGO (CASSINO PREMIUM) - MOLDURA DOURADA #}
+    <div class="game-container">
+        <div class="game-frame">
+            <div class="game-display" id="game-display">
                 
-                <button id="work-button" class="mining-btn">
-                    <i class="fa-solid fa-microchip"></i> 
-                    <span>MINERAÇÃO FOREX</span>
-                </button>
+                {# Cenário Único Desenhado em Código (SVG & CSS) #}
+                <div id="game-scene" class="scene">
+                    <div class="floating-bubbles"></div>
+                    
+                    {# IMAGEM DA PRINCESA (GIF ANIMADO NO STATIC) #}
+                    {# VOCÊ DEVE BAIXAR UM GIF E SALVAR EM: static/images/ariel_dance.gif #}
+                    <div id="central-character" class="ariel-dance-container">
+                        <img src="{% static 'images/ariel_dance.gif' %}" alt="Ariel Dançando" class="ariel-gif">
+                    </div>
+                </div>
+
+                {# Overlay de Mensagem #}
+                <div id="status-overlay" class="status-overlay">
+                    <p id="task-text">LIBERE O TESOURO!</p>
+                </div>
+
             </div>
         </div>
 
-        {# E. MENSAGENS DJANGO #}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="toast-message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+        {# 3. PAINEL DE CONTROLE - DESIGN CASSINO PREMIUM #}
+        <div class="control-panel">
+            {# Contador Removido Conforme Pedido #}
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // --- LÓGICA DO GRÁFICO (FOREX STYLE) ---
-                var options = {
-                    series: [{ data: [] }],
-                    chart: {
-                        type: 'area',
-                        height: 200, // Ajustado para telas menores
-                        toolbar: { show: false },
-                        animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } }
-                    },
-                    colors: ['#00ff88'],
-                    fill: {
-                        type: 'gradient',
-                        gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05 }
-                    },
-                    dataLabels: { enabled: false },
-                    stroke: { curve: 'smooth', width: 2 },
-                    xaxis: { labels: { show: false }, axisBorder: { show: false } },
-                    yaxis: { labels: { show: false } },
-                    grid: { borderColor: '#1a2637' }
-                };
+            {% if not has_active_level %}
+                <button class="btn-play disabled" disabled>
+                    <i class="fas fa-lock"></i> VIP BLOQUEADO
+                </button>
+                <p class="warning-text">Ative um VIP para liberar o jogo</p>
+            {% else %}
+                <button id="work-button" class="btn-play">
+                    <span class="btn-glow"></span>
+                    <i class="fas fa-play-circle"></i> JOGAR
+                </button>
+            {% endif %}
+        </div>
+    </div>
 
-                var chart = new ApexCharts(document.querySelector("#chart-timeline"), options);
-                chart.render();
+    {# 4. RODAPÉ ESTILO CASSINO (PARA PREENCHER O ESPAÇO) #}
+    <div class="casino-footer-deco">
+        <div class="footer-divider-glow">
+            <i class="fas fa-crown"></i>
+            <span>PROVEDORES CERTIFICADOS</span>
+            <i class="fas fa-crown"></i>
+        </div>
 
-                function updateChart() {
-                    let newData = [];
-                    for(let i=0; i<15; i++) {
-                        newData.push(Math.floor(Math.random() * (100 - 40) + 40));
-                    }
-                    chart.updateSeries([{ data: newData }]);
-                    const price = (1.08 + Math.random() * 0.01).toFixed(5);
-                    document.getElementById('live-price').innerText = price;
-                }
-                setInterval(updateChart, 3000);
-                updateChart();
+        <div class="chinese-grid-premium">
+            <div class="slot-premium-gold pulse-gold"><i class="fas fa-dragon"></i></div>
+            <div class="slot-premium-gold pulse-gold"><i class="fas fa-gem"></i></div>
+            <div class="slot-premium-gold pulse-gold"><i class="fas fa-crown"></i></div>
+            
+            <div class="slot-premium-neon pulse-blue"><i class="fas fa-bolt"></i></div>
+            <div class="slot-premium-neon pulse-pink"><i class="fas fa-heart"></i></div>
+            <div class="slot-premium-neon pulse-orange"><i class="fas fa-star"></i></div>
+        </div>
 
-                // --- LÓGICA DE TAREFAS (DJANGO INTEGRATION) ---
-                const workButton = document.getElementById('work-button');
-                const taskMessage = document.getElementById('task-message');
-                const lightRed = document.getElementById('light-red');
-                const lightYellow = document.getElementById('light-yellow');
-                const lightGreen = document.getElementById('light-green');
-                const progressContainer = document.getElementById('progress-bar-container');
-                const progressFill = document.getElementById('progress-fill');
+        <div class="scrolling-ticker">
+            <div class="ticker-content">
+                <span>⚠️ PAGAMENTOS INSTANTÂNEOS VIA UNITEL MONEY • AFRICELL • MOVICEL ⚠️</span>
+                <span>👑 ARIEL REINO DA RENDA • PAGAMENTOS 24H 👑</span>
+            </div>
+        </div>
+    </div>
 
-                let tasksCompletedToday = {{ tasks_completed_today|default:0 }}; 
-                let maxTasks = {{ max_tasks|default:1 }};
-
-                function updateUI(status) {
-                    lightRed.className = 'light';
-                    lightYellow.className = 'light';
-                    lightGreen.className = 'light';
-
-                    if (status === 'idle') {
-                        lightRed.classList.add('red', 'pulse');
-                        workButton.disabled = false;
-                    } else if (status === 'working') {
-                        lightYellow.classList.add('yellow', 'blink');
-                        workButton.disabled = true;
-                    } else if (status === 'done') {
-                        lightGreen.classList.add('green', 'glow');
-                        workButton.disabled = true;
-                        workButton.innerHTML = '<i class="fa-solid fa-check"></i> OPERAÇÃO FINALIZADA';
-                    }
-                }
-
-                function checkStatus() {
-                    if (tasksCompletedToday >= maxTasks) {
-                        taskMessage.textContent = "LIMITE DIÁRIO ALCANÇADO";
-                        updateUI('done');
-                    } else {
-                        updateUI('idle');
-                    }
-                }
-
-                if (workButton) {
-                    workButton.addEventListener('click', function() {
-                        if (tasksCompletedToday < maxTasks) {
-                            updateUI('working');
-                            taskMessage.textContent = "SINCRONIZANDO...";
-                            progressContainer.style.display = 'block';
-                            
-                            let width = 0;
-                            let interval = setInterval(() => {
-                                if(width >= 100) clearInterval(interval);
-                                else {
-                                    width += 2;
-                                    progressFill.style.width = width + '%';
-                                }
-                            }, 50);
-
-                            fetch("{% url 'process_task' %}", {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRFToken': '{{ csrf_token }}'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                setTimeout(() => {
-                                    if (data.success) {
-                                        tasksCompletedToday++;
-                                        taskMessage.innerHTML = `<span style="color: #00ff88">LUCRO: KZ ${data.daily_gain}</span>`;
-                                    } else {
-                                        taskMessage.textContent = data.message || "ERRO";
-                                    }
-                                    progressContainer.style.display = 'none';
-                                    progressFill.style.width = '0%';
-                                    checkStatus();
-                                }, 2500);
-                            })
-                            .catch(error => {
-                                taskMessage.textContent = "CONEXÃO INTERROMPIDA";
-                                updateUI('idle');
-                            });
-                        }
-                    });
-                }
-                checkStatus();
-            });
-        </script>
+    {# 5. MENSAGENS DJANGO #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="magic-toast">{{ message }}</div>
+        {% endfor %}
     {% endif %}
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const workButton = document.getElementById('work-button');
+        const taskText = document.getElementById('task-text');
+        const centralCharacter = document.getElementById('central-character');
+
+        let tasksCompletedToday = {{ tasks_completed_today|default:0 }};
+        let maxTasks = {{ max_tasks|default:1 }};
+
+        // Verifica status inicial - SE JÁ JOGOU HOJE, DESATIVA
+        if (tasksCompletedToday >= 1) {
+            disablePlayButton("CONCLUÍDO HOJE");
+        }
+
+        if (workButton) {
+            workButton.addEventListener('click', function() {
+                // Inicia Animação de Cassino (5 segundos)
+                startArielAnimation();
+
+                // Chama o Backend via Fetch
+                fetch("{% url 'process_task' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Espera os 5 segundos da animação
+                    setTimeout(() => {
+                        if (data.success) {
+                            tasksCompletedToday++;
+                            showSuccess(`+${data.daily_gain} KZ`);
+                            // DESATIVA O BOTÃO PERMANENTEMENTE ATÉ O DIA SEGUINTE
+                            disablePlayButton("CONCLUÍDO HOJE");
+                        } else {
+                            showError(data.message);
+                            resetGame();
+                        }
+                    }, 5000);
+                })
+                .catch(error => {
+                    showError("ERRO DE CONEXÃO REAIS");
+                    resetGame();
+                });
+            });
+        }
+
+        function startArielAnimation() {
+            workButton.disabled = true;
+            workButton.style.opacity = "0.7";
+            taskText.innerText = "BUSCANDO PÉROLAS REAIS...";
+            // Ativa animação de cassino (pulsação)
+            centralCharacter.classList.add('animating'); 
+        }
+
+        function resetGame() {
+            workButton.disabled = false;
+            workButton.style.opacity = "1";
+            taskText.innerText = "JOGAR NOVAMENTE?";
+            centralCharacter.classList.remove('animating');
+        }
+
+        function disablePlayButton(text) {
+            if(workButton) {
+                workButton.disabled = true;
+                workButton.innerHTML = `<i class="fas fa-calendar-check"></i> ${text}`;
+                workButton.className = "btn-play finished";
+                workButton.style.opacity = "0.7";
+            }
+            taskText.innerText = text;
+        }
+
+        function showSuccess(msg) {
+            taskText.innerHTML = `<span style="color: #fff; font-weight: 900; font-size: 20px; text-shadow: 0 0 10px rgba(0,0,0,0.5);">${msg}</span>`;
+            centralCharacter.classList.add('success-burst');
+            setTimeout(() => centralCharacter.classList.remove('success-burst'), 1000);
+        }
+
+        function showError(msg) {
+            taskText.style.color = "#ff4d4d";
+            taskText.innerText = msg;
+        }
+    });
+</script>
+
 <style>
+    /* RESET E BÁSICOS - PALETA PREMIUM */
     :root {
-        --bg-dark: #0a0f18;
-        --card-dark: #121926;
-        --accent-green: #00ff88;
-        --accent-yellow: #ffcc00;
-        --accent-red: #ff4d4d;
-        --text-main: #ffffff;
-        --text-dim: #8492a6;
+        --ariel-pink: #d81b60; /* Rosa Chique/Forte */
+        --ariel-teal: #00e5ff; /* Turquesa Cintilante */
+        --ariel-gold: #ffd700; /* Ouro Puro */
+        --body-bg: #fad0c4;
+        --white-pearl: #ffffff;
+        --modal-dark: #121217;
     }
 
     body {
-        background-color: var(--bg-dark);
-        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, var(--body-bg) 0%, #ffc1d1 100%) no-repeat fixed;
+        min-height: 100vh;
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
         margin: 0;
-        padding: 0;
-        color: var(--text-main);
-        overflow-x: hidden; /* Previne rolagem horizontal */
-    }
-
-    .forex-terminal {
-        width: 100%;
-        max-width: 480px; /* Limite para não esticar em tablets */
-        margin: 0 auto;
-        padding: 10px; /* Reduzido para ganhar espaço lateral */
-        box-sizing: border-box;
-    }
-
-    /* HEADER */
-    .terminal-header {
+        overflow-x: hidden;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: var(--card-dark);
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid #1e293b;
-        margin-bottom: 12px;
-    }
-
-    .status-indicator {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 9px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-    }
-
-    .live-dot {
-        width: 7px;
-        height: 7px;
-        background: var(--accent-red);
-        border-radius: 50%;
-        animation: pulse-red 1.5s infinite;
-    }
-
-    .market-info .pair { font-size: 11px; font-weight: bold; color: var(--text-dim); }
-    .market-info .price { font-family: 'JetBrains Mono', monospace; color: var(--accent-green); font-size: 12px; }
-
-    /* GRAFICO */
-    .analysis-section {
-        background: var(--card-dark);
-        border-radius: 12px;
-        padding: 5px;
-        margin-bottom: 12px;
-        border: 1px solid #1e293b;
-    }
-
-    /* CARD DE MINERAÇÃO */
-    .mining-card {
-        background: var(--card-dark);
-        border-radius: 15px;
-        padding: 15px;
-        border: 1px solid #1e293b;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .mining-stats {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-    }
-
-    .stat-item .label { font-size: 8px; color: var(--text-dim); }
-    .stat-item .value { font-size: 11px; font-weight: bold; }
-
-    .display-screen {
-        background: #05070a;
-        border-radius: 8px;
-        padding: 25px 10px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid #1e293b;
-        margin-bottom: 15px;
-    }
-
-    .scan-line {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 2px;
-        background: rgba(0, 255, 136, 0.2);
-        animation: scan 3s infinite linear;
-    }
-
-    #task-message {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        color: var(--text-main);
-    }
-
-    .progress-container {
-        width: 100%;
-        height: 4px;
-        background: #1a2637;
-        margin-top: 12px;
-        border-radius: 2px;
-    }
-    .progress-fill {
-        height: 100%;
-        background: var(--accent-green);
-        box-shadow: 0 0 10px var(--accent-green);
-    }
-
-    .status-lights {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 15px;
         justify-content: center;
     }
 
-    .light {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #232d3d;
-    }
-
-    .light.red { background: var(--accent-red); box-shadow: 0 0 10px var(--accent-red); }
-    .light.yellow { background: var(--accent-yellow); box-shadow: 0 0 10px var(--accent-yellow); }
-    .light.green { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
-
-    .mining-btn {
+    .ariel-casino-body {
         width: 100%;
-        padding: 16px;
-        border-radius: 10px;
-        border: none;
-        background: linear-gradient(135deg, #00ff88 0%, #00bd65 100%);
-        color: #000;
-        font-weight: 800;
-        font-size: 15px;
-        cursor: pointer;
+        max-width: 450px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 0px;
     }
 
-    /* ESTADO BLOQUEADO */
-    .lock-card {
-        background: var(--card-dark);
-        padding: 20px;
+    /* 1. HEADER CHIQUE E COMPACTO */
+    .casino-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .btn-back-magic {
+        width: 35px;
+        height: 35px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ariel-pink);
+        text-decoration: none;
+        backdrop-filter: blur(5px);
+        font-size: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .magic-title {
+        font-family: 'Great Vibes', cursive;
+        font-size: 26px;
+        color: var(--ariel-pink);
+        text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        margin: 0;
+    }
+
+    .balance-tag {
+        background: rgba(255, 255, 255, 0.5);
+        padding: 5px 12px;
         border-radius: 15px;
-        text-align: center;
-        border: 1px dashed #334155;
+        color: var(--ariel-pink);
+        font-weight: 800;
+        font-size: 11px;
+        border: 2px solid var(--white-pearl);
     }
 
-    @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+    /* 2. GAME FRAME PREMIUM COMPACTO */
+    .game-container {
+        width: 90%;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+
+    .game-frame {
+        background: #fff;
+        padding: 5px;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(216, 27, 96, 0.25);
+        border: 4px solid var(--ariel-gold);
+    }
+
+    .game-display {
+        height: 280px; /* Altura otimizada */
+        background: #8ec5fc;
+        background-image: linear-gradient(62deg, #c3e5fc 0%, #fcd4e9 100%);
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .scene { width: 100%; height: 100%; position: relative; display: flex; justify-content: center; align-items: center;}
+
+    /* ARIEL DANCE CONTAINER */
+    .ariel-dance-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .ariel-gif {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ajusta o GIF para preencher o espaço (fit) */
+    }
+
+    /* OVERLAY */
+    .status-overlay {
+        position: absolute; bottom: 15px;
+        background: rgba(216, 27, 96, 0.6);
+        width: 80%; padding: 10px;
+        border-radius: 50px;
+        text-align: center;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    #task-text {
+        margin: 0; font-weight: 800; letter-spacing: 1.5px;
+        font-size: 11px; text-transform: uppercase;
+        color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* 3. CONTROLS CASSINO COMPACTOS */
+    .control-panel {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .btn-play {
+        width: 100%;
+        height: 55px; /* Altura compactada */
+        border-radius: 50px;
+        border: none;
+        background: linear-gradient(180deg, #ff6b8a, #d81b60);
+        color: white;
+        font-size: 20px;
+        font-weight: 900;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(216, 27, 96, 0.4);
+        transition: transform 0.2s, background 0.3s;
+    }
+
+    .btn-play:active { transform: scale(0.96); }
+
+    .btn-play.disabled {
+        background: #b0bec5;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    .btn-play.finished {
+        background: #4caf50 !important; /* Verde Concluído */
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    .warning-text {
+        color: #fff;
+        font-size: 10px;
+        margin-top: 8px;
+        font-weight: 600;
+        opacity: 0.8;
+    }
+
+    /* 4. RODAPÉ DE CASSINO DECORATIVO */
+    .casino-footer-deco {
+        width: 100%;
+        background: linear-gradient(180deg, #1a1a24 0%, #05030a 100%);
+        padding: 20px 10px;
+        border-top: 2px solid var(--ariel-gold);
+        box-shadow: 0 -10px 30px rgba(255, 215, 0, 0.15);
+        margin-top: auto; /* Empurra para o final */
+        box-sizing: border-box;
+    }
+
+    .footer-divider-glow {
+        text-align: center;
+        color: var(--ariel-gold);
+        font-weight: 900;
+        font-size: 12px;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chinese-grid-premium {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .slot-premium-gold, .slot-premium-neon {
+        height: 50px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: 0.3s;
+        font-size: 20px;
+    }
+
+    .slot-premium-gold { color: var(--ariel-gold); border: 1px solid rgba(255, 215, 0, 0.3); }
+    
+    .pulse-gold { animation: pulseGold 2s infinite alternate; }
+    .pulse-blue { color: var(--ariel-teal); border-color: var(--ariel-teal); animation: pulseBlue 2s infinite alternate; }
+    .pulse-pink { color: var(--ariel-pink); border-color: var(--ariel-pink); animation: pulsePink 2s infinite alternate; }
+    .pulse-orange { color: #ff6a00; border-color: #ff6a00; animation: pulseOrange 2s infinite alternate; }
+
+    @keyframes pulseGold { to { box-shadow: 0 0 15px rgba(255,215,0,0.4); transform: scale(1.02); } }
+    @keyframes pulseBlue { to { box-shadow: 0 0 15px var(--ariel-teal); } }
+    @keyframes pulsePink { to { box-shadow: 0 0 15px var(--ariel-pink); } }
+
+    /* Letreiro Profissional */
+    .scrolling-ticker {
+        background: rgba(255, 215, 0, 0.05);
+        border-top: 1px solid rgba(255, 215, 0, 0.2);
+        border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        padding: 5px 0;
+        overflow: hidden;
+    }
+    .ticker-content {
+        display: flex;
+        white-space: nowrap;
+        animation: tickerMove 20s linear infinite;
+    }
+    .ticker-content span {
+        color: var(--ariel-gold);
+        font-size: 9px;
+        font-weight: bold;
+        margin-right: 50px;
+    }
+    @keyframes tickerMove {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    /* ANIMATIONS PREMIUM */
+    .ariel-dance-container.animating {
+        animation: casinoPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes successExplosion {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.1); box-shadow: 0 0 50px rgba(255,255,255,0.5); }
+        100% { transform: scale(1); }
+    }
+
+    .btn-glow {
+        position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+        animation: rotateGlow 3s linear infinite;
+    }
+
+    @keyframes rotateGlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .magic-toast {
+        position: fixed; bottom: 15px;
+        background: #fff; color: var(--ariel-pink);
+        padding: 8px 25px; border-radius: 30px;
+        font-weight: 800; font-size: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        animation: slideUp 0.5s forwards; z-index: 9999;
+    }
+
+    @keyframes slideUp { from { bottom: -50px; } to { bottom: 15px; } }
+
+    @keyframes casinoPulse {
+        0%, 100% { filter: drop-shadow(0 0 10px var(--white-pearl)); }
+        50% { filter: drop-shadow(0 0 25px var(--white-pearl)); }
+    }
 </style>
 {% endblock %}

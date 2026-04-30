@@ -1,73 +1,68 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Níveis de Investimento - Profissional{% endblock %}
+{% block title %}Níveis Princesa Ariel{% endblock %}
 
 {% block content %}
-<div class="level-container">
+<div class="ariel-magical-container">
     
-    {# Botão Voltar #}
-    <div class="top-navigation">
-        <a href="{% url 'home' %}" class="back-link">
-            <i class="fas fa-arrow-left"></i> VOLTAR
+    <div class="ariel-header-soft">
+        <a href="{% url 'menu' %}" class="btn-back-princess">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="main-title">NÍVEIS DE PRODUÇÃO</h1>
+        <h2 class="ariel-title-princess">Planos Ariel</h2>
+        <div class="pearl-balance">
+        </div>
     </div>
 
-    <div class="level-stack">
+    <div class="ariel-pearl-grid">
         {% for level in levels %}
-        <div class="level-card-wrapper">
-            <div class="level-card {% if level.id in user_levels %}active-glow{% endif %}">
-                
-                {# Cabeçalho do Card #}
-                <div class="card-header">
-                    <div class="level-badge">
-                        <i class="fas fa-gem"></i>
-                        <span>NÍVEL {{ level.name }}</span>
-                    </div>
-                    {% if level.id in user_levels %}
-                        <div class="status-tag active">ATIVO</div>
-                    {% endif %}
+        <div class="ariel-pearl-card {% if level.id in user_levels %}level-active-princess{% endif %}">
+            
+            <div class="card-princess-header">
+                <div class="icon-shell-container">
+                    {% if forloop.counter == 1 %}<i class="fas fa-hand-holding-heart"></i>
+                    {% elif forloop.counter == 2 %}<i class="fas fa-wand-sparkles"></i>
+                    {% elif forloop.counter == 3 %}<i class="fas fa-gem"></i>
+                    {% else %}<i class="fas fa-crown"></i>{% endif %}
                 </div>
+                <div class="text-name-group">
+                    <span class="label-vip">VIP {{ forloop.counter }}</span>
+                    <h3 class="name-level">{{ level.name }}</h3>
+                </div>
+                {% if level.id in user_levels %}
+                    <span class="crown-active"><i class="fas fa-check-circle"></i></span>
+                {% endif %}
+            </div>
 
-                {# Corpo com Dados Financeiros #}
-                <div class="card-body">
-                    <div class="data-grid">
-                        <div class="data-box">
-                            <span class="data-label">Depósito Inicial</span>
-                            <span class="data-value highlight-gold">KZ {{ level.deposit_value }}</span>
-                        </div>
-                        <div class="data-box">
-                            <span class="data-label">Rendimento Diário</span>
-                            <span class="data-value highlight-green">KZ {{ level.daily_gain }}</span>
-                        </div>
-                        <div class="data-box">
-                            <span class="data-label">Rendimento Mensal</span>
-                            <span class="data-value highlight-blue">KZ {{ level.monthly_gain }}</span>
-                        </div>
-                        <div class="data-box">
-                            <span class="data-label">Ciclo do Contrato</span>
-                            <span class="data-value">{{ level.cycle_days }} Dias</span>
-                        </div>
+            <div class="card-princess-body">
+                <div class="magic-info-box">
+                    <div class="info-item">
+                        <span class="info-label">Custo</span>
+                        <span class="info-val">{{ level.deposit_value }} KZ</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Diário</span>
+                        <span class="info-val profit">+{{ level.daily_gain }} KZ</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Ciclo</span>
+                        {# Se o campo cycle estiver vazio no banco, exibe 365 como padrão #}
+                        <span class="info-val">{{ level.cycle|default:"90" }} Dias</span>
                     </div>
                 </div>
+            </div>
 
-                {# Rodapé com Ação #}
-                <div class="card-footer">
-                    {% if level.id in user_levels %}
-                        <div class="active-button">
-                            <i class="fas fa-check-circle"></i> LICENÇA ADQUIRIDA
-                        </div>
-                    {% else %}
-                        <form method="post" action="{% url 'nivel' %}" class="w-100">
-                            {% csrf_token %}
-                            <input type="hidden" name="level_id" value="{{ level.id }}">
-                            <button type="submit" class="invest-button">
-                                ADQUIRIR LICENÇA <i class="fas fa-angle-right"></i>
-                            </button>
-                        </form>
-                    {% endif %}
-                </div>
+            <div class="card-princess-footer">
+                {% if level.id in user_levels %}
+                    <div class="status-already-owned">ATIVO</div>
+                {% else %}
+                    <form method="post" action="{% url 'nivel' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="level_id" value="{{ level.id }}">
+                        <button type="submit" class="btn-activate-magic">ATIVAR</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -75,177 +70,144 @@
 </div>
 
 <style>
-    /* FUNDO AZUL ESCURO COM BRILHO */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Dancing+Script:wght@700&display=swap');
+
+    :root {
+        --princess-pink: #ff85a1;
+        --princess-soft-pink: #fbb1bd;
+        --white-pearl: #ffffff;
+    }
+
     body {
-        background: radial-gradient(circle at top, #0d1b33 0%, #040911 100%) !important;
+        background: linear-gradient(135deg, #fce4ec 0%, #e3f2fd 100%) no-repeat fixed;
+        font-family: 'Montserrat', sans-serif;
         margin: 0;
-        font-family: 'Inter', sans-serif;
-        color: white;
+        color: #5a4a4a;
+        overflow-x: hidden;
     }
 
-    .level-container {
-        max-width: 480px;
+    .ariel-magical-container {
+        max-width: 450px;
         margin: 0 auto;
-        padding: 20px 15px 100px 15px;
+        padding: 15px 10px 80px;
     }
 
-    /* BOTÃO VOLTAR */
-    .top-navigation {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-
-    .back-link {
-        color: #00d2ff;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 800;
+    .ariel-header-soft {
         display: flex;
         align-items: center;
-        gap: 8px;
-        letter-spacing: 1px;
-    }
-
-    .main-title {
-        font-size: 18px;
-        font-weight: 900;
-        letter-spacing: 2px;
-        color: #fff;
-        margin: 0;
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    }
-
-    /* ESTILIZAÇÃO DOS CARDS (STACK VERTICAL) */
-    .level-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 25px; /* MAIOR AFASTAMENTO ENTRE CARDS */
-    }
-
-    .level-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .level-card:hover {
-        transform: translateY(-5px);
-        border-color: #00d2ff;
-        box-shadow: 0 10px 30px rgba(0, 210, 255, 0.15);
-    }
-
-    /* BRILHO PARA NÍVEL ATIVO */
-    .active-glow {
-        border-color: #00ff88 !important;
-        background: linear-gradient(145deg, rgba(0, 255, 136, 0.05) 0%, rgba(4, 9, 17, 0.5) 100%);
-        box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
-    }
-
-    /* CABEÇALHO DO CARD */
-    .card-header {
-        display: flex;
         justify-content: space-between;
-        align-items: center;
         margin-bottom: 20px;
     }
 
-    .level-badge {
+    .btn-back-princess {
+        width: 38px;
+        height: 38px;
+        background: var(--white-pearl);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--princess-pink);
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .ariel-title-princess {
+        font-family: 'Dancing Script', cursive;
+        font-size: 24px;
+        color: #ff5c8a;
+        margin: 0;
+    }
+
+    .pearl-balance {
+        background: var(--white-pearl);
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: 800;
+        font-size: 11px;
+        color: #ff5c8a;
+        border: 1px solid var(--princess-soft-pink);
+    }
+
+    .ariel-pearl-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .ariel-pearl-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        padding: 12px 15px;
+        position: relative;
+        border: 1px solid var(--white-pearl);
+        box-shadow: 0 6px 15px rgba(255, 133, 161, 0.08);
+    }
+
+    .level-active-princess {
+        border: 1.5px solid var(--princess-pink);
+    }
+
+    .card-princess-header {
         display: flex;
         align-items: center;
         gap: 10px;
-        font-weight: 800;
-        font-size: 14px;
-        color: #00d2ff;
+        margin-bottom: 10px;
     }
 
-    .status-tag.active {
-        background: #00ff88;
-        color: #000;
-        font-size: 10px;
-        padding: 2px 10px;
-        border-radius: 50px;
-        font-weight: 900;
-    }
-
-    /* GRID DE DADOS */
-    .data-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .data-box {
+    .icon-shell-container {
+        width: 40px;
+        height: 40px;
+        background: var(--princess-soft-pink);
+        border-radius: 12px;
         display: flex;
-        flex-direction: column;
-        gap: 5px;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: white;
     }
 
-    .data-label {
-        font-size: 10px;
-        color: #8a94a6;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    .label-vip { font-size: 9px; font-weight: 800; color: var(--princess-pink); }
+    .name-level { font-size: 14px; margin: 0; font-weight: 700; color: #444; }
+    .crown-active { margin-left: auto; color: #4caf50; font-size: 18px; }
+
+    .magic-info-box {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        background: #fdfdfd;
+        border-radius: 12px;
+        padding: 8px 5px;
+        margin-bottom: 10px;
+        text-align: center;
     }
 
-    .data-value {
-        font-size: 15px;
-        font-weight: 800;
-    }
+    .info-item { border-right: 1px solid #f0f0f0; }
+    .info-item:last-child { border-right: none; }
 
-    .highlight-gold { color: #feca57; }
-    .highlight-green { color: #00ff88; }
-    .highlight-blue { color: #00d2ff; }
+    .info-label { font-size: 8px; color: #999; text-transform: uppercase; display: block; margin-bottom: 2px; }
+    .info-val { font-size: 11px; font-weight: 800; display: block; }
+    .info-val.profit { color: #ff5c8a; }
 
-    /* BOTÃO DE INVESTIMENTO */
-    .invest-button {
+    .btn-activate-magic {
         width: 100%;
-        background: linear-gradient(90deg, #00d2ff 0%, #0072ff 100%);
+        background: linear-gradient(90deg, #ff85a1, #ff5c8a);
         border: none;
-        padding: 15px;
+        padding: 10px;
         border-radius: 12px;
         color: white;
         font-weight: 800;
-        font-size: 14px;
-        margin-top: 20px;
+        font-size: 12px;
         cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        transition: 0.3s;
     }
 
-    .invest-button:hover {
-        filter: brightness(1.2);
-        box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
-    }
-
-    .active-button {
+    .status-already-owned {
         text-align: center;
-        padding: 15px;
-        color: #00ff88;
-        font-weight: 800;
-        font-size: 13px;
-        border: 1px dashed rgba(0, 255, 136, 0.3);
+        background: #f5f5f5;
+        color: #aaa;
+        padding: 8px;
         border-radius: 12px;
-        margin-top: 20px;
-    }
-
-    /* ANIMAÇÃO DE REVELAÇÃO */
-    @keyframes reveal {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .level-card-wrapper {
-        animation: reveal 0.6s ease forwards;
+        font-size: 11px;
+        font-weight: 800;
     }
 </style>
 {% endblock %}

@@ -4,258 +4,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Criar Conta - IBKR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Criar Conta - Ariel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #00a859; 
-            --secondary: #ffcc00; 
-            --dark: #1a1a1a;
-            --light-bg: #ffffff;
+            --ariel-teal: #20b2aa;
+            --ariel-pink: #ff85a2;
+            --ariel-gold: #ffd700;
+            --ariel-purple: #9370db;
             --glass-white: rgba(255, 255, 255, 0.95);
         }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
-            position: relative;
+            margin: 0; padding: 0; width: 100%; min-height: 100vh;
+            overflow-x: hidden; position: relative;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background: radial-gradient(circle at top right, #ffffff, #f1f1f1);
-            color: var(--dark);
+            display: flex; flex-direction: column; align-items: center;
+            background: linear-gradient(135deg, #a1887f 0%, #ff85a2 20%, #20b2aa 100%);
+            background-attachment: fixed;
+            color: #333;
         }
 
-        /* BARRA SUPERIOR */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.3; z-index: 0; pointer-events: none;
+        }
+
         .top-nav {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 25px;
-            box-sizing: border-box;
+            width: 100%; display: flex; justify-content: space-between;
+            align-items: center; padding: 15px 20px; box-sizing: border-box; z-index: 10;
         }
 
-        .logo-img {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .logo-ariel {
+            font-family: 'Great Vibes', cursive; font-size: 35px; color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .nav-link-login {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.85em;
-            padding: 7px 14px;
-            border: 1.5px solid var(--primary);
-            border-radius: 50px;
+        .language-selector {
+            background: var(--glass-white); padding: 5px 12px; border-radius: 20px;
+            display: flex; align-items: center; gap: 8px; border: 2px solid var(--ariel-pink);
         }
 
-        /* CONTAINER ALARGADO (SEM ESPAÇOS LATERAIS EXCESSIVOS) */
+        .language-selector select {
+            border: none; background: transparent; font-weight: 700;
+            color: var(--ariel-teal); outline: none; cursor: pointer; font-size: 0.9rem;
+        }
+
         .register-container {
-            margin-top: 10px;
-            margin-bottom: 30px;
-            background: var(--glass-white);
-            padding: 35px 25px;
-            border-radius: 20px;
-            width: 95%; 
-            max-width: 480px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,168,89,0.1);
-            text-align: center;
-            box-sizing: border-box;
+            position: relative; z-index: 5; margin-top: 10px; margin-bottom: 120px;
+            background: var(--glass-white); padding: 30px 20px; border-radius: 30px;
+            width: 92%; max-width: 420px; box-shadow: 0 15px 35px rgba(255, 133, 162, 0.4);
+            border: 3px solid white; text-align: center; box-sizing: border-box;
+        }
+
+        .register-container::after {
+            content: "👑"; position: absolute; top: -25px; left: 50%;
+            transform: translateX(-50%); font-size: 40px;
         }
 
         h2 {
-            font-weight: 700;
-            font-size: 1.7rem;
-            margin-bottom: 25px;
-            color: #222;
+            font-family: 'Great Vibes', cursive; font-size: 2.5rem;
+            margin-bottom: 20px; color: var(--ariel-teal);
         }
 
-        /* CAMPOS DE FORMULÁRIO COM ALTO CONTRASTE */
-        .form-group {
-            margin-bottom: 18px;
-            text-align: left;
-        }
-
+        .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            display: block;
-            color: #333;
-            text-transform: uppercase;
+            font-size: 0.7rem; font-weight: 700; margin-left: 10px;
+            display: block; color: var(--ariel-purple); text-transform: uppercase;
         }
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+
+        .country-select {
+            position: absolute; left: 10px; display: flex; align-items: center;
+            border-right: 1px solid #eee; padding-right: 5px; height: 100%;
+        }
+
+        .country-select select {
+            background: transparent; border: none; font-size: 0.85rem;
+            font-weight: 600; outline: none; cursor: pointer; color: var(--ariel-teal);
         }
 
         .input-wrapper i.main-icon {
-            position: absolute;
-            left: 15px;
-            color: var(--primary);
-            font-size: 1.1rem;
+            position: absolute; left: 15px; color: var(--ariel-teal); font-size: 1rem;
         }
 
         .auth-form input {
-            width: 100%;
-            padding: 16px 15px 16px 48px;
-            border: 2px solid #d0d0d0; /* Bordas mais visíveis conforme solicitado */
-            border-radius: 12px;
-            background: #ffffff;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.2s ease-in-out;
-            outline: none;
-            box-sizing: border-box;
-            color: #000;
+            width: 100%; padding: 14px 15px 14px 45px; border: 2px solid #ffdae3;
+            border-radius: 25px; background: #fff; font-size: 0.95rem;
+            outline: none; box-sizing: border-box; transition: 0.3s;
         }
 
-        .auth-form input:focus {
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(0, 168, 89, 0.1);
+        .phone-input { padding-left: 85px !important; }
+
+        .toggle-password {
+            position: absolute; right: 15px; cursor: pointer; color: #ccc;
         }
 
-        /* POLÍTICAS */
+        /* BARRA INFERIOR SEM SAQUE */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            background: white; display: flex; justify-content: space-around;
+            align-items: center; border-top: 3px solid var(--ariel-pink);
+            z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            text-decoration: none; color: #888; display: flex;
+            flex-direction: column; align-items: center; font-size: 0.75rem; font-weight: 700;
+            flex: 1; transition: 0.3s; cursor: pointer; border: none; background: none;
+        }
+
+        .nav-item i { font-size: 1.5rem; margin-bottom: 4px; }
+        .nav-item.active { color: var(--ariel-teal); }
+
         .policy-container {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            text-align: left;
-            align-items: flex-start;
-        }
-
-        .policy-container input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            margin-top: 2px;
-        }
-
-        .policy-text {
-            font-size: 0.82rem;
-            color: #444;
-            line-height: 1.4;
-        }
-
-        /* BOTÃO */
-        .submit-button {
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #00a859 0%, #008f4c 100%);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            text-transform: uppercase;
-            box-shadow: 0 8px 15px rgba(0, 168, 89, 0.2);
-        }
-
-        @media (max-width: 380px) {
-            .register-container {
-                width: 98%;
-                padding: 25px 15px;
-            }
+            display: flex; gap: 10px; margin: 15px 5px; text-align: left; font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
 
     <nav class="top-nav">
-        <div class="logo-img">IBKR</div>
-        <a href="{% url 'login' %}" class="nav-link-login">Já tenho conta</a>
+        <div class="logo-ariel">Ariel</div>
+        <div class="language-selector">
+            <i class="fa-solid fa-globe"></i>
+            <select id="langSelect" onchange="translatePage(this.value)">
+                <option value="pt">PT</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+                <option value="fr">FR</option>
+                <option value="ar">AR</option>
+                <option value="zh">ZH</option>
+            </select>
+        </div>
     </nav>
 
     <div class="register-container">
-        <div class="header">
-            <h2>Criar Conta</h2>
-        </div>
+        <h2 id="txt-title">Criar Conta</h2>
         
-        <form method="post" class="auth-form">
+        <form method="post" class="auth-form" id="main-form">
             {% csrf_token %}
 
             <div class="form-group">
-                <label>Número de Telefone</label>
+                <label id="lbl-phone">TELEFONE MÁGICO</label>
                 <div class="input-wrapper">
-                    <i class="fa-solid fa-phone main-icon"></i>
-                    <input type="text" name="phone_number" placeholder="Ex: 941 000 000" required>
+                    <div class="country-select">
+                        <select name="ddi">
+                            <option value="+244">🇦🇴</option>
+                            <option value="+55">🇧🇷</option>
+                            <option value="+351">🇵🇹</option>
+                            <option value="+238">🇨🇻</option>
+                            <option value="+258">🇲🇿</option>
+                            <option value="+239">🇸🇹</option>
+                        </select>
+                    </div>
+                    <input type="text" name="phone_number" class="phone-input" placeholder="9xx xxx xxx" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Senha de Acesso</label>
+                <label id="lbl-pass">SENHA SECRETA</label>
                 <div class="input-wrapper">
-                    <i class="fa-solid fa-lock main-icon"></i>
-                    <input type="password" name="password" placeholder="Crie sua senha" required>
+                    <i class="fa-solid fa-wand-sparkles main-icon"></i>
+                    <input type="password" name="password" id="pass" placeholder="******" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePass('pass')"></i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Confirmar Senha</label>
+                <label id="lbl-confirm">CONFIRME A MAGIA</label>
                 <div class="input-wrapper">
-                    <i class="fa-solid fa-shield-halved main-icon"></i>
-                    <input type="password" name="confirm_password" placeholder="Repita a senha" required>
+                    <i class="fa-solid fa-gem main-icon"></i>
+                    <input type="password" name="confirm_password" id="conf" placeholder="******" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePass('conf')"></i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Código de Convite</label>
+                <label id="lbl-invite">CÓDIGO DE CONVITE</label>
                 <div class="input-wrapper">
-                    <i class="fa-solid fa-ticket main-icon"></i>
-                    <input type="text" id="invite_code" name="invited_by_code" placeholder="Código (Opcional)" value="{{ request.GET.invite|default:'' }}">
+                    <i class="fa-solid fa-crown main-icon"></i>
+                    <input type="text" id="invite_code" name="invited_by_code" placeholder="..." value="{{ request.GET.invite|default:'' }}">
                 </div>
             </div>
 
             <label class="policy-container">
-                <input type="checkbox" required>
-                <span class="policy-text">
-                    Tenho +18 anos e aceito os <strong>Termos</strong> e a <strong>Política de Gestão IBKR</strong>.
-                </span>
+                <input type="checkbox" id="policy-check" required>
+                <span id="txt-policy">Aceito os Termos da Realeza Ariel.</span>
             </label>
-            
-            <button type="submit" class="submit-button">
-                <span>Criar a conta</span>
-                <i class="fa-solid fa-user-plus"></i>
-            </button>
         </form>
     </div>
 
+    <div class="bottom-nav">
+        <a href="{% url 'login' %}" class="nav-item">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span id="nav-login">ENTRAR</span>
+        </a>
+
+        <button type="button" onclick="submitRegister()" class="nav-item active">
+            <i class="fa-solid fa-user-plus"></i>
+            <span id="nav-reg">CRIAR CONTA</span>
+        </button>
+    </div>
+
     <script>
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            const icon = input.nextElementSibling;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
+        // Função para disparar o envio do formulário pelo botão do rodapé
+        function submitRegister() {
+            const form = document.getElementById('main-form');
+            if (form.reportValidity()) {
+                form.submit();
+            }
+        }
+
+        const translations = {
+            pt: { title: "Criar Conta", phone: "Telefone Mágico", pass: "Senha Secreta", confirm: "Confirme a Magia", invite: "Código de Convite", policy: "Aceito os Termos da Realeza Ariel.", login: "ENTRAR", reg: "CRIAR CONTA" },
+            en: { title: "Create Account", phone: "Magic Phone", pass: "Secret Password", confirm: "Confirm Magic", invite: "Invite Code", policy: "I accept Ariel's Royal Terms.", login: "LOGIN", reg: "REGISTER" },
+            es: { title: "Crear Cuenta", phone: "Teléfono Mágico", pass: "Contraseña Secreta", confirm: "Confirmar Magia", invite: "Código de Invitación", policy: "Acepto los Térmos de Ariel.", login: "ENTRAR", reg: "REGISTRO" },
+            fr: { title: "Créer un Compte", phone: "Téléphone Magique", pass: "Mot de Passe", confirm: "Confirmer la Magie", invite: "Code d'Invitation", policy: "J'accepte les conditions d'Ariel.", login: "CONNEXION", reg: "S'INSCRIRE" },
+            ar: { title: "إنشاء حساب", phone: "الهاتف السحري", pass: "كلمة المرور", confirm: "تأكيد السحر", invite: "رمز الدعوة", policy: "أنا أقبل الشروط الملكية", login: "تسجيل الدخول", reg: "تسجيل" },
+            zh: { title: "创建账号", phone: "魔法电话", pass: "秘密密码", confirm: "确认魔法", invite: "邀请码", policy: "我接受条款", login: "登录", reg: "注册" }
+        };
+
+        function translatePage(lang) {
+            const t = translations[lang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('lbl-phone').innerText = t.phone;
+            document.getElementById('lbl-pass').innerText = t.pass;
+            document.getElementById('lbl-confirm').innerText = t.confirm;
+            document.getElementById('lbl-invite').innerText = t.invite;
+            document.getElementById('txt-policy').innerText = t.policy;
+            document.getElementById('nav-login').innerText = t.login;
+            document.getElementById('nav-reg').innerText = t.reg;
+            document.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        }
+
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const invite = urlParams.get('invite');
-            if (invite) {
-                document.getElementById('invite_code').value = invite;
-            }
+            if (invite) document.getElementById('invite_code').value = invite;
         }
     </script>
-
 </body>
 </html>

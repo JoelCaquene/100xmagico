@@ -201,16 +201,21 @@ def saque(request):
 @login_required
 def tarefa(request):
     user = request.user
-    active_level = UserLevel.objects.filter(user=user, is_active=True).first()
-    has_active_level = active_level is not None
-    today = date.today()
+    # Busca todos os níveis ativos do usuário
+    active_user_levels = UserLevel.objects.filter(user=user, is_active=True).select_related('level')
+    has_active_level = active_user_levels.exists()
+    
+    today = timezone.localdate()
     tasks_completed_today = Task.objects.filter(user=user, completed_at__date=today).count()
     
+    # O limite de tarefas agora é o número de níveis VIP que ele possui
+    max_tasks = active_user_levels.count() if has_active_level else 1
+
     context = {
         'has_active_level': has_active_level,
-        'active_level': active_level,
+        'active_user_levels': active_user_levels, # Passa todos os níveis
         'tasks_completed_today': tasks_completed_today,
-        'max_tasks': 1,
+        'max_tasks': max_tasks,
     }
     return render(request, 'tarefa.html', context)
 
@@ -220,61 +225,42 @@ def process_task(request):
     user = request.user
     
     try:
-        # 1. Busca o vínculo de nível ativo
-        active_user_level = UserLevel.objects.filter(user=user, is_active=True).select_related('level').first()
+        # 1. Busca TODOS os níveis VIP ativos do usuário
+        active_user_levels = UserLevel.objects.filter(user=user, is_active=True).select_related('level')
 
-        if not active_user_level:
-            return JsonResponse({'success': False, 'message': 'Você não possui um nível VIP ativo.'})
+        if not active_user_levels.exists():
+            return JsonResponse({'success': False, 'message': 'Você não possui nenhum nível VIP ativo.'})
 
-        # 2. Verifica se a tarefa já foi feita hoje (evita duplicidade)
+        # 2. Verifica se já realizou a tarefa global hoje
         today = timezone.localdate()
         if Task.objects.filter(user=user, completed_at__date=today).exists():
-            return JsonResponse({'success': False, 'message': 'Limite diário de tarefas alcançado.'})
+            return JsonResponse({'success': False, 'message': 'Você já realizou suas tarefas de hoje.'})
 
-        # 3. Pega o valor do ganho (USANDO O NOME CORRETO DO SEU MODELS: daily_gain)
-        task_earnings = Decimal(str(active_user_level.level.daily_gain))
+        # 3. Calcula o ganho total somando o daily_gain de cada VIP que ele possui
+        total_task_earnings = Decimal('0.00')
+        for user_level in active_user_levels:
+            total_task_earnings += Decimal(str(user_level.level.daily_gain))
 
-        # 4. Registra a tarefa no banco (Para aparecer no Admin)
+        # 4. Registra uma única tarefa diária com o valor total acumulado
         Task.objects.create(
             user=user, 
-            earnings=task_earnings
-            # completed_at é auto_now_add, então não precisa passar manualmente
+            earnings=total_task_earnings
         ) 
         
-        # 5. Adiciona o valor ao saldo do usuário que realizou a tarefa
-        user.available_balance += task_earnings
+        # 5. Adiciona o ganho total ao saldo do usuário
+        user.available_balance += total_task_earnings
         user.save()
 
-        # 6. Distribuição de Subsídios para a Rede (A, B, C)
-        # Nível A (100 KZ)
-        p1 = user.invited_by
-        if p1:
-            p1.available_balance += Decimal('100.00')
-            p1.subsidy_balance += Decimal('100.00')
-            p1.save()
-
-            # Nível B (30 KZ)
-            p2 = p1.invited_by
-            if p2:
-                p2.available_balance += Decimal('30.00')
-                p2.subsidy_balance += Decimal('30.00')
-                p2.save()
-
-                # Nível C (10 KZ)
-                p3 = p2.invited_by
-                if p3:
-                    p3.available_balance += Decimal('10.00')
-                    p3.subsidy_balance += Decimal('10.00')
-                    p3.save()
-
+        # 6. Distribuição de Subsídios para a Rede (ANULADO conforme solicitado)
+        # A comissão de tarefa dos subordinados foi removida.
+        
         return JsonResponse({
             'success': True, 
-            'message': f'Tarefa concluída! {task_earnings} KZ foram adicionados ao seu saldo.'
+            'message': f'Sucesso! Você recebeu {total_task_earnings} KZ referentes aos seus níveis VIP ativos.'
         })
 
     except Exception as e:
-        # Se der qualquer erro, o JSON evita a "Conexão Interrompida" e mostra o erro real
-        return JsonResponse({'success': False, 'message': f'Erro: {str(e)}'})
+        return JsonResponse({'success': False, 'message': f'Erro ao processar: {str(e)}'})
 
 @login_required
 def nivel(request):
@@ -294,18 +280,18 @@ def nivel(request):
             request.user.level_active = True
             request.user.save()
 
-            # Nível A (15%)
+            # Nível A (10%)
             p1 = request.user.invited_by
             if p1 and UserLevel.objects.filter(user=p1, is_active=True).exists():
-                com1 = val * Decimal('0.15')
+                com1 = val * Decimal('0.10')
                 p1.available_balance += com1
                 p1.subsidy_balance += com1
                 p1.save()
 
-                # Nível B (3%)
+                # Nível B (1%)
                 p2 = p1.invited_by
                 if p2 and UserLevel.objects.filter(user=p2, is_active=True).exists():
-                    com2 = val * Decimal('0.03')
+                    com2 = val * Decimal('0.1')
                     p2.available_balance += com2
                     p2.subsidy_balance += com2
                     p2.save()

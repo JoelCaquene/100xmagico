@@ -1,276 +1,273 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Levantamento de Salário{% endblock %}
+{% block title %}Levantamento | Princesa Ariel{% endblock %}
 
 {% block content %}
-<div class="forex-bg">
-    <div class="saque-wrapper">
-        
-        <div class="top-nav-saque">
-            <a href="{% url 'perfil' %}" class="btn-back">
-                <i class="fas fa-chevron-left"></i>
-            </a>
-        </div>
-
-        <div class="saque-card">
-            <div class="card-header-saque">
-                <i class="fas fa-university"></i>
-                <h2>A Levantamento</h2>
-                <div class="balance-badge">
-                    Saldo: <span>{{ request.user.available_balance|default:"0.00" }} KZ</span>
-                </div>
-            </div>
-
-            {# Área de Mensagens Django #}
-            {% if messages %}
-                <ul class="messages-custom">
-                    {% for message in messages %}
-                        <li class="{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if not has_bank_details %}
-                <div class="alert-box-saque">
-                    <i class="fas fa-exclamation-circle"></i> 
-                    <p>Adicione suas coordenadas bancárias no Perfil antes de sacar.</p>
-                </div>
-            {% endif %}
-
-            <form method="post" id="form-saque">
-                {% csrf_token %}
-                
-                <div class="input-section">
-                    <label><i class="fas fa-money-bill-wave"></i> Valor a Sacar (KZ):</label>
-                    <div class="input-container-custom">
-                        {{ form.amount }}
-                    </div>
-                </div>
-
-                <div class="quick-values-grid">
-                    <button type="button" class="val-btn" onclick="setAmount(3000)">3.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(6000)">6.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(18000)">18.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(55000)">55.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(120000)">120.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(200000)">200.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(500000)">500.000</button>
-                    <button type="button" class="val-btn" onclick="setAmount(800000)">800.000</button>
-                </div>
-
-                <button type="submit" class="confirm-saque-btn" {% if not has_bank_details %}disabled{% endif %}>
-                    <i class="fas fa-check-double"></i> CONFIRMAR
-                </button>
-            </form>
-
-            <div class="min-amount-footer">
-                Saque mínimo permitido: <strong>3.000 KZ</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
 <style>
-    /* Fundo Forex Azul Escuro */
-    .forex-bg {
-        background: radial-gradient(circle at center, #0a192f 0%, #02060c 100%);
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
+    
+    :root { 
+        --dark: #0b0718; 
+        --card: #161129; 
+        --pink: #ff2d75; 
+        --gold: #ffb800; 
+        --teal: #00f2ff; 
+        --glass: rgba(255, 255, 255, 0.05);
+    }
+
+    body { 
+        background: var(--dark); 
+        color: white; 
+        font-family: 'Poppins', sans-serif; 
+        margin: 0; 
+        overflow-x: hidden; 
+    }
+
+    /* FUNDO IDÊNTICO AO MENU */
+    .saque-bg {
+        background: radial-gradient(circle at top, #1a1140 0%, var(--dark) 100%);
         min-height: 100vh;
+        width: 100%;
         display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 40px;
+    }
+
+    /* HEADER */
+    .ariel-header { 
+        width: 100%;
+        height: 120px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
         justify-content: center;
-        padding: 10px; /* Reduzido para ganhar espaço lateral */
+        background: linear-gradient(rgba(11,7,24,0.7), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
+        background-size: cover; 
+        background-position: center;
+        border-bottom: 1px solid var(--pink);
         position: relative;
-        overflow: hidden;
     }
 
-    .forex-bg::before {
-        content: "";
-        position: absolute;
-        top: -50%; left: -50%; width: 200%; height: 200%;
-        background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-        opacity: 0.1;
-        pointer-events: none;
+    .back-nav { position: absolute; top: 20px; left: 15px; }
+    .back-arrow {
+        color: white; font-size: 18px; background: var(--pink);
+        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; box-shadow: 0 0 15px var(--pink); text-decoration: none;
     }
 
-    .saque-wrapper {
-        width: 100%;
-        max-width: 500px; /* Aumentado levemente para melhor estética */
-        z-index: 2;
-        margin-top: 10px;
+    /* CARD DE SAQUE */
+    .saque-container {
+        width: 92%;
+        max-width: 400px;
+        margin-top: -30px;
+        z-index: 10;
     }
 
-    /* Navegação Topo - Apenas Sinal */
-    .top-nav-saque {
-        margin-bottom: 15px;
-        padding-left: 5px;
+    .royal-saque-card {
+        background: var(--card);
+        border: 1px solid var(--glass);
+        border-radius: 25px;
+        padding: 25px 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        position: relative;
     }
 
-    .btn-back {
-        color: #00d4ff;
-        text-decoration: none;
-        font-size: 1.5rem; /* Seta maior para facilitar o clique */
-        display: inline-flex;
-        transition: 0.3s;
-    }
-
-    .btn-back:hover {
-        color: #fff;
-        transform: translateX(-3px);
-    }
-
-    /* Card de Saque */
-    .saque-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 20px;
-        padding: 25px 15px; /* Ajuste interno para mobile */
-        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    }
-
-    .card-header-saque {
+    .balance-view {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 15px;
+        border: 1px dashed rgba(0, 242, 255, 0.3);
     }
+    .balance-view span { font-size: 12px; color: var(--teal); display: block; text-transform: uppercase; }
+    .balance-view h2 { margin: 5px 0 0; font-size: 24px; color: #fff; }
 
-    .card-header-saque i {
-        font-size: 2.2rem;
-        color: #00d4ff;
-        text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-    }
-
-    .card-header-saque h2 {
-        color: #fff;
-        font-size: 1.3rem;
-        margin: 10px 0;
-    }
-
-    .balance-badge {
-        background: rgba(0, 212, 255, 0.15);
-        color: #00d4ff;
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        border: 1px solid rgba(0, 212, 255, 0.3);
-    }
-
-    /* Estilo do Input Django */
-    .input-section label {
-        display: block;
-        color: #8892b0;
-        margin-bottom: 8px;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .input-container-custom input {
+    /* INPUT E VALORES */
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 11px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; }
+    
+    .display-amount {
+        background: var(--dark) !important;
+        border: 1px solid var(--pink) !important;
+        color: var(--pink) !important;
         width: 100%;
-        background: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(0, 212, 255, 0.4) !important;
-        border-radius: 10px !important;
-        padding: 12px !important;
-        color: #fff !important;
-        font-size: 1.6rem !important;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 22px;
+        font-weight: bold;
         text-align: center;
         outline: none;
     }
 
-    /* Grade de Valores Otimizada */
-    .quick-values-grid {
+    .values-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
-        margin: 15px 0;
+        gap: 8px;
+        margin-bottom: 20px;
     }
-
     .val-btn {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #ccd6f6;
-        padding: 12px 2px;
-        border-radius: 8px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .val-btn:active {
-        background: #00d4ff;
-        color: #02060c;
-    }
-
-    /* Botão Finalizar */
-    .confirm-saque-btn {
-        width: 100%;
-        padding: 16px;
-        border-radius: 12px;
-        border: none;
-        background: linear-gradient(135deg, #00d4ff 0%, #0072ff 100%);
+        background: var(--glass);
+        border: 1px solid rgba(255,255,255,0.1);
         color: white;
-        font-size: 1rem;
-        font-weight: 700;
+        padding: 10px 2px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: bold;
         cursor: pointer;
+        transition: 0.3s;
+    }
+    .val-btn:active, .val-btn.selected {
+        background: var(--pink);
+        border-color: var(--pink);
+        box-shadow: 0 0 10px var(--pink);
+    }
+
+    /* RESUMO FINANCEIRO */
+    .calc-box {
+        background: rgba(0,0,0,0.3);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 25px;
+    }
+    .calc-row {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 10px 20px rgba(0, 114, 255, 0.3);
-        margin-top: 10px;
-    }
-
-    .confirm-saque-btn:disabled {
-        background: #233554;
-        color: #495670;
-        box-shadow: none;
-    }
-
-    /* Mensagens */
-    .messages-custom {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 15px;
-    }
-
-    .messages-custom li {
-        padding: 10px;
-        border-radius: 8px;
-        text-align: center;
-        font-size: 0.85rem;
+        justify-content: space-between;
+        font-size: 12px;
         margin-bottom: 8px;
     }
-
-    .messages-custom .success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
-    .messages-custom .error { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
-
-    .min-amount-footer {
-        text-align: center;
-        color: #495670;
-        font-size: 0.75rem;
-        margin-top: 15px;
+    .calc-row:last-child {
+        margin-bottom: 0;
+        padding-top: 8px;
+        border-top: 1px solid var(--glass);
+        color: var(--teal);
+        font-weight: bold;
     }
 
-    .alert-box-saque {
-        background: rgba(255, 193, 7, 0.1);
-        border: 1px solid #ffc107;
-        color: #ffc107;
-        padding: 10px;
-        border-radius: 8px;
-        font-size: 0.8rem;
+    .confirm-btn {
+        width: 100%;
+        background: linear-gradient(90deg, var(--pink), #ff5e95);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 16px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(255, 45, 117, 0.3);
+    }
+    .confirm-btn:disabled { opacity: 0.3; filter: grayscale(1); }
+
+    /* ALERTAS */
+    .msg-royal {
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 12px;
+        text-align: center;
         margin-bottom: 15px;
-        text-align: center;
+        border: 1px solid;
     }
+    .msg-error { background: rgba(255,0,0,0.1); color: #ff4d4d; border-color: #ff4d4d; }
+    .msg-success { background: rgba(0,255,0,0.1); color: #00ff00; border-color: #00ff00; }
+
 </style>
 
+<div class="saque-bg">
+    <div class="ariel-header">
+        <div class="back-nav">
+            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-home"></i></a>
+        </div>
+        <h1 style="font-family: 'Great Vibes'; font-size: 32px; margin: 0; text-shadow: 0 0 10px var(--pink);">Princesa Ariel</h1>
+        <p style="font-size: 10px; letter-spacing: 2px; color: var(--teal); margin: 0;">LEVANTAMENTO ROYAL</p>
+    </div>
+
+    <div class="saque-container">
+        <div class="royal-saque-card">
+            
+            <div class="balance-view">
+                <span>Saldo Disponível</span>
+                <h2>{{ request.user.available_balance|default:"0" }} KZ</h2>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="msg-royal msg-{{ message.tags }}">
+                    <i class="fas fa-info-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if not has_bank_details %}
+                <div class="msg-royal msg-error">
+                    <i class="fas fa-exclamation-triangle"></i> Configure seu banco no Perfil.
+                </div>
+            {% endif %}
+
+            <form method="post" id="formSaque">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <label>Valor Selecionado (KZ)</label>
+                    <input type="number" id="id_amount_display" class="display-amount" placeholder="0" readonly>
+                    <div style="display:none;">{{ form.amount }}</div>
+                </div>
+
+                <div class="values-grid">
+                    <button type="button" class="val-btn" onclick="updateVal(this, 3000)">3000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 6000)">6000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 15000)">15000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 55000)">55000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 120000)">120000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 200000)">200000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 500000)">500000k</button>
+                    <button type="button" class="val-btn" onclick="updateVal(this, 700000)">700000k</button>
+                </div>
+
+                <div class="calc-box">
+                    <div class="calc-row">
+                        <span>Taxa de Processamento (15%)</span>
+                        <span id="taxaTxt">0 KZ</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>Líquido a Receber</span>
+                        <span id="receberTxt">0 KZ</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="confirm-btn" {% if not has_bank_details %}disabled{% endif %}>
+                    SOLICITAR LEVANTAMENTO
+                </button>
+            </form>
+
+            <p style="text-align: center; font-size: 10px; color: #666; margin-top: 20px;">
+                Mínimo: 3.000 KZ | Processamento em até 24h úteis.
+            </p>
+        </div>
+    </div>
+</div>
+
 <script>
-    function setAmount(val) {
-        const input = document.querySelector('input[name="amount"]');
-        if (input) {
-            input.value = val;
-            input.focus();
-        }
+    function updateVal(btn, value) {
+        // Estilo dos botões
+        document.querySelectorAll('.val-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        // Atualiza campos
+        const display = document.getElementById('id_amount_display');
+        const hiddenInput = document.querySelector('input[name="amount"]');
+        
+        display.value = value;
+        hiddenInput.value = value;
+
+        // Cálculos
+        const taxa = value * 0.15;
+        const liquido = value - taxa;
+
+        document.getElementById('taxaTxt').innerText = taxa.toLocaleString() + ' KZ';
+        document.getElementById('receberTxt').innerText = liquido.toLocaleString() + ' KZ';
     }
 </script>
 {% endblock %}
