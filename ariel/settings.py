@@ -19,7 +19,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # ======================================================================
 # CONFIGURAÇÃO DOS HOSTS PERMITIDOS
 # ======================================================================
-# Lógica para aceitar os domínios personalizados e o do Render
 hosts_string = config('ALLOWED_HOSTS', default='')
 ALLOWED_HOSTS = [host.strip() for host in hosts_string.split(',') if host.strip()]
 
@@ -123,27 +122,31 @@ if not os.path.exists(MEDIA_ROOT):
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # ======================================================================
-# SEGURANÇA E REDIRECIONAMENTO DE DOMÍNIO
+# SEGURANÇA E REDIRECIONAMENTO (AJUSTADO PARA EVITAR ERRO 520)
 # ======================================================================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.CustomUser'
 LOGIN_URL = 'login'
 
 if not DEBUG:
-    # Força o HTTPS
-    SECURE_SSL_REDIRECT = True
+    # Essencial para o Render identificar o HTTPS vindo do proxy
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
     
-    # Configurações de Cookie e HSTS
-    CSRF_COOKIE_SECURE = True
+    # Cookies seguros
     SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
+    # Proteções básicas de navegador
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    
+    # Redirecionamento de domínio
+    PREPEND_WWW = False
 
-    # Redirecionamento para o domínio principal (sem www)
-    PREPEND_WWW = False  # Garante que não force o www
+    # HSTS desativado momentaneamente para garantir a compatibilidade inicial
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
     
