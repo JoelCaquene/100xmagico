@@ -19,14 +19,25 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # ======================================================================
 # CONFIGURAÇÃO DOS HOSTS PERMITIDOS
 # ======================================================================
+# Lógica para aceitar os domínios personalizados e o do Render
 hosts_string = config('ALLOWED_HOSTS', default='')
 ALLOWED_HOSTS = [host.strip() for host in hosts_string.split(',') if host.strip()]
 
+# Adicionando seus domínios manualmente para garantir o funcionamento
+CUSTOM_DOMAINS = [
+    'princesa-ariel.store',
+    'www.princesa-ariel.store',
+    'princesa-ariel.onrender.com'
+]
+
+for domain in CUSTOM_DOMAINS:
+    if domain not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(domain)
+
 if not DEBUG:
     RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-    if RENDER_EXTERNAL_HOSTNAME:
-        if RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
-            ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 INSTALLED_APPS = [
@@ -101,27 +112,29 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ======================================================================
-# MEDIA FILES (Uploads de usuários - Comprovantes, etc)
+# MEDIA FILES (Uploads de usuários)
 # ======================================================================
-# Em produção no Render (sem Cloudinary), salvamos na pasta media local
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Garante que a pasta media existe para evitar erros de permissão
 if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
 
-# Default storage padrão do Django para disco local
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # ======================================================================
-# SEGURANÇA E OUTROS
+# SEGURANÇA E REDIRECIONAMENTO DE DOMÍNIO
 # ======================================================================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.CustomUser'
 LOGIN_URL = 'login'
 
 if not DEBUG:
+    # Força o HTTPS
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Configurações de Cookie e HSTS
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
@@ -130,5 +143,7 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    # Redirecionamento para o domínio principal (sem www)
+    PREPEND_WWW = False  # Garante que não force o www
     
