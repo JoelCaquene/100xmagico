@@ -1,5 +1,6 @@
 """
 Django settings for 100xmagico project.
+Pronto para produção no Render.com com domínio personalizado.
 """
 
 from pathlib import Path
@@ -19,14 +20,18 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # ======================================================================
 # CONFIGURAÇÃO DOS HOSTS PERMITIDOS
 # ======================================================================
-hosts_string = config('ALLOWED_HOSTS', default='')
-ALLOWED_HOSTS = [host.strip() for host in hosts_string.split(',') if host.strip()]
+ALLOWED_HOSTS = []
 
-# Domínios de produção e locais (Vírgula corrigida abaixo)
+# Puxa hosts extras do arquivo .env se existirem
+hosts_env = config('ALLOWED_HOSTS', default='')
+if hosts_env:
+    ALLOWED_HOSTS.extend([host.strip() for host in hosts_env.split(',')])
+
+# Domínios de produção e locais atualizados
 CUSTOM_DOMAINS = [
-    'princesa-100xmagico.store',
-    'www.princesa-100xmagico.store',
-    'princesa-100xmagico.onrender.com',
+    '100xmagico.art',
+    'www.100xmagico.art',
+    'one00xmagico.onrender.com',
     '127.0.0.1',
     'localhost',
 ]
@@ -87,7 +92,7 @@ TEMPLATES = [
 WSGI_APPLICATION = '100xmagico.wsgi.application'
 
 # ======================================================================
-# DATABASE
+# DATABASE (PostgreSQL no Render / SQLite local)
 # ======================================================================
 DATABASES = {
     'default': dj_database_url.config(
@@ -109,7 +114,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Armazenamento de arquivos estáticos (WhiteNoise)
+# Armazenamento de arquivos estáticos (WhiteNoise com compressão)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ======================================================================
@@ -120,8 +125,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
-
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # ======================================================================
 # SEGURANÇA E REDIRECIONAMENTO
@@ -147,8 +150,8 @@ if not DEBUG:
     # Redirecionamento de domínio
     PREPEND_WWW = False
 
-    # HSTS
-    SECURE_HSTS_SECONDS = 0
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-    SECURE_HSTS_PRELOAD = False
+    # HSTS (Ativado para segurança máxima)
+    SECURE_HSTS_SECONDS = 31536000  # 1 ano
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
     
