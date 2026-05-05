@@ -1,311 +1,247 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Meu Perfil | Princesa Ariel{% endblock %}
+{% block title %}Meu Perfil | 100XMAGICO{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
     
     :root { 
-        --dark: #0b0718; 
-        --card: #161129; 
-        --pink: #ff2d75; 
-        --gold: #ffb800; 
-        --teal: #00f2ff; 
-        --glass: rgba(255, 255, 255, 0.05);
+        --bg-body: #050505; --panel: #110d1f; --gold: #ffb800; 
+        --accent: #00f2ff; --success: #00ff88; --danger: #ff3333;
+        --glass: rgba(255, 255, 255, 0.03);
     }
 
-    body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg-body); color: white; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; width: 100%; }
 
-    /* FUNDO IDÊNTICO AO DEPÓSITO */
-    .profile-bg {
-        background: radial-gradient(circle at top, #1a1140 0%, var(--dark) 100%);
-        min-height: 100vh;
-        width: 100%;
-        padding-bottom: 80px;
+    .main-container {
+        background: radial-gradient(circle at top, #1c143d 0%, #050505 60%);
+        min-height: 100vh; width: 100%; padding-bottom: 30px;
     }
 
-    /* HEADER ROYAL */
-    .ariel-header { 
-        height: 160px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        background: linear-gradient(rgba(11,7,24,0.7), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
-        background-size: cover; background-position: center;
-        border-bottom: 1px solid var(--pink);
+    .header-casino {
+        padding: 25px 20px; text-align: center;
+        border-bottom: 1px solid rgba(255, 184, 0, 0.2);
+        background: linear-gradient(180deg, rgba(255,184,0,0.05) 0%, transparent 100%);
+    }
+    .header-casino h1 {
+        font-family: 'Cinzel', serif; font-size: 26px; margin: 0;
+        background: linear-gradient(to bottom, #fff 30%, var(--gold) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
     }
 
-    .back-nav { position: absolute; top: 20px; left: 15px; }
-    .back-arrow {
-        color: white; font-size: 18px; background: var(--pink);
-        width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; box-shadow: 0 0 10px var(--pink); text-decoration: none;
-    }
+    .lang-bar { display: flex; justify-content: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.3); }
+    .lang-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 10px; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    .lang-btn.active { border-color: var(--gold); color: var(--gold); }
 
-    /* IDENTITY CARD (AVATAR + ID) */
-    .user-identity {
-        margin: -40px 15px 20px;
-        background: var(--card);
-        border-radius: 20px;
-        padding: 20px;
-        text-align: center;
-        border: 1px solid var(--glass);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
+    .menu-list { padding: 20px 15px; display: grid; gap: 12px; }
+    .menu-item { background: var(--panel); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 18px; display: flex; align-items: center; text-decoration: none; color: white; }
+    .icon-box { width: 45px; height: 45px; background: rgba(0, 242, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--accent); margin-right: 15px; border: 1px solid rgba(0, 242, 255, 0.2); }
+    .item-info b { display: block; font-size: 14px; }
+    .item-info span { font-size: 10px; color: #777; }
 
-    .avatar-container { position: relative; width: 90px; height: 90px; margin: 0 auto 10px; }
-    .user-avatar {
-        width: 100%; height: 100%; border-radius: 50%;
-        border: 3px solid var(--pink); object-fit: cover;
-        background: var(--dark);
-    }
-    .edit-avatar-btn {
-        position: absolute; bottom: 0; right: 0;
-        background: var(--teal); color: var(--dark);
-        width: 28px; height: 28px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 12px; cursor: pointer; border: 2px solid var(--card);
-    }
-
-    .id-text { font-size: 18px; font-weight: bold; color: white; margin: 5px 0; }
-    .badge-vip { background: var(--gold); color: var(--dark); font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: bold; }
-
-    /* BOTÕES NUMERADOS */
-    .menu-grid { padding: 0 15px; display: grid; gap: 12px; }
-    .menu-btn {
-        background: var(--card);
-        border: 1px solid var(--glass);
-        padding: 15px; border-radius: 15px;
-        display: flex; align-items: center;
-        text-decoration: none; color: white;
-        transition: 0.3s; position: relative;
-    }
-    .btn-num {
-        width: 25px; height: 25px; background: var(--glass);
-        border-radius: 50%; display: flex; align-items: center;
-        justify-content: center; font-size: 11px; margin-right: 15px; color: var(--teal);
-    }
-    .menu-btn i { font-size: 18px; margin-right: 15px; color: var(--pink); width: 20px; text-align: center; }
-    .menu-btn span { flex: 1; font-size: 14px; font-weight: 500; }
-    .menu-btn .chevron { font-size: 12px; opacity: 0.3; }
-
-    /* LÓGICA DE MODAL (JANELA SOBREPOSTA) */
-    .royal-modal {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: var(--dark); z-index: 1000;
-        display: none; flex-direction: column;
-        animation: slideUp 0.4s ease-out;
-    }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-    .modal-header {
-        padding: 20px; display: flex; align-items: center;
-        border-bottom: 1px solid var(--glass); background: var(--card);
-    }
-    .close-modal { font-size: 20px; margin-right: 20px; color: var(--pink); }
+    .modal-full { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 3000; display: none; flex-direction: column; }
+    .modal-nav { padding: 20px; display: flex; align-items: center; gap: 20px; background: #000; border-bottom: 1px solid var(--gold); }
     .modal-content { padding: 20px; flex: 1; overflow-y: auto; }
 
-    /* FORMS NO MODAL */
-    .field-box { margin-bottom: 20px; }
-    .field-box label { display: block; font-size: 12px; color: var(--teal); margin-bottom: 8px; }
-    .field-box input {
-        width: 100%; background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
-        padding: 12px; border-radius: 10px; color: white; box-sizing: border-box;
-    }
-    .btn-save {
-        width: 100%; background: var(--pink); color: white; border: none;
-        padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 10px;
-    }
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; font-size: 11px; color: var(--gold); margin-bottom: 6px; font-weight: 700; }
+    .input-group input { width: 100% !important; background: #ffffff !important; color: #000000 !important; border: none !important; padding: 14px !important; border-radius: 12px !important; font-weight: 700; }
 
-    /* STATUS NO EXTRATO */
-    .transaction-item {
-        background: var(--glass); padding: 12px; border-radius: 12px;
-        margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .status-badge { font-size: 10px; padding: 3px 8px; border-radius: 5px; }
-    .badge-approved { background: #28a74522; color: #28a745; }
-    .badge-pending { background: #ffc10722; color: #ffc107; }
+    .btn-gold { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(90deg, #ffb800, #ff8a00); color: #000; font-weight: 800; text-transform: uppercase; }
 
+    .hist-card { background: var(--panel); padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid var(--glass); display: flex; justify-content: space-between; align-items: center; }
+    .status-box { padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; border: 1px solid; }
+    .status-aprovado { background: rgba(0, 255, 136, 0.1); color: var(--success); border-color: var(--success); }
+    .status-pendente { background: rgba(255, 51, 51, 0.1); color: var(--danger); border-color: var(--danger); }
 </style>
 
-<div class="profile-bg">
-    <div class="ariel-header">
-        <div class="back-nav">
-            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
+<div class="main-container">
+    <div class="lang-bar" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,184,0,0.1);">
+        
+        <a href="/" style="color: var(--gold); font-size: 22px; text-decoration: none; padding: 5px 15px; display: flex; align-items: center;">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+
+        <div style="display: flex; gap: 8px;">
+            <div class="lang-btn" onclick="changeLang('pt')" id="btn-pt">PT</div>
+            <div class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</div>
+            <div class="lang-btn" onclick="changeLang('es')" id="btn-es">ES</div>
+            <div class="lang-btn" onclick="changeLang('fr')" id="btn-fr">FR</div>
+            <div class="lang-btn" onclick="changeLang('zh')" id="btn-zh">中文</div>
         </div>
-        <h1 style="font-family: 'Great Vibes'; font-size: 30px; margin: 0; text-shadow: 0 0 10px var(--pink);">Princesa Ariel</h1>
     </div>
 
-    <div class="user-identity">
-        <div class="avatar-container">
-            <img src="https://ui-avatars.com/api/?name={{ request.user.phone_number }}&background=ff2d75&color=fff" id="currentAvatar" class="user-avatar">
-            <div class="edit-avatar-btn" onclick="openModal('modalAvatar')"><i class="fas fa-camera"></i></div>
-        </div>
-        <div class="id-text">{{ request.user.phone_number }}</div>
-        <span class="badge-vip">ID: {{ request.user.id }}</span>
+    <div class="header-casino">
+        <h1 id="txt-logo">100XMAGICO</h1>
     </div>
 
-    <div class="menu-grid">
-        <a href="javascript:void(0)" class="menu-btn" onclick="openModal('modalBank')">
-            <div class="btn-num">1</div>
-            <i class="fas fa-university"></i>
-            <span>Banco</span>
-            <i class="fas fa-chevron-right chevron"></i>
+    <div class="menu-list">
+        <a href="javascript:void(0)" class="menu-item" onclick="openModal('modalBank')">
+            <div class="icon-box"><i class="fas fa-wallet"></i></div>
+            <div class="item-info"><b id="txt-menu-wallet">Gerenciar Carteiras</b><span id="txt-sub-wallet">PIX ou Cripto</span></div>
         </a>
 
-        <a href="javascript:void(0)" class="menu-btn" onclick="openModal('modalHistory')">
-            <div class="btn-num">2</div>
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Extrato</span>
-            <i class="fas fa-chevron-right chevron"></i>
+        <a href="javascript:void(0)" class="menu-item" onclick="openModal('modalHist')">
+            <div class="icon-box"><i class="fas fa-history"></i></div>
+            <div class="item-info"><b id="txt-menu-hist">Histórico de Saques</b><span id="txt-sub-hist">Status dos pagamentos</span></div>
         </a>
 
-        <a href="{% url 'saque' %}" class="menu-btn">
-            <div class="btn-num">3</div>
-            <i class="fas fa-wallet" style="color: var(--teal);"></i>
-            <span>Sacar</span>
-            <i class="fas fa-chevron-right chevron"></i>
+        <a href="{% url 'saque' %}" class="menu-item">
+            <div class="icon-box" style="color:var(--gold)"><i class="fas fa-hand-holding-usd"></i></div>
+            <div class="item-info"><b id="txt-menu-saque">Solicitar Saque</b><span id="txt-sub-saque">Retirar lucros</span></div>
         </a>
 
-        <a href="https://princesa-ariel.store/static/app/princesa-ariel.apk" target="_blank" download class="menu-btn">
-            <div class="btn-num">4</div>
-            <i class="fas fa-download"></i>
-            <span>Download do App</span>
-            <i class="fas fa-chevron-right chevron"></i>
+        <a href="{% static 'app/100xmagico.apk' %}" target="_blank" download class="menu-item">
+            <div class="icon-box"><i class="fas fa-download"></i></div>
+            <div class="item-info"><b id="txt-menu-app">Baixar Aplicativo</b><span id="txt-sub-app">APK Oficial</span></div>
         </a>
 
-        <a href="javascript:void(0)" class="menu-btn" onclick="openModal('modalPassword')">
-            <div class="btn-num">5</div>
-            <i class="fas fa-key"></i>
-            <span>Senha</span>
-            <i class="fas fa-chevron-right chevron"></i>
+        <a href="javascript:void(0)" class="menu-item" onclick="openModal('modalPass')">
+            <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
+            <div class="item-info"><b id="txt-menu-pass">Segurança</b><span id="txt-sub-pass">Alterar senha</span></div>
         </a>
 
-        <a href="{% url 'logout' %}" class="menu-btn" style="border-color: rgba(255,45,117,0.3);">
-            <div class="btn-num">6</div>
-            <i class="fas fa-sign-out-alt" style="color: var(--pink);"></i>
-            <span style="color: var(--pink);">Sair</span>
+        <a href="{% url 'logout' %}" class="menu-item" style="border-color: rgba(255,51,51,0.2);">
+            <div class="icon-box" style="color:var(--danger)"><i class="fas fa-power-off"></i></div>
+            <div class="item-info"><b id="txt-menu-exit" style="color:var(--danger)">Sair da Conta</b></div>
         </a>
     </div>
 </div>
 
-<div id="modalBank" class="royal-modal">
-    <div class="modal-header">
-        <i class="fas fa-times close-modal" onclick="closeModal('modalBank')"></i>
-        <span>Dados Bancários</span>
-    </div>
+<div id="modalBank" class="modal-full">
+    <div class="modal-nav"><i class="fas fa-chevron-left" onclick="closeModal('modalBank')" style="color:var(--gold)"></i><b id="txt-title-bank">CONFIGURAR SAQUE</b></div>
     <div class="modal-content">
-        <form method="post">
+        <div id="step_selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+            <div onclick="toggleForm('pix')" style="background:var(--panel); padding:20px; border-radius:15px; text-align:center;"><i class="fas fa-bolt" style="color:var(--accent); font-size:30px;"></i><br><b>PIX</b></div>
+            <div onclick="toggleForm('crypto')" style="background:var(--panel); padding:20px; border-radius:15px; text-align:center;"><i class="fab fa-bitcoin" style="color:var(--gold); font-size:30px;"></i><br><b>USDT</b></div>
+        </div>
+        
+        <form method="post" id="form_real" style="display:none;">
             {% csrf_token %}
-            <div class="field-box">
-                <label>Nome do Titular</label>
+            <div class="input-group">
+                <label id="lbl-titular">NOME DO TITULAR</label>
                 {{ form.account_holder_name }}
             </div>
-            <div class="field-box">
-                <label>Instituição Bancária</label>
+            <div class="input-group" id="group-inst">
+                <label id="lbl-inst">INSTITUIÇÃO / REDE</label>
                 {{ form.bank_name }}
             </div>
-            <div class="field-box">
-                <label>IBAN</label>
+            <div class="input-group">
+                <label id="lbl-key">CHAVE OU ENDEREÇO</label>
                 {{ form.IBAN }}
             </div>
-            <button type="submit" name="update_bank" class="btn-save">SALVAR ALTERAÇÕES</button>
+            <button type="submit" name="update_bank" class="btn-gold" id="btn-save-bank">SALVAR</button>
+            <p onclick="location.reload()" style="text-align:center; color:#555; font-size:12px; margin-top:15px;">Voltar</p>
         </form>
     </div>
 </div>
 
-<div id="modalHistory" class="royal-modal">
-    <div class="modal-header">
-        <i class="fas fa-times close-modal" onclick="closeModal('modalHistory')"></i>
-        <span>Histórico de Saques</span>
-    </div>
+<div id="modalHist" class="modal-full">
+    <div class="modal-nav"><i class="fas fa-chevron-left" onclick="closeModal('modalHist')" style="color:var(--gold)"></i><b id="txt-title-hist">HISTÓRICO</b></div>
     <div class="modal-content">
-        {% if withdrawal_records %}
-            {% for record in withdrawal_records %}
-            <div class="transaction-item">
-                <div>
-                    <div style="font-size: 14px; font-weight: bold;">- {{ record.amount }} KZ</div>
-                    <div style="font-size: 10px; color: #888;">{{ record.created_at|date:"d/m/Y H:i" }}</div>
-                </div>
-                <span class="status-badge {% if record.status == 'Aprovado' %}badge-approved{% else %}badge-pending{% endif %}">
-                    {{ record.status }}
-                </span>
+        {% for record in withdrawal_records %}
+        <div class="hist-card">
+            <div>
+                <div style="font-weight:700" class="usdt-liquid" data-value="{{ record.amount }}"></div>
+                <div class="wise-calc" data-value="{{ record.amount }}" style="color:var(--success); font-size:11px;"></div>
             </div>
-            {% endfor %}
-        {% else %}
-            <p style="text-align: center; color: #666; margin-top: 50px;">Nenhum registro encontrado.</p>
-        {% endif %}
+            <div class="status-box {% if record.status == 'Aprovado' %}status-aprovado{% else %}status-pendente{% endif %}">
+                {{ record.status }}
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
-<div id="modalPassword" class="royal-modal">
-    <div class="modal-header">
-        <i class="fas fa-times close-modal" onclick="closeModal('modalPassword')"></i>
-        <span>Alterar Senha</span>
-    </div>
+<div id="modalPass" class="modal-full">
+    <div class="modal-nav"><i class="fas fa-chevron-left" onclick="closeModal('modalPass')" style="color:var(--gold)"></i><b id="txt-title-pass">SENHA</b></div>
     <div class="modal-content">
         <form method="post">
             {% csrf_token %}
-            <div class="field-box">
-                <label>Senha Atual</label>
-                {{ password_form.old_password }}
-            </div>
-            <div class="field-box">
-                <label>Nova Senha</label>
-                {{ password_form.new_password1 }}
-            </div>
-            <div class="field-box">
-                <label>Confirmar Nova Senha</label>
-                {{ password_form.new_password2 }}
-            </div>
-            <button type="submit" name="change_password" class="btn-save">ATUALIZAR SENHA</button>
+            <div class="input-group"><label>SENHA ATUAL</label>{{ password_form.old_password }}</div>
+            <div class="input-group"><label>NOVA SENHA</label>{{ password_form.new_password1 }}</div>
+            <div class="input-group"><label>CONFIRMAR</label>{{ password_form.new_password2 }}</div>
+            <button type="submit" name="change_password" class="btn-gold">ATUALIZAR</button>
         </form>
-    </div>
-</div>
-
-<div id="modalAvatar" class="royal-modal">
-    <div class="modal-header">
-        <i class="fas fa-times close-modal" onclick="closeModal('modalAvatar')"></i>
-        <span>Escolher Avatar</span>
-    </div>
-    <div class="modal-content" style="text-align: center;">
-        <p style="font-size: 12px; color: #888;">Escolha um estilo ou carregue sua foto</p>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
-            <img src="https://ui-avatars.com/api/?name=User&background=00f2ff&color=000" class="user-avatar" onclick="setAvatar(this.src)" style="width: 80px; height: 80px; cursor:pointer;">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=ff2d75&color=fff" class="user-avatar" onclick="setAvatar(this.src)" style="width: 80px; height: 80px; cursor:pointer;">
-            <div style="width: 80px; height: 80px; background: var(--glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                <i class="fas fa-plus"></i>
-            </div>
-        </div>
     </div>
 </div>
 
 <script>
-    function openModal(id) {
-        document.getElementById(id).style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Impede rolar a página atrás
-    }
+    const translations = {
+        pt: { logo: "100XMAGICO", wallet: "Gerenciar Carteiras", swallet: "PIX ou Cripto", hist: "Histórico de Saques", shist: "Status dos pagamentos", app: "Baixar Aplicativo", pass: "Segurança", exit: "Sair da Conta", tbank: "CONFIGURAR SAQUE", save: "SALVAR" },
+        en: { logo: "100XMAGICO", wallet: "Manage Wallets", swallet: "PIX or Crypto", hist: "Withdraw History", shist: "Payment status", app: "Download App", pass: "Security", exit: "Logout", tbank: "WITHDRAWAL SETUP", save: "SAVE" },
+        es: { logo: "100XMAGICO", wallet: "Gestionar Carteras", swallet: "PIX o Cripto", hist: "Historial", shist: "Estado de pagos", app: "Descargar App", pass: "Seguridad", exit: "Salir", tbank: "CONFIGURAR RETIRO", save: "GUARDAR" },
+        fr: { logo: "100XMAGICO", wallet: "Portefeuilles", swallet: "PIX ou Crypto", hist: "Historique", shist: "Statut", app: "Télécharger App", pass: "Sécurité", exit: "Déconnexion", tbank: "CONFIGURER", save: "ENREGISTRER" },
+        zh: { logo: "100XMAGICO", wallet: "管理钱包", swallet: "PIX 或加密", hist: "提现记录", shist: "支付状态", app: "下载应用", pass: "安全", exit: "退出登录", tbank: "设置提现", save: "保存" }
+    };
 
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function setAvatar(src) {
-        document.getElementById('currentAvatar').src = src;
-        closeModal('modalAvatar');
-    }
-
-    // Fecha modais com a tecla ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === "Escape") {
-            const modals = document.querySelectorAll('.royal-modal');
-            modals.forEach(m => m.style.display = 'none');
-            document.body.style.overflow = 'auto';
+    function applyLang(lang) {
+        const t = translations[lang];
+        if (!t) return;
+        const elements = {
+            'txt-logo': t.logo, 'txt-menu-wallet': t.wallet, 'txt-sub-wallet': t.swallet,
+            'txt-menu-hist': t.hist, 'txt-sub-hist': t.shist, 'txt-menu-app': t.app,
+            'txt-menu-pass': t.pass, 'txt-menu-exit': t.exit, 'txt-title-bank': t.tbank, 'btn-save-bank': t.save
+        };
+        for (let id in elements) {
+            let el = document.getElementById(id);
+            if (el) el.innerText = elements[id];
         }
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = document.getElementById('btn-' + lang);
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function changeLang(lang) {
+        localStorage.setItem('userLang', lang);
+        applyLang(lang);
+    }
+
+    function toggleForm(type) {
+        const form = document.getElementById('form_real');
+        const selector = document.getElementById('step_selector');
+        const lblInst = document.getElementById('lbl-inst');
+        const lblKey = document.getElementById('lbl-key');
+        const inputInst = document.querySelector('[name="bank_name"]');
+        selector.style.display = 'none';
+        form.style.display = 'block';
+        if(type === 'pix') {
+            lblInst.innerText = "INSTITUIÇÃO"; inputInst.value = "PIX"; lblKey.innerText = "CHAVE PIX";
+        } else {
+            lblInst.innerText = "CARTEIRA / REDE (Ex: TRC20)"; inputInst.value = ""; lblKey.innerText = "ENDEREÇO DA CARTEIRA";
+        }
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; if(id === 'modalHist') runConversion(); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    
+    function runConversion() {
+        const TAXA_LIQUIDA = 0.90; // Desconto de 10%
+        const CAMBIO = 5.48;
+
+        // Atualiza USDT com desconto
+        document.querySelectorAll('.usdt-liquid').forEach(el => {
+            const rawVal = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
+            const liquid = rawVal * TAXA_LIQUIDA;
+            el.innerText = liquid.toFixed(2) + ' USDT (Líquido)';
+        });
+
+        // Atualiza R$ com desconto e câmbio
+        document.querySelectorAll('.wise-calc').forEach(el => {
+            const rawVal = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
+            const finalBRL = (rawVal * TAXA_LIQUIDA) * CAMBIO;
+            el.innerText = finalBRL.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' (PIX)';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('userLang') || 'pt';
+        applyLang(savedLang);
     });
 </script>
 {% endblock %}

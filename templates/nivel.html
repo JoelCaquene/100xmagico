@@ -1,66 +1,226 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Níveis Princesa Ariel{% endblock %}
+{% block title %}Planos | 100XMAGICO{% endblock %}
 
 {% block content %}
-<div class="ariel-magical-container">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
     
-    <div class="ariel-header-soft">
-        <a href="{% url 'menu' %}" class="btn-back-princess">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <h2 class="ariel-title-princess">Planos Ariel</h2>
-        <div class="pearl-balance">
+    :root { 
+        --bg: #050308; 
+        --card-bg: rgba(22, 17, 41, 0.7); 
+        --primary: #00f2ff; /* Teal */
+        --accent: #ffb800; /* Gold */
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --text-dim: #a1a1a1;
+    }
+
+    body { 
+        background: var(--bg); 
+        color: white; 
+        font-family: 'Poppins', sans-serif; 
+        margin: 0; 
+    }
+
+    /* FUNDO PROFISSIONAL */
+    .dashboard-bg {
+        background-image: 
+            radial-gradient(circle at top, #161129 0%, var(--bg) 80%),
+            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5V19SAAAAEHRSTlMAEBESExQVGBkaGxwdHh8g9S1ZkgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfmBQUIISgXN3MhAAAAUElEQVQ4y2NgYGRiYmZhhgFmFmYWVlY2dg5OLm4eXj7+AISBRE5uHl6wIKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCInwAAA9OQEbE9m48AAAAABJRU54ErkJggg==');
+        background-size: auto, 50px 50px;
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 50px;
+    }
+
+    /* HEADER */
+    .brand-header { 
+        width: 100%;
+        height: 100px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        border-bottom: 1px solid var(--glass-border);
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .back-nav { position: absolute; left: 15px; }
+    .back-arrow {
+        color: white; font-size: 14px; background: rgba(0, 242, 255, 0.1);
+        width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; border: 1px solid var(--primary); text-decoration: none;
+    }
+
+    .header-title {
+        font-family: 'Cinzel', serif;
+        font-size: 22px; 
+        letter-spacing: 2px;
+        background: linear-gradient(to bottom, #fff 0%, var(--primary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* CONTAINER DE CARDS */
+    .vip-list {
+        width: 92%;
+        max-width: 480px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .vip-card {
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        transition: 0.3s;
+    }
+
+    .vip-card.level-active-princess {
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+    }
+
+    /* CARD HEADER */
+    .card-top {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .vip-badge {
+        width: 50px; height: 50px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; color: var(--primary);
+        border: 1px solid var(--glass-border);
+    }
+
+    .vip-title-group h3 { margin: 0; font-size: 18px; color: #fff; font-weight: 700; }
+    .vip-tag { font-size: 9px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+    .active-check { margin-left: auto; color: #2ecc71; font-size: 20px; }
+
+    /* INFO GRID */
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        background: rgba(0,0,0,0.2);
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .info-box { text-align: center; }
+    .info-label { display: block; font-size: 9px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 5px; }
+    .info-value { display: block; font-size: 13px; font-weight: 700; color: #fff; }
+    .profit-text { color: var(--accent); }
+
+    /* BOTÃO */
+    .btn-action {
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-buy {
+        background: linear-gradient(90deg, var(--primary), #00a2ff);
+        color: #000;
+    }
+
+    .btn-buy:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3); }
+
+    .btn-active {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-dim);
+        cursor: default;
+        border: 1px solid var(--glass-border);
+    }
+
+    /* CAMBIO TEXT */
+    .conversion-tag {
+        display: block;
+        font-size: 10px;
+        color: #2ecc71;
+        margin-top: 2px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="dashboard-bg">
+    <div class="brand-header">
+        <div class="back-nav">
+            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
         </div>
+        <h1 class="header-title">100XMAGICO</h1>
     </div>
 
-    <div class="ariel-pearl-grid">
+    <div class="vip-list">
         {% for level in levels %}
-        <div class="ariel-pearl-card {% if level.id in user_levels %}level-active-princess{% endif %}">
+        <div class="vip-card {% if level.id in user_levels %}level-active-princess{% endif %}">
             
-            <div class="card-princess-header">
-                <div class="icon-shell-container">
-                    {% if forloop.counter == 1 %}<i class="fas fa-hand-holding-heart"></i>
-                    {% elif forloop.counter == 2 %}<i class="fas fa-wand-sparkles"></i>
+            <div class="card-top">
+                <div class="vip-badge">
+                    {% if forloop.counter == 1 %}<i class="fas fa-bolt"></i>
+                    {% elif forloop.counter == 2 %}<i class="fas fa-microchip"></i>
                     {% elif forloop.counter == 3 %}<i class="fas fa-gem"></i>
                     {% else %}<i class="fas fa-crown"></i>{% endif %}
                 </div>
-                <div class="text-name-group">
-                    <span class="label-vip">VIP {{ forloop.counter }}</span>
-                    <h3 class="name-level">{{ level.name }}</h3>
+                <div class="vip-title-group">
+                    <span class="vip-tag">Nível Profissional</span>
+                    <h3>VIP {{ forloop.counter }} - {{ level.name }}</h3>
                 </div>
                 {% if level.id in user_levels %}
-                    <span class="crown-active"><i class="fas fa-check-circle"></i></span>
+                    <span class="active-check"><i class="fas fa-check-circle"></i></span>
                 {% endif %}
             </div>
 
-            <div class="card-princess-body">
-                <div class="magic-info-box">
-                    <div class="info-item">
-                        <span class="info-label">Custo</span>
-                        <span class="info-val">{{ level.deposit_value }} KZ</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Diário</span>
-                        <span class="info-val profit">+{{ level.daily_gain }} KZ</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Ciclo</span>
-                        {# Se o campo cycle estiver vazio no banco, exibe 365 como padrão #}
-                        <span class="info-val">{{ level.cycle|default:"90" }} Dias</span>
-                    </div>
+            <div class="info-grid">
+                <div class="info-box">
+                    <span class="info-label">Custo</span>
+                    <span class="info-value">USDT {{ level.deposit_value }}</span>
+                    <span class="conversion-tag brl-convert" data-value="{{ level.deposit_value }}">R$ 0,00</span>
+                </div>
+                <div class="info-box">
+                    <span class="info-label">Diário</span>
+                    <span class="info-value profit-text">+{{ level.daily_gain }}</span>
+                    <span class="conversion-tag brl-convert" data-value="{{ level.daily_gain }}" style="color: var(--accent);">R$ 0,00</span>
+                </div>
+                <div class="info-box">
+                    <span class="info-label">Ciclo</span>
+                    <span class="info-value">{{ level.cycle|default:"365" }} Dias</span>
                 </div>
             </div>
 
-            <div class="card-princess-footer">
+            <div class="card-footer">
                 {% if level.id in user_levels %}
-                    <div class="status-already-owned">ATIVO</div>
+                    <button class="btn-action btn-active">PLANO ATUAL</button>
                 {% else %}
                     <form method="post" action="{% url 'nivel' %}">
                         {% csrf_token %}
                         <input type="hidden" name="level_id" value="{{ level.id }}">
-                        <button type="submit" class="btn-activate-magic">ATIVAR</button>
+                        <button type="submit" class="btn-action btn-buy">ATIVAR AGORA</button>
                     </form>
                 {% endif %}
             </div>
@@ -69,145 +229,16 @@
     </div>
 </div>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Dancing+Script:wght@700&display=swap');
-
-    :root {
-        --princess-pink: #ff85a1;
-        --princess-soft-pink: #fbb1bd;
-        --white-pearl: #ffffff;
-    }
-
-    body {
-        background: linear-gradient(135deg, #fce4ec 0%, #e3f2fd 100%) no-repeat fixed;
-        font-family: 'Montserrat', sans-serif;
-        margin: 0;
-        color: #5a4a4a;
-        overflow-x: hidden;
-    }
-
-    .ariel-magical-container {
-        max-width: 450px;
-        margin: 0 auto;
-        padding: 15px 10px 80px;
-    }
-
-    .ariel-header-soft {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .btn-back-princess {
-        width: 38px;
-        height: 38px;
-        background: var(--white-pearl);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--princess-pink);
-        text-decoration: none;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .ariel-title-princess {
-        font-family: 'Dancing Script', cursive;
-        font-size: 24px;
-        color: #ff5c8a;
-        margin: 0;
-    }
-
-    .pearl-balance {
-        background: var(--white-pearl);
-        padding: 6px 12px;
-        border-radius: 15px;
-        font-weight: 800;
-        font-size: 11px;
-        color: #ff5c8a;
-        border: 1px solid var(--princess-soft-pink);
-    }
-
-    .ariel-pearl-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .ariel-pearl-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 20px;
-        padding: 12px 15px;
-        position: relative;
-        border: 1px solid var(--white-pearl);
-        box-shadow: 0 6px 15px rgba(255, 133, 161, 0.08);
-    }
-
-    .level-active-princess {
-        border: 1.5px solid var(--princess-pink);
-    }
-
-    .card-princess-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    .icon-shell-container {
-        width: 40px;
-        height: 40px;
-        background: var(--princess-soft-pink);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        color: white;
-    }
-
-    .label-vip { font-size: 9px; font-weight: 800; color: var(--princess-pink); }
-    .name-level { font-size: 14px; margin: 0; font-weight: 700; color: #444; }
-    .crown-active { margin-left: auto; color: #4caf50; font-size: 18px; }
-
-    .magic-info-box {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        background: #fdfdfd;
-        border-radius: 12px;
-        padding: 8px 5px;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .info-item { border-right: 1px solid #f0f0f0; }
-    .info-item:last-child { border-right: none; }
-
-    .info-label { font-size: 8px; color: #999; text-transform: uppercase; display: block; margin-bottom: 2px; }
-    .info-val { font-size: 11px; font-weight: 800; display: block; }
-    .info-val.profit { color: #ff5c8a; }
-
-    .btn-activate-magic {
-        width: 100%;
-        background: linear-gradient(90deg, #ff85a1, #ff5c8a);
-        border: none;
-        padding: 10px;
-        border-radius: 12px;
-        color: white;
-        font-weight: 800;
-        font-size: 12px;
-        cursor: pointer;
-    }
-
-    .status-already-owned {
-        text-align: center;
-        background: #f5f5f5;
-        color: #aaa;
-        padding: 8px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 800;
-    }
-</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const taxaWise = 5.48;
+        const elements = document.querySelectorAll('.brl-convert');
+        
+        elements.forEach(el => {
+            const usdt = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
+            const brl = usdt * taxaWise;
+            el.innerText = brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        });
+    });
+</script>
 {% endblock %}

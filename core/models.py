@@ -80,21 +80,40 @@ class PlatformSettings(models.Model):
     def __str__(self):
         return "Configurações da Plataforma"
 
-# ---
+from django.db import models
 
 class PlatformBankDetails(models.Model):
-    bank_name = models.CharField(max_length=100, verbose_name="Nome do Banco")
-    IBAN = models.CharField(max_length=50, verbose_name="IBAN")
-    account_holder_name = models.CharField(max_length=100, verbose_name="Nome do Titular")
+    # Definimos as opções de tipo para o administrador escolher
+    TYPE_CHOICES = [
+        ('PIX', 'PIX (Brasil)'),
+        ('USDT', 'USDT (Cripto Internacional)'),
+    ]
+
+    type = models.CharField(
+        max_length=10, 
+        choices=TYPE_CHOICES, 
+        default='PIX',
+        verbose_name="Tipo de Conta"
+    )
+    bank_name = models.CharField(
+        max_length=100, 
+        verbose_name="Nome do Banco ou Rede (Ex: Nubank ou TRC20)"
+    )
+    IBAN = models.CharField(
+        max_length=100, 
+        verbose_name="Chave PIX ou Endereço da Carteira"
+    )
+    account_holder_name = models.CharField(
+        max_length=100, 
+        verbose_name="Nome do Titular"
+    )
 
     class Meta:
-        verbose_name = "Detalhe Bancário da Plataforma"
-        verbose_name_plural = "Detalhes Bancários da Plataforma"
+        verbose_name = "Forma de Pagamento"
+        verbose_name_plural = "Formas de Pagamento"
     
     def __str__(self):
-        return f"{self.bank_name} - {self.account_holder_name}"
-
-# ---
+        return f"[{self.type}] {self.bank_name} - {self.account_holder_name}"
 
 class BankDetails(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name="Usuário")
@@ -127,20 +146,35 @@ class Deposit(models.Model):
 
 # ---
 
+# No seu models.py
+
+# No seu models.py
+from decimal import Decimal # Certifique-se que esta linha está no topo
+
 class Withdrawal(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Usuário")
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor")
     status = models.CharField(max_length=20, default='Pending', verbose_name="Status")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data de Criação")
-    
+
+    # --- ADICIONE ESTAS PROPRIEDADES ABAIXO ---
+
+    @property
+    def taxa_calculada(self):
+        return self.amount * Decimal('0.10')
+
+    @property
+    def valor_liquido_usdt(self):
+        return self.amount - self.taxa_calculada
+
+    @property
+    def valor_total_brl(self):
+        # Usa o câmbio fixo de 5.48 conforme seu admin
+        return self.valor_liquido_usdt * Decimal('5.48')
+
     class Meta:
         verbose_name = "Saque"
         verbose_name_plural = "Saques"
-
-    def __str__(self):
-        return f"Saque de {self.amount} por {self.user.phone_number} ({self.status})"
-
-# ---
 
 class Level(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="Nome do Nível")

@@ -1,291 +1,277 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Minha Equipa | Princesa Ariel{% endblock %}
+{% block title %}Minha Equipa | 100XMAGICO{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
     
     :root { 
-        --dark: #0b0718; 
-        --card: #161129; 
+        --bg: #050308; 
+        --card-bg: rgba(22, 17, 41, 0.7); 
         --pink: #ff2d75; 
-        --gold: #ffb800; 
         --teal: #00f2ff; 
-        --glass: rgba(255, 255, 255, 0.05);
+        --gold: #ffb800; 
+        --purple: #9f7aea;
+        --glass-border: rgba(255, 255, 255, 0.08);
     }
 
     body { 
-        background: var(--dark); 
+        background: var(--bg); 
         color: white; 
         font-family: 'Poppins', sans-serif; 
         margin: 0; 
         overflow-x: hidden; 
-        width: 100%;
     }
 
-    .team-container {
-        width: 100%;
-        max-width: 450px;
-        margin: 0 auto;
+    /* FUNDO TEXTURIZADO PROFISSIONAL */
+    .dashboard-bg {
+        background-image: 
+            radial-gradient(circle at top, #1e1345 0%, var(--bg) 80%),
+            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5V19SAAAAEHRSTlMAEBESExQVGBkaGxwdHh8g9S1ZkgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfmBQUIISgXN3MhAAAAUElEQVQ4y2NgYGRiYmZhhgFmFmYWVlY2dg5OLm4eXj7+AISBRE5uHl6wIKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCInwAAA9OQEbE9m48AAAAABJRU54ErkJggg==');
+        background-size: auto, 50px 50px;
         min-height: 100vh;
-        padding-bottom: 50px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 80px;
+        box-sizing: border-box;
     }
 
-    /* HEADER ROYAL (Igual ao Depósito) */
-    .ariel-header { 
-        height: 140px; 
+    /* HEADER */
+    .brand-header { 
+        width: 100%;
+        height: 110px; 
         display: flex; 
         flex-direction: column; 
         align-items: center; 
         justify-content: center;
-        background: linear-gradient(rgba(11,7,24,0.6), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
-        background-size: cover; 
-        background-position: center;
-        border-bottom: 1px solid var(--pink);
+        border-bottom: 1px solid var(--glass-border);
+        margin-bottom: 25px;
         position: relative;
     }
 
-    /* BOTÃO VOLTAR (Apenas Seta) */
-    .back-nav {
-        position: absolute;
-        top: 20px;
-        left: 15px;
-    }
+    .back-nav { position: absolute; top: 25px; left: 15px; }
     .back-arrow {
-        color: white;
-        font-size: 20px;
-        background: var(--pink);
-        width: 35px;
-        height: 35px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        box-shadow: 0 0 10px var(--pink);
-        text-decoration: none;
+        color: white; font-size: 14px; background: rgba(255, 45, 117, 0.15);
+        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; border: 1px solid var(--pink); text-decoration: none;
+        transition: 0.3s;
     }
+    .back-arrow:hover { background: var(--pink); box-shadow: 0 0 15px var(--pink); }
 
-    .logo-text { 
-        font-family: 'Great Vibes', cursive; 
-        font-size: 35px; 
+    .header-title {
+        font-family: 'Cinzel', serif;
+        font-size: 24px; 
+        font-weight: 700;
         margin: 0; 
-        color: #fff;
-        text-shadow: 0 0 10px var(--pink);
+        letter-spacing: 3px;
+        background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     /* INVITE SECTION */
-    .invite-section { padding: 20px 15px; text-align: center; }
+    .invite-container {
+        width: 90%;
+        max-width: 450px;
+        margin-bottom: 25px;
+    }
     .invite-box {
-        background: var(--card);
-        border: 1px solid var(--pink);
-        padding: 12px;
-        border-radius: 12px;
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        padding: 15px;
+        border-radius: 15px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        box-shadow: inset 0 0 10px rgba(255,45,117,0.1);
+        justify-content: space-between;
+        backdrop-filter: blur(10px);
     }
-    .invite-box span {
-        flex: 1;
-        font-size: 11px;
-        color: var(--teal);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+    .invite-box span { font-size: 11px; color: var(--teal); opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
     .copy-btn {
         background: var(--pink);
-        border: none;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 8px;
-        cursor: pointer;
+        border: none; color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer;
+        transition: 0.3s;
     }
 
-    /* GRID DE CARDS PERSONALIZADOS */
-    .team-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        padding: 0 15px;
+    /* CARDS VERTICAIS - UM POR LINHA */
+    .team-list {
+        width: 90%;
+        max-width: 450px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
     .royal-card {
-        background: var(--card);
-        border: 1px solid var(--glass);
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
         border-radius: 20px;
-        padding: 15px;
-        position: relative;
-        overflow: hidden;
-        transition: 0.3s;
-    }
-    .royal-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 4px;
-    }
-
-    .card-a::before { background: var(--pink); }
-    .card-b::before { background: var(--teal); }
-    .card-c::before { background: #9f7aea; }
-    .card-total::before { background: var(--gold); }
-
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-    .card-header i { font-size: 20px; opacity: 0.8; }
-    .level-tag { font-size: 9px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; }
-
-    .card-body h3 { margin: 0; font-size: 18px; color: #fff; }
-    .card-body p { margin: 2px 0; font-size: 10px; color: #aaa; }
-
-    .card-footer {
-        margin-top: 12px;
-        padding-top: 10px;
-        border-top: 1px solid var(--glass);
-        font-size: 10px;
-    }
-    .val-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .val-row b { color: var(--teal); }
-
-    /* REGRAS */
-    .rules-section {
-        margin: 25px 15px;
-        background: rgba(255, 45, 117, 0.05);
-        border-radius: 15px;
         padding: 20px;
-        border-left: 3px solid var(--pink);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        backdrop-filter: blur(10px);
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .rules-section h4 { margin: 0 0 10px; color: var(--pink); font-size: 14px; }
-    .rule-item { display: flex; gap: 10px; font-size: 11px; color: #ccc; margin-bottom: 8px; line-height: 1.4; }
-    .rule-item i { color: var(--teal); margin-top: 3px; }
+    .royal-card:hover { transform: scale(1.02); background: rgba(30, 24, 55, 0.8); border-color: rgba(255,255,255,0.2); }
 
-    /* ESTILIZAÇÃO DO TOTAL */
-    .total-card-full {
-        grid-column: span 2;
-        background: linear-gradient(135deg, var(--card), #251b45);
-        border: 1px solid var(--gold);
+    .card-icon {
+        width: 60px; height: 60px;
+        border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        position: relative;
     }
-    .gold-text { color: var(--gold) !important; text-shadow: 0 0 10px rgba(255,184,0,0.3); }
+    
+    /* Pulsação nos ícones */
+    .card-icon::after {
+        content: ''; position: absolute; width: 100%; height: 100%;
+        border-radius: 18px; border: 1px solid currentColor;
+        opacity: 0.3; animation: pulse 2s infinite;
+    }
+
+    .card-content { flex: 1; }
+    .card-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+    .card-value { display: block; font-size: 22px; font-weight: 700; color: #fff; margin: 2px 0; }
+    .card-meta { font-size: 11px; color: var(--teal); font-weight: 500; }
+
+    /* CARD DE SUBSIDIO (Destaque Gold) */
+    .subsidy-card {
+        border: 1px solid var(--gold);
+        background: linear-gradient(135deg, rgba(22, 17, 41, 0.9), #2a1f0a);
+    }
+    .gold-text { color: var(--gold) !important; }
+    .brl-value { color: #2ecc71; font-weight: 700; font-size: 16px; margin-top: 5px; display: block; }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.2); opacity: 0; }
+        100% { transform: scale(1); opacity: 0.3; }
+    }
+
+    /* FOOTER / REGRAS */
+    .rules-card {
+        width: 90%; max-width: 450px;
+        margin-top: 30px;
+        padding: 20px;
+        background: rgba(255, 45, 117, 0.05);
+        border-radius: 20px;
+        border-left: 4px solid var(--pink);
+    }
+    .rules-card h4 { margin: 0 0 12px; color: var(--pink); font-size: 14px; text-transform: uppercase; }
+    .rule-item { font-size: 11px; color: #bbb; margin-bottom: 10px; display: flex; gap: 10px; align-items: flex-start; }
+    .rule-item i { color: var(--teal); margin-top: 2px; }
 
 </style>
 
-<div class="team-container">
-    <div class="ariel-header">
+<div class="dashboard-bg">
+    <div class="brand-header">
         <div class="back-nav">
-            <a href="{% url 'menu' %}" class="back-arrow">
-                <i class="fas fa-chevron-left"></i>
-            </a>
+            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
         </div>
-        <h1 class="logo-text">Princesa Ariel</h1>
-        <p style="font-size: 10px; letter-spacing: 2px; color: var(--teal); margin: 0;">SISTEMA DE AFILIADOS</p>
+        <h1 class="header-title">100XMAGICO</h1>
+        <span style="font-size: 9px; color: var(--teal); letter-spacing: 4px; text-transform: uppercase;">Global Team Network</span>
     </div>
 
-    <div class="invite-section">
+    <div class="invite-container">
         <div class="invite-box">
             <span id="invite-link">{{ invite_link }}</span>
             <button class="copy-btn" id="copyBtn"><i class="fas fa-copy"></i></button>
         </div>
-        <p style="font-size: 11px; color: #888; margin-top: 10px;">Código de Convite: <b style="color: white;">{{ user.invite_code }}</b></p>
+        <p style="font-size: 11px; text-align: center; margin-top: 10px; color: #777;">ID de Convite: <b style="color: #fff;">{{ user.invite_code }}</b></p>
     </div>
 
-    <div class="team-grid">
-        <div class="royal-card card-a">
-            <div class="card-header">
-                <i class="fas fa-crown" style="color: var(--pink);"></i>
-                <span class="level-tag">NÍVEL 1</span>
-            </div>
-            <div class="card-body">
-                <h3>{{ level_a_count }}</h3>
-                <p>Membros Diretos</p>
-            </div>
-            <div class="card-footer">
-                <div class="val-row"><span>Investidores:</span> <b>{{ level_a_investors }}</b></div>
-                <div class="val-row"><span>Comissão:</span> <b style="color: var(--pink);">10%</b></div>
+    <div class="team-list">
+        
+        <div class="royal-card">
+            <div class="card-icon" style="color: var(--pink);"><i class="fas fa-user-tie"></i></div>
+            <div class="card-content">
+                <span class="card-label">Nível 1 (Membros Diretos)</span>
+                <span class="card-value">{{ level_a_count }}</span>
+                <div class="card-meta">Comissão: 10% | Ativos: {{ level_a_investors }}</div>
             </div>
         </div>
 
-        <div class="royal-card card-b">
-            <div class="card-header">
-                <i class="fas fa-gem" style="color: var(--teal);"></i>
-                <span class="level-tag">NÍVEL 2</span>
-            </div>
-            <div class="card-body">
-                <h3>{{ level_b_count }}</h3>
-                <p>Membros Indiretos</p>
-            </div>
-            <div class="card-footer">
-                <div class="val-row"><span>Investidores:</span> <b>{{ level_b_investors }}</b></div>
-                <div class="val-row"><span>Comissão:</span> <b style="color: var(--teal);">1%</b></div>
+        <div class="royal-card">
+            <div class="card-icon" style="color: var(--teal);"><i class="fas fa-users"></i></div>
+            <div class="card-content">
+                <span class="card-label">Nível 2 (Membros Indiretos)</span>
+                <span class="card-value">{{ level_b_count }}</span>
+                <div class="card-meta">Comissão: 1% | Ativos: {{ level_b_investors }}</div>
             </div>
         </div>
 
-        <div class="royal-card card-c">
-            <div class="card-header">
-                <i class="fas fa-star" style="color: #9f7aea;"></i>
-                <span class="level-tag">NÍVEL 3</span>
-            </div>
-            <div class="card-body">
-                <h3>{{ level_c_count }}</h3>
-                <p>Membros Rede</p>
-            </div>
-            <div class="card-footer">
-                <div class="val-row"><span>Investidores:</span> <b>{{ level_c_investors }}</b></div>
-                <div class="val-row"><span>Comissão:</span> <b style="color: #9f7aea;">1%</b></div>
+        <div class="royal-card">
+            <div class="card-icon" style="color: var(--purple);"><i class="fas fa-sitemap"></i></div>
+            <div class="card-content">
+                <span class="card-label">Nível 3 (Membros de Rede)</span>
+                <span class="card-value">{{ level_c_count }}</span>
+                <div class="card-meta">Comissão: 1% | Ativos: {{ level_c_investors }}</div>
             </div>
         </div>
 
-        <div class="royal-card total-card-full card-total">
-            <div class="card-header">
-                <i class="fas fa-wallet gold-text"></i>
-                <span class="level-tag" style="border: 1px solid var(--gold); color: var(--gold);">RESUMO GERAL</span>
-            </div>
-            <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h3 class="gold-text">Kz {{ subsidy_balance|default:"0.00" }}</h3>
-                    <p>Bónus Total da Rede</p>
-                </div>
-                <div style="text-align: right;">
-                    <h3 style="font-size: 16px;">{{ team_count }}</h3>
-                    <p>Total Equipa</p>
-                </div>
+        <div class="royal-card subsidy-card">
+            <div class="card-icon" style="color: var(--gold);"><i class="fas fa-gem"></i></div>
+            <div class="card-content">
+                <span class="card-label gold-text">Total Bónus de Subsídio</span>
+                <span class="card-value gold-text">USDT {{ subsidy_balance|default:"0.00" }}</span>
+                <span class="brl-value" id="val-brl-total">R$ 0,00</span>
+                <div class="card-meta" style="color: #fff; opacity: 0.5;">Total Equipa: {{ team_count }}</div>
             </div>
         </div>
+
     </div>
 
-    <div class="rules-section">
-        <h4><i class="fas fa-info-circle"></i> Regras de Comissionamento</h4>
+    <div class="rules-card">
+        <h4><i class="fas fa-info-circle"></i> Regras de Equipa</h4>
         <div class="rule-item">
-            <i class="fas fa-check-circle"></i>
-            <span><b>Nível A:</b> Ganhe <b>10%</b> de cada ativação VIP que o seu convidado direto fizer.</span>
+            <i class="fas fa-check-double"></i>
+            <span><b>Ganhos Nível A:</b> 10% de comissão sobre ativações VIP diretas.</span>
         </div>
         <div class="rule-item">
-            <i class="fas fa-check-circle"></i>
-            <span><b>Nível B:</b> Ganhe <b>1%</b> de cada ativação VIP dos subordinados de 2º nível.</span>
+            <i class="fas fa-check-double"></i>
+            <span><b>Rede B e C:</b> 1% de bonificação sobre ativações da rede secundária.</span>
         </div>
-        <div class="rule-item">
-            <i class="fas fa-check-circle"></i>
-            <span><b>Nível C:</b> Ganhe <b>1%</b> de cada ativação VIP da sua rede de 3º nível.</span>
-        </div>
-        <div class="rule-item" style="border-top: 1px solid var(--glass); padding-top: 10px; margin-top: 10px;">
+        <div class="rule-item" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 5px;">
             <i class="fas fa-exclamation-triangle" style="color: var(--pink);"></i>
-            <span style="color: var(--pink);"><b>Importante:</b> Não há comissões sobre as tarefas diárias da equipe.</span>
+            <span style="color: var(--pink);">As comissões são creditadas apenas em novas ativações de planos.</span>
         </div>
     </div>
 </div>
 
 <script>
-    document.getElementById('copyBtn').addEventListener('click', function() {
-        const textToCopy = document.getElementById('invite-link').innerText;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            const btn = this;
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            btn.style.background = '#28a745';
-            setTimeout(() => {
-                btn.innerHTML = original;
-                btn.style.background = '';
-            }, 2000);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Câmbio Wise Simulado
+        const taxaWise = 5.48;
+        
+        // Pegar o valor em USDT vindo do Django
+        const valUsdt = parseFloat("{{ subsidy_balance|default:'0' }}".replace(',', '.')) || 0;
+        
+        // Calcular e Formatar em BRL
+        const totalBrl = valUsdt * taxaWise;
+        document.getElementById('val-brl-total').innerText = totalBrl.toLocaleString('pt-BR', { 
+            style: 'currency', 
+            currency: 'BRL' 
+        });
+
+        // Copiar Link
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const link = document.getElementById('invite-link').innerText;
+            navigator.clipboard.writeText(link).then(() => {
+                const btn = this;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.style.background = '#2ecc71';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-copy"></i>';
+                    btn.style.background = '';
+                }, 2000);
+            });
         });
     });
 </script>

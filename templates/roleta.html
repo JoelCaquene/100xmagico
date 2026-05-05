@@ -2,357 +2,212 @@
 {% load static %}
 
 {% block content %}
-<link href="https://fonts.googleapis.com/css2?family=Monoton&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Monoton&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<div id="win-modal" class="win-overlay" style="display: none;">
-    <div class="win-content-compact">
-        <div class="explosion-particles">
-            <span style="--i:1;"><i class="fas fa-coins gold-text"></i></span>
-            <span style="--i:2;"><i class="fas fa-star gold-text"></i></span>
-            <span style="--i:3;"><i class="fas fa-gem teal-text"></i></span>
-            <span style="--i:4;"><i class="fas fa-coins gold-text"></i></span>
-            <span style="--i:5;"><i class="fas fa-money-bill-wave green-text"></i></span>
-            <span style="--i:6;"><i class="fas fa-star gold-text"></i></span>
-            <span style="--i:7;"><i class="fas fa-crown gold-text"></i></span>
-            <span style="--i:8;"><i class="fas fa-coins gold-text"></i></span>
-        </div>
-        
-        <div class="congratulations-text">JACKPOT!</div>
-        <p>Você destrancou um baú contendo</p>
-        <div class="win-amount-neon" id="modal-prize">0 KZ</div>
-        <button onclick="closeWinModal()" class="btn-collect-premium">RECOLHER PRÊMIO</button>
-    </div>
-</div>
+<div class="casino-body">
+    <a href="{% url 'menu' %}" class="btn-back-minimal"><i class="fas fa-arrow-left"></i></a>
 
-<div class="casino-wrapper-premium">
-    <div class="header-section text-center">
-        <h1 class="casino-title-neon">CAIXAS DA SORTE</h1>
-        <p class="royal-subtitle-premium">ESCOLHA UM BAÚ E DESCUBRA SEU TESOURO</p>
-        
-        <div class="spin-counter-premium">
-            <div class="counter-header">
-                <i class="fas fa-key gold-text"></i> CHAVES DISPONÍVEIS
+    {# MODAL DE VITÓRIA EXPLOSIVO #}
+    <div id="win-modal" class="win-overlay" style="display: none;">
+        <div class="win-content-premium">
+            <div class="firework-anchor"></div>
+            <div class="jackpot-header">GRAND WIN</div>
+            <div class="stars-row-win">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
             </div>
-            <div class="counter-value" id="roulette-spins">{{ roulette_spins }}</div>
+            <p>TESOURO REVELADO</p>
+            <div class="win-amount-box">
+                <div class="val-usdt" id="modal-prize-usdt">0.00 USDT</div>
+                <div class="val-brl" id="modal-prize-brl">R$ 0,00</div>
+            </div>
+            <button onclick="closeWinModal()" class="btn-collect">RESGATAR COMISSÃO</button>
         </div>
     </div>
 
-    <div class="boxes-grid-premium" id="boxes-container">
-        {% for i in "123456" %}
-        <div class="box-item-3d" onclick="openBox(this)">
-            <div class="box-inner">
-                <div class="box-front">
-                    <div class="box-lid"></div>
-                    <div class="box-base-3d">
-                        <i class="fas fa-question-circle question-icon"></i>
-                        <div class="inner-glow"></div>
+    <div class="casino-wrapper">
+        <div class="header-section">
+            <h1 class="casino-title">100X<span>MAGICO</span></h1>
+            <div class="lucky-tag">LUCKY BOXES</div>
+            
+            <div class="key-status-card">
+                <div class="key-info">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1164/1164620.png" class="key-icon-img">
+                    <div class="key-text">
+                        <span>CHAVES DISPONÍVEIS</span>
+                        <strong id="roulette-spins">{{ roulette_spins }}</strong>
                     </div>
                 </div>
-                <div class="box-top"></div>
             </div>
-            <div class="box-shadow-premium"></div>
         </div>
-        {% endfor %}
-    </div>
 
-    <div class="winners-panel-premium mt-5">
-        <div class="panel-header-premium">
-            <i class="fas fa-bolt teal-text"></i> ÚLTIMOS GANHADORES
-        </div>
-        <div class="ticker-box-premium">
-            <div class="ticker-content-premium">
-                {% for winner in recent_winners %}
-                <div class="ticker-item-premium">
-                    <span class="user-id">ID {{ winner.user.id }}</span>
-                    <span class="action-txt">abriu um baú e ganhou</span>
-                    <span class="p-val-neon">+{{ winner.prize }} KZ</span>
+        {# GRID DE CAIXAS COM CORES VARIADAS #}
+        <div class="boxes-container" id="boxes-container">
+            {% for i in "123456" %}
+            <div class="box-wrapper color-{{ i }}" onclick="openBox(this)">
+                <div class="box-3d">
+                    <div class="box-lid"></div>
+                    <div class="box-body">
+                        <i class="fas fa-crown"></i>
+                        <div class="glow-effect"></div>
+                    </div>
                 </div>
-                {% empty %}
-                <div class="ticker-item-premium">Aguardando novos tesouros...</div>
-                {% endfor %}
+                <div class="box-platform"></div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {# PAINEL DE GANHOS ESTILO ROLETA #}
+        <div class="winners-marquee">
+            <div class="marquee-title"><i class="fas fa-bolt"></i> VENCEDORES AO VIVO</div>
+            <div class="marquee-content">
+                <div class="marquee-track">
+                    {% for winner in recent_winners %}
+                    <div class="winner-pill">
+                        <span class="w-id">ID {{ winner.user.id|slice:":4" }}</span>
+                        <span class="w-val">+{{ winner.prize }} USDT</span>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<audio id="snd-open" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
-<audio id="snd-win" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+<audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="snd-jackpot" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
 
 <style>
     :root {
-        --pink-neon: #ff0055;
-        --pink-dark: #b0003a;
-        --teal-neon: #00f2ff;
-        --gold-neon: #ffb800;
-        --dark-royal: #0b0718;
-        --card-royal: #161129;
-        --glass-royal: rgba(255, 255, 255, 0.03);
+        --gold: #ffcc00;
+        --neon-pink: #ff0055;
+        --neon-blue: #00f2ff;
+        --dark-bg: #05030a;
+        --wise-green: #00ff00;
     }
 
-    body { background: #05030a; margin: 0; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
-
-    .casino-wrapper-premium {
+    /* FUNDO ARCO-ÍRIS CASSINO CHINÊS */
+    .casino-body {
+        background: var(--dark-bg);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.15) 0%, transparent 40%),
+            url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
         min-height: 100vh;
-        background: radial-gradient(circle at top, #1c0f4d 0%, #05030a 100%);
-        padding: 40px 15px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        overflow-x: hidden;
     }
 
-    /* TÍTULO NEON ESTILO CASSINO */
-    .casino-title-neon {
-        font-family: 'Monoton', cursive;
-        color: #fff;
-        font-size: 36px;
-        margin: 0;
-        letter-spacing: 2px;
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--pink-neon), 0 0 40px var(--pink-neon), 0 0 60px var(--pink-neon);
-        animation: neon-flicker 1.5s infinite alternate;
+    .btn-back-minimal {
+        position: absolute; top: 20px; left: 20px; color: white; font-size: 24px; z-index: 1000;
     }
 
-    .royal-subtitle-premium { font-size: 10px; color: var(--teal-neon); letter-spacing: 3px; text-transform: uppercase; margin: 10px 0 30px; font-weight: bold; }
+    .casino-wrapper { padding: 30px 15px; display: flex; flex-direction: column; align-items: center; }
 
-    /* CONTADOR DE CHAVES PREMIUM */
-    .spin-counter-premium {
-        background: var(--card-royal);
-        border: 2px solid var(--pink-neon);
-        padding: 15px 30px;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0 0 15px rgba(255, 0, 85, 0.5), inset 0 0 10px rgba(0,0,0,0.5);
-        margin-bottom: 40px;
+    /* HEADER */
+    .casino-title { font-family: 'Goldman', sans-serif; font-weight: 900; font-size: 32px; margin-bottom: 0; }
+    .casino-title span { color: var(--gold); text-shadow: 0 0 15px var(--gold); }
+    .lucky-tag { font-size: 10px; letter-spacing: 5px; color: var(--neon-blue); font-weight: 900; margin-bottom: 20px; }
+
+    .key-status-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        padding: 10px 25px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
     }
-    .counter-header { font-size: 11px; color: #fff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-    .counter-value { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 0 10px #fff; }
+    .key-info { display: flex; align-items: center; gap: 12px; }
+    .key-icon-img { width: 30px; filter: drop-shadow(0 0 5px var(--gold)); }
+    .key-text span { display: block; font-size: 9px; color: #ccc; }
+    .key-text strong { font-size: 20px; color: #fff; }
 
     /* GRID DE CAIXAS 3D */
-    .boxes-grid-premium {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
-        width: 100%;
-        max-width: 380px;
-        perspective: 1000px; /* Importante para o efeito 3D */
+    .boxes-container {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;
+        width: 100%; max-width: 350px; margin-top: 40px;
     }
 
-    .box-item-3d {
-        position: relative;
-        height: 140px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        transition: transform 0.2s;
-    }
-
-    /* Animação de tremor ao hover - mais chamativa */
-    .box-item-3d:hover { transform: scale(1.05); }
-    .box-item-3d:hover .box-inner { animation: tremble 0.5s infinite; }
-
-    .box-inner {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        transform-style: preserve-3d;
-        z-index: 2;
-    }
-
-    /* Frente da Caixa 3D */
-    .box-base-3d {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, var(--pink-neon), var(--pink-dark));
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: inset 0 -8px 15px rgba(0,0,0,0.4), 0 5px 15px rgba(0,0,0,0.3);
-        border: 2px solid rgba(255,255,255,0.1);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .question-icon { font-size: 40px; color: rgba(255,255,255,0.7); text-shadow: 0 0 10px #fff; z-index: 2; }
-
-    /* Brilho interno pulsante */
-    .inner-glow {
-        position: absolute; inset: 0;
-        background: radial-gradient(circle, var(--teal-neon) 0%, transparent 70%);
-        opacity: 0.1;
-        animation: pulse-glow 2s infinite alternate;
-    }
-
-    /* Tampa 3D */
-    .box-lid {
-        position: absolute;
-        top: -10px; left: -5px;
-        width: 110px; height: 25px;
-        background: var(--pink-neon);
-        border-radius: 6px;
-        border-bottom: 4px solid rgba(0,0,0,0.3);
-        z-index: 3;
-        transition: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        box-shadow: 0 4px 5px rgba(0,0,0,0.3);
-    }
-
-    /* Topo da caixa para efeito 3D */
-    .box-top {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100px; height: 100px;
-        background: var(--pink-dark);
-        transform: rotateX(90deg) translateZ(50px);
-        border-radius: 12px;
-        opacity: 0.8;
-    }
-
-    /* Animação de Abertura */
-    .box-item-3d.opening .box-lid { transform: translateY(-50px) rotateX(110deg); opacity: 0; }
-    .box-item-3d.opening .box-inner { transform: translateZ(50px) scale(1.1); animation: pop-up 0.5s forwards; }
-
-    .box-shadow-premium {
-        position: absolute;
-        bottom: 15px;
-        width: 80px; height: 15px;
-        background: rgba(0,0,0,0.6);
-        filter: blur(8px);
-        border-radius: 50%;
-    }
-
-    /* MODAL DE VITÓRIA COMPACTO E EXPLOSIVO */
-    .win-overlay {
-        position: fixed; inset: 0; background: rgba(5, 3, 10, 0.9);
-        display: flex; align-items: center; justify-content: center; z-index: 9999;
-        backdrop-filter: blur(5px);
-    }
-
-    .win-content-compact {
-        background: var(--card-royal);
-        padding: 30px;
-        border-radius: 20px;
-        text-align: center;
-        border: 2px solid var(--gold-neon);
-        box-shadow: 0 0 30px var(--gold-neon), inset 0 0 15px rgba(255,184,0,0.2);
-        width: 80%; max-width: 300px; /* Tamanho pequeno conforme pedido */
-        position: relative;
-        animation: modal-enter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .congratulations-text { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 22px; color: #fff; margin: 0; text-shadow: 0 0 10px var(--gold-neon); letter-spacing: 1px; }
-    .win-content-compact p { font-size: 11px; color: #aaa; margin: 5px 0 15px; }
+    .box-wrapper { position: relative; height: 140px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
     
-    .win-amount-neon {
-        font-size: 32px;
-        font-weight: 900;
-        color: #fff;
-        margin: 15px 0 25px;
-        text-shadow: 0 0 5px #fff, 0 0 15px var(--teal-neon);
-        background: rgba(0,0,0,0.3);
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid var(--teal-neon);
+    .box-3d { width: 80px; height: 70px; position: relative; transition: 0.3s; z-index: 2; }
+    .box-body { 
+        width: 100%; height: 100%; border-radius: 8px; position: relative;
+        display: flex; align-items: center; justify-content: center; font-size: 24px;
+        border: 2px solid rgba(255,255,255,0.2);
+        box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5);
+    }
+    .box-lid { 
+        position: absolute; top: -5px; left: -2px; width: 84px; height: 20px; 
+        background: #fff; border-radius: 5px; z-index: 3; transition: 0.5s;
     }
 
-    .btn-collect-premium {
-        background: linear-gradient(90deg, var(--gold-neon), #fff);
-        color: #000;
-        border: none;
-        width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        font-weight: 900;
-        cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 12px;
-        transition: 0.2s;
-    }
-    .btn-collect-premium:hover { transform: scale(1.05); box-shadow: 0 0 15px #fff; }
+    /* Cores das caixas */
+    .color-1 .box-body { background: linear-gradient(135deg, #ff0055, #80002b); }
+    .color-2 .box-body { background: linear-gradient(135deg, #00f2ff, #007a80); }
+    .color-3 .box-body { background: linear-gradient(135deg, #ffcc00, #997a00); }
+    .color-4 .box-body { background: linear-gradient(135deg, #a020f0, #4b0082); }
+    .color-5 .box-body { background: linear-gradient(135deg, #00ff00, #006400); }
+    .color-6 .box-body { background: linear-gradient(135deg, #ff4500, #8b0000); }
 
-    /* Animação da Explosão de Partículas */
-    .explosion-particles {
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%; height: 100%;
-        pointer-events: none;
-        z-index: -1;
-    }
-    .explosion-particles span {
-        position: absolute;
-        display: block;
-        opacity: 0;
-        font-size: 16px;
-        animation: particles-explode 1s ease-out forwards;
-        animation-delay: 0.3s;
-    }
-    /* Definição de trajetórias para as partículas */
-    @keyframes particles-explode {
-        0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-        100% {
-            transform: translate(calc(sin(var(--i) * 45deg) * 150px), calc(cos(var(--i) * 45deg) * 150px)) scale(0.5) rotate(360deg);
-            opacity: 0;
-        }
+    .box-platform { 
+        width: 90px; height: 20px; background: rgba(0,0,0,0.4); 
+        border-radius: 50%; filter: blur(5px); margin-top: -10px;
     }
 
-    /* FEED DE VENCEDORES PREMIUM */
-    .winners-panel-premium {
-        width: 92%;
-        max-width: 380px;
-        background: rgba(0,0,0,0.3);
-        border-radius: 15px;
-        overflow: hidden;
-        border: 1px solid var(--glass-royal);
+    /* Animação Abrir */
+    .opening .box-lid { transform: translateY(-40px) rotate(-15deg); opacity: 0; }
+    .opening .box-body { transform: scale(1.1); box-shadow: 0 0 30px var(--gold); }
+
+    /* MODAL DE VITÓRIA PREMIUM */
+    .win-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+        display: flex; align-items: center; justify-content: center; z-index: 9999;
     }
-    .panel-header-premium { background: var(--glass-royal); padding: 12px; font-size: 11px; font-weight: bold; color: #fff; text-align: center; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--glass-royal); }
-    .ticker-box-premium { height: 45px; overflow: hidden; background: #07040f; }
-    .ticker-content-premium { animation: slideUp-premium 12s linear infinite; }
-    .ticker-item-premium { height: 45px; display: flex; justify-content: space-around; align-items: center; font-size: 10px; border-bottom: 1px solid var(--glass-royal); color: #ccc; }
-    .p-val-neon { color: var(--teal-neon); font-weight: bold; text-shadow: 0 0 5px var(--teal-neon); font-size: 12px; }
-    .gold-text { color: var(--gold-neon); }
-    .teal-text { color: var(--teal-neon); }
-    .green-text { color: var(--green-text); }
+    .win-content-premium {
+        width: 85%; max-width: 320px; background: #161129; border: 2px solid var(--gold);
+        border-radius: 20px; padding: 30px; text-align: center;
+        box-shadow: 0 0 50px rgba(255, 204, 0, 0.4);
+        animation: modalShow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .jackpot-header { font-family: 'Monoton', cursive; font-size: 35px; color: var(--gold); }
+    .win-amount-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid var(--neon-blue); }
+    .val-usdt { font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+    .val-brl { color: var(--wise-green); font-weight: bold; font-size: 16px; margin-top: 5px; }
 
-    /* KEYFRAMES */
-    @keyframes neon-flicker { 0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--pink-neon), 0 0 40px var(--pink-neon); } 20%, 22%, 24%, 55% { text-shadow: none; } }
-    @keyframes pulse-glow { from { opacity: 0.05; } to { opacity: 0.15; } }
-    @keyframes tremble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); } }
-    @keyframes pop-up { 0% { transform: scale(1); } 50% { transform: scale(1.15) translateY(-10px); } 100% { transform: scale(1.1) translateY(-5px); } }
-    @keyframes slideUp-premium { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
-    @keyframes modal-enter { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .btn-collect {
+        width: 100%; background: var(--gold); border: none; padding: 15px; border-radius: 50px;
+        font-weight: 900; font-size: 14px; text-transform: uppercase; cursor: pointer;
+    }
 
+    /* MARQUEE DE VENCEDORES */
+    .winners-marquee { width: 100%; max-width: 350px; margin-top: 40px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; }
+    .marquee-title { font-size: 10px; font-weight: bold; color: var(--neon-pink); text-align: center; margin-bottom: 8px; }
+    .marquee-track { display: flex; gap: 20px; animation: scrollMarquee 15s linear infinite; }
+    .winner-pill { background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 20px; white-space: nowrap; font-size: 11px; }
+    .w-val { color: var(--gold); font-weight: bold; }
+
+    @keyframes scrollMarquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    @keyframes modalShow { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 </style>
 
 <script>
-    let isOpening = false;
+    const CAMBIO_WISE = 5.48; // O mesmo usado no seu menu
+    let isSpinning = false;
 
     function openBox(element) {
-        const spins = document.getElementById('roulette-spins');
-        
-        // Evita cliques múltiplos ou sem chaves
-        if (isOpening || parseInt(spins.innerText) <= 0) {
-            if(parseInt(spins.innerText) <= 0) {
-                // Efeito visual de falha no contador se não tiver chaves
-                const counter = document.querySelector('.spin-counter-premium');
-                counter.style.animation = 'tremble 0.2s 2';
-                setTimeout(() => counter.style.animation = '', 400);
-            }
-            return;
-        }
+        const spins = parseInt(document.getElementById('roulette-spins').innerText);
+        if (isSpinning || spins <= 0) return;
 
-        isOpening = true;
-        
-        // Remove animação de tremble do hover e adiciona classe de abertura
-        element.style.animation = 'none';
+        isSpinning = true;
+        document.getElementById('snd-click').play();
         element.classList.add('opening');
-        
-        // Som de abertura (baú rangendo)
-        document.getElementById('snd-open').play().catch(()=>{});
 
-        // Chamada AJAX para a MESMA rota da roleta
+        // Lógica de Embaralhamento: Muda a posição visual das caixas a cada clique
+        const container = document.getElementById('boxes-container');
+        const children = Array.from(container.children);
+        
         fetch('{% url "spin_roulette" %}', {
             method: 'POST',
             headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' }
@@ -360,40 +215,38 @@
         .then(res => res.json())
         .then(data => {
             if(data.success) {
-                // Aguarda a animação da tampa sair antes de mostrar o ganho
                 setTimeout(() => {
-                    // Som de vitória (moedas/brilho)
-                    document.getElementById('snd-win').play().catch(()=>{});
-                    showWinModal(data.prize);
-                    spins.innerText = data.remaining_spins;
-                    isOpening = false;
-                }, 800);
+                    // Fogos de Artifício (Confetti)
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#ffcc00', '#ff0055', '#00f2ff']
+                    });
+
+                    showPremiumWin(data.prize);
+                    document.getElementById('roulette-spins').innerText = data.remaining_spins;
+                    document.getElementById('snd-jackpot').play();
+                }, 600);
             } else {
-                // Em caso de erro do backend (ex: erro de saldo simulado)
                 alert(data.message);
                 element.classList.remove('opening');
-                isOpening = false;
+                isSpinning = false;
             }
-        })
-        .catch(err => {
-            console.error(err);
-            element.classList.remove('opening');
-            isOpening = false;
         });
     }
 
-    function showWinModal(amount) {
-        document.getElementById('modal-prize').innerText = amount + " KZ";
+    function showPremiumWin(amount) {
+        const usdt = parseFloat(amount);
+        const brl = usdt * CAMBIO_WISE;
+        
+        document.getElementById('modal-prize-usdt').innerText = usdt.toFixed(2) + " USDT";
+        document.getElementById('modal-prize-brl').innerText = "R$ " + brl.toLocaleString('pt-BR', {minimumFractionDigits: 2});
         document.getElementById('win-modal').style.display = 'flex';
-        // Impede rolagem do fundo
-        document.body.style.overflow = 'hidden';
     }
 
     function closeWinModal() {
-        document.getElementById('win-modal').style.display = 'none';
-        document.body.style.overflow = '';
-        // Recarrega para resetar as caixas e atualizar o feed
-        location.reload();
+        location.reload(); // Recarrega para reorganizar as caixas e atualizar o saldo
     }
 </script>
 {% endblock %}

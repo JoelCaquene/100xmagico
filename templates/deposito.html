@@ -1,421 +1,306 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Depósito - Princesa Ariel{% endblock %}
+{% block title %}Depósito Internacional - 100xmagico{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap');
     
     :root { 
-        --dark: #0b0718; 
-        --card: #161129; 
-        --pink: #ff2d75; 
-        --gold: #ffb800; 
-        --teal: #00f2ff; 
+        --bg: #07050f; 
+        --card: #120d26; 
+        --accent: #00f2ff; 
+        --primary: #ff2d75; 
+        --gold: #ffb800;
         --glass: rgba(255, 255, 255, 0.05);
+        --text-dim: #9ca3af;
     }
 
-    body { 
-        background: var(--dark); 
-        color: white; 
-        font-family: 'Poppins', sans-serif; 
-        margin: 0; 
-        overflow-x: hidden; 
-        width: 100%;
-    }
+    body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; width: 100%; }
+    .main-container { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 40px; }
 
-    .deposit-container {
-        width: 100%;
-        max-width: 450px;
-        margin: 0 auto;
-        min-height: 100vh;
-        padding-bottom: 50px;
-        position: relative;
-    }
+    /* HEADER */
+    .brand-header { padding: 40px 20px; text-align: center; background: radial-gradient(circle at top, #1e1345 0%, var(--bg) 70%); border-bottom: 1px solid var(--glass); }
+    .brand-logo { font-family: 'Playfair Display', serif; font-size: 32px; font-style: italic; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
 
-    /* HEADER ROYAL */
-    .ariel-header { 
-        height: 140px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        background: linear-gradient(rgba(11,7,24,0.6), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
-        background-size: cover; 
-        background-position: center;
-        border-bottom: 1px solid var(--pink);
-    }
+    /* STEPPER */
+    .stepper-bar { display: flex; padding: 20px; justify-content: space-between; }
+    .step-item { font-size: 10px; text-align: center; color: var(--text-dim); font-weight: 800; flex: 1; transition: 0.3s; }
+    .step-item i { font-size: 16px; display: block; margin-bottom: 5px; }
+    .step-item.active { color: var(--accent); }
+    .step-item.active i { color: var(--primary); }
 
-    .logo-text { 
-        font-family: 'Great Vibes', cursive; 
-        font-size: 40px; 
-        margin: 0; 
-        color: #fff;
-        text-shadow: 0 0 10px var(--pink);
-    }
+    /* CARDS */
+    .card-ui { background: var(--card); border: 1px solid var(--glass); border-radius: 20px; padding: 20px; margin: 0 15px 20px; }
+    .balance-label { font-size: 12px; color: var(--text-dim); }
+    .balance-value { font-size: 22px; font-weight: 800; color: var(--accent); }
 
-    .subtitle { 
-        font-size: 10px; 
-        letter-spacing: 3px; 
-        color: var(--teal); 
-        text-transform: uppercase;
-        font-weight: bold;
-    }
+    /* INPUTS */
+    .input-label { font-size: 13px; font-weight: 600; margin-bottom: 12px; display: block; color: var(--text-dim); }
+    .amount-input-wrapper { background: rgba(0,0,0,0.3); border: 2px solid var(--glass); border-radius: 15px; padding: 15px; display: flex; align-items: center; }
+    .amount-input-wrapper input { background: transparent; border: none; outline: none; color: white; font-size: 24px; font-weight: 800; width: 100%; }
+    .usdt-tag { color: var(--gold); font-weight: 800; margin-left: 10px; }
 
-    /* STEPPER ROYAL */
-    .stepper { 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-around; 
-        padding: 20px 15px;
-    }
+    /* CÂMBIO */
+    .conversion-box { background: rgba(0, 242, 255, 0.05); border-radius: 12px; padding: 12px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--accent); }
+    .brl-val { color: #fff; font-weight: 700; }
 
-    .step-unit { 
-        font-size: 11px; 
-        text-align: center; 
-        color: rgba(255,255,255,0.4); 
-        font-weight: bold;
-        position: relative;
-    }
+    /* GRID VALORES */
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .val-btn { background: var(--glass); border: 1px solid transparent; padding: 12px; border-radius: 12px; color: white; font-weight: 700; cursor: pointer;}
+    .val-btn.active { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
 
-    .step-unit.active { color: var(--pink); text-shadow: 0 0 10px var(--pink); }
+    /* METODOS */
+    .method-card { background: var(--card); border: 1px solid var(--glass); border-radius: 15px; padding: 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
+    .method-card.active { border-color: var(--accent); background: rgba(0,242,255,0.05); }
+    .method-card i { font-size: 24px; color: var(--accent); }
 
-    /* CARDS E CAIXAS */
-    .info-box { 
-        background: var(--card); 
-        border: 1px solid var(--glass); 
-        padding: 15px; 
-        border-radius: 15px; 
-        display: flex; 
-        justify-content: space-between; 
-        margin: 0 15px 25px 15px; 
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
+    /* DETALHES PAGAMENTO */
+    .payment-details { display: none; margin-top: 20px; }
+    .copy-panel { background: #000; padding: 15px; border-radius: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .copy-text { font-size: 11px; color: var(--accent); word-break: break-all; margin-right: 10px; font-family: monospace; }
 
-    .info-label { color: #aaa; font-size: 12px; }
-    .info-value { color: var(--teal); font-weight: bold; }
+    .qr-container { text-align: center; margin: 20px 0; }
+    .qr-container img { width: 180px; height: 180px; border-radius: 10px; border: 5px solid white; background: white;}
 
-    .input-section { padding: 0 15px; }
-    .input-section label { font-size: 13px; color: #fff; margin-bottom: 10px; display: block; }
+    .btn-glow { width: calc(100% - 30px); margin: 20px 15px; padding: 18px; border-radius: 50px; border: none; background: linear-gradient(90deg, var(--primary), #ff5a94); color: white; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(255, 45, 117, 0.3); cursor: pointer; }
+    .btn-glow:disabled { opacity: 0.2; cursor: not-allowed; }
 
-    .main-input-group { 
-        display: flex; 
-        align-items: center; 
-        background: rgba(255,255,255,0.03);
-        border: 1px solid var(--pink); 
-        border-radius: 12px; 
-        padding: 15px; 
-        margin: 10px 0; 
-        box-shadow: inset 0 0 10px rgba(255,45,117,0.1);
-    }
+    .upload-box { border: 2px dashed var(--glass); padding: 30px; text-align: center; border-radius: 20px; margin-top: 15px; cursor: pointer; }
+    .upload-box i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
 
-    .main-input-group input { 
-        border: none; 
-        outline: none; 
-        font-size: 18px; 
-        font-weight: bold; 
-        width: 100%; 
-        color: #fff; 
-        background: transparent; 
-    }
-
-    .currency { color: var(--pink); font-weight: bold; margin-right: 10px; }
-
-    .quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-    .q-btn { 
-        background: var(--card); 
-        border: 1px solid var(--glass); 
-        padding: 12px; 
-        border-radius: 10px; 
-        font-weight: bold; 
-        color: #fff; 
-        transition: 0.3s;
-    }
-
-    .q-btn.active { 
-        background: var(--pink); 
-        border-color: #fff; 
-        box-shadow: 0 0 15px var(--pink);
-    }
-
-    .rules-card { 
-        background: rgba(255, 45, 117, 0.05); 
-        padding: 15px; 
-        border-radius: 12px; 
-        margin: 20px 15px; 
-        font-size: 12px; 
-        border-left: 3px solid var(--pink);
-        color: #ccc;
-    }
-
-    /* BANCOS */
-    .bank-grid { padding: 0 15px; }
-    .bank-card { 
-        width: 100%; 
-        display: flex; 
-        justify-content: space-between; 
-        padding: 18px; 
-        border: 1px solid var(--glass); 
-        background: var(--card); 
-        border-radius: 12px; 
-        margin-bottom: 12px; 
-        align-items: center; 
-        color: white;
-    }
-    .bank-card.active { border-color: var(--teal); box-shadow: 0 0 15px rgba(0,242,255,0.2); }
-
-    /* DETALHES */
-    .details-panel { background: var(--card); margin: 0 15px; padding: 20px; border-radius: 15px; border: 1px solid var(--glass); }
-    .data-row { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
-    .data-row label { font-size: 11px; color: var(--pink); display: block; text-transform: uppercase; }
-    .data-row p { font-weight: bold; margin: 5px 0; color: #fff; }
-
-    .copy-box { 
-        display: flex; 
-        background: rgba(0,0,0,0.3); 
-        border-radius: 8px; 
-        padding: 5px; 
-        border: 1px solid var(--glass);
-    }
-    .copy-box input { border: none; background: transparent; padding: 8px; flex: 1; font-size: 11px; color: var(--teal); font-weight: bold; }
-    .copy-box button { background: var(--pink); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 10px; font-weight: bold; }
-
-    .total-highlight { background: linear-gradient(90deg, rgba(255,184,0,0.1), transparent); border-left: 3px solid var(--gold); border-bottom: none; }
-    .total-highlight p { color: var(--gold); font-size: 20px; text-shadow: 0 0 10px rgba(255,184,0,0.3); }
-
-    /* UPLOAD */
-    .upload-section { padding: 0 15px; margin-top: 20px; }
-    .file-drop { 
-        border: 2px dashed var(--glass); 
-        padding: 25px; 
-        text-align: center; 
-        border-radius: 12px; 
-        background: var(--card);
-        color: #888; 
-    }
-    .name-input { 
-        width: 100%; 
-        padding: 15px; 
-        border-radius: 10px; 
-        border: 1px solid var(--glass); 
-        background: var(--card); 
-        color: #fff; 
-        margin-top: 10px;
-    }
-
-    /* BOTÕES ACTION */
-    .btn-action { 
-        width: calc(100% - 30px); 
-        margin: 20px 15px;
-        background: linear-gradient(90deg, var(--pink), #ff5d9e); 
-        color: #fff; 
-        border: none; 
-        padding: 16px; 
-        border-radius: 50px; 
-        font-size: 14px; 
-        font-weight: bold; 
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 5px 15px rgba(255,45,117,0.3);
-    }
-    .btn-action:disabled { opacity: 0.3; background: #444; box-shadow: none; }
-    .btn-submit { background: linear-gradient(90deg, #00c853, #64dd17); box-shadow: 0 5px 15px rgba(0,200,83,0.3); }
-
-    /* MODAL SUCESSO */
-    .success-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-    .success-card-mini { background: var(--card); border: 2px solid var(--pink); width: 85%; border-radius: 25px; padding: 30px; text-align: center; }
-    .success-icon-circle { width: 60px; height: 60px; background: var(--pink); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 20px; box-shadow: 0 0 20px var(--pink); }
-    .btn-back { display: block; background: var(--teal); color: #000; text-decoration: none; padding: 12px; border-radius: 50px; font-weight: bold; margin-top: 20px; }
-
-    /* ANIMAÇÕES */
-    @keyframes pulsePink { to { box-shadow: 0 0 20px var(--pink); } }
+    .prosperity-msg { text-align: center; padding: 40px 20px; }
+    .prosperity-msg h2 { font-family: 'Playfair Display'; color: var(--gold); font-size: 28px; }
+    .success-icon { font-size: 60px; color: #00ff88; margin-bottom: 20px; }
 </style>
 
-<div class="deposit-container">
-    <div class="ariel-header">
-        <h1 class="logo-text">Princesa Ariel</h1>
-        <p class="subtitle">Área de Depósito Seguro</p>
-    </div>
+<div class="main-container">
+    <header class="brand-header">
+        <h1 class="brand-logo">100xmagico</h1>
+        <p style="font-size: 10px; letter-spacing: 4px; color: var(--text-dim);">SISTEMA DE DEPÓSITO GLOBAL</p>
+    </header>
 
     {% if deposit_success %}
-        <div class="success-overlay">
-            <div class="success-card-mini">
-                <div class="success-icon-circle">✓</div>
-                <h2 style="color: #fff;">Depósito Enviado!</h2>
-                <p style="color: #ccc; font-size: 14px;">Aguarde <strong>5 minutos</strong> pela aprovação no seu reino.</p>
-                <a href="{% url 'menu' %}" class="btn-back">ENTRAR NO REINO</a>
-            </div>
+        <div class="prosperity-msg">
+            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+            <h2>Fluxo de Prosperidade!</h2>
+            <p style="color: var(--text-dim);">Seu comprovante foi enviado. Em <strong>5 minutos</strong> o saldo será liberado.</p>
+            <a href="{% url 'menu' %}" class="btn-glow" style="display:block; text-decoration:none; text-align:center;">Entrar no Reino</a>
         </div>
     {% else %}
-        <div class="stepper">
-            <div class="step-unit active" id="st-1">1<span>VALOR</span></div>
-            <div class="step-unit" id="st-2">2<span>BANCO</span></div>
-            <div class="step-unit" id="st-3">3<span>PAGAR</span></div>
+        <div class="stepper-bar">
+            <div class="step-item active" id="step-i-1"><i class="fas fa-coins"></i> VALOR</div>
+            <div class="step-item" id="step-i-2"><i class="fas fa-wallet"></i> MÉTODO</div>
+            <div class="step-item" id="step-i-3"><i class="fas fa-file-invoice-dollar"></i> FINALIZAR</div>
         </div>
 
         <form id="deposit-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="hidden" name="{{ form.amount.name }}" id="id_amount">
-            <input type="hidden" name="selected_bank" id="id_selected_bank">
+            <input type="hidden" name="amount" id="final_amount_usdt">
+            <input type="hidden" name="payment_method" id="id_payment_method">
 
-            <div id="step-1" class="step-content">
-                <div class="info-box">
-                    <span class="info-label">Saldo Atual</span>
-                    <span class="info-value">Kz {{ user.available_balance|default:"0.00" }}</span>
+            <div id="step-1">
+                <div class="card-ui">
+                    <span class="balance-label">Saldo Atual</span>
+                    <div class="balance-value">USDT {{ user.usdt_balance|default:"0.00" }}</div>
                 </div>
 
-                <div class="input-section">
-                    <label>Quanto deseja recarregar?</label>
-                    <div class="main-input-group">
-                        <span class="currency">Kz</span>
-                        <input type="number" id="manual-amount" placeholder="0.00">
+                <div style="padding: 0 15px;">
+                    <label class="input-label">Quanto deseja depositar? (USDT)</label>
+                    <div class="amount-input-wrapper">
+                        <input type="number" id="usdt-input" placeholder="0.00" step="0.01">
+                        <span class="usdt-tag">USDT</span>
                     </div>
 
-                    <div class="quick-grid">
+                    <div class="conversion-box">
+                        <span style="font-size: 11px; color: var(--text-dim);"><i class="fas fa-exchange-alt"></i> Câmbio Brasil (Wise)</span>
+                        <span class="brl-val" id="brl-conversion">R$ 0,00</span>
+                    </div>
+
+                    <div class="values-grid">
                         {% for val in level_deposits_list %}
-                            <button type="button" class="q-btn" data-value="{{ val }}">{{ val }}</button>
+                            <button type="button" class="val-btn" data-val="{{ val }}">{{ val }}</button>
                         {% endfor %}
                     </div>
                 </div>
-
-                <div class="rules-card">
-                    <p style="color: var(--pink); font-weight: bold; margin-top:0;">REGRAS DO REINO:</p>
-                    <ul style="padding: 0; list-style: none;">
-                        <li>• Envie o valor exato escolhido</li>
-                        <li>• Comprovativo deve estar legível</li>
-                        <li>• Atendimento: 08:30 às 20:00</li>
-                    </ul>
-                </div>
-                
-                <button type="button" class="btn-action" id="to-step-2" disabled>PRÓXIMO PASSO</button>
+                <button type="button" class="btn-glow" id="go-to-2" disabled>Próximo Passo</button>
             </div>
 
-            <div id="step-2" class="step-content" style="display: none;">
-                <label style="margin: 0 15px 15px; display: block; color: var(--pink); font-weight: bold;">SELECIONE O BANCO</label>
-                <div class="bank-grid">
-                    {% for bank in platform_bank_details %}
-                        <button type="button" class="bank-card" data-bank-id="{{ forloop.counter }}">
-                            <span class="bank-name">{{ bank.bank_name }}</span>
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    {% endfor %}
-                </div>
-                <button type="button" class="btn-action" id="to-step-3" disabled>VER DADOS BANCÁRIOS</button>
-            </div>
+            <div id="step-2" style="display: none;">
+                <div style="padding: 0 15px;">
+                    <label class="input-label">Forma de Pagamento</label>
+                    
+                    {% if pix_accounts %}
+                    <div class="method-card" data-method="pix">
+                        <i class="fab fa-pix"></i>
+                        <div>
+                            <div style="font-weight: 800;">PIX (Brasil)</div>
+                            <div style="font-size: 10px; color: var(--text-dim);">Rápido e Seguro em Reais</div>
+                        </div>
+                    </div>
+                    {% endif %}
 
-            <div id="step-3" class="step-content" style="display: none;">
-                {% for bank in platform_bank_details %}
-                    <div id="details-{{ forloop.counter }}" class="details-panel" style="display: none;">
-                        <div class="data-row">
-                            <label>Banco</label>
-                            <p>{{ bank.bank_name }}</p>
+                    {% if usdt_wallets %}
+                    <div class="method-card" data-method="usdt">
+                        <i class="fas fa-network-wired"></i>
+                        <div>
+                            <div style="font-weight: 800;">USDT (Internacional)</div>
+                            <div style="font-size: 10px; color: var(--text-dim);">Cripto TRC20 / ERC20</div>
                         </div>
-                        <div class="data-row">
-                            <label>Titular</label>
-                            <p>{{ bank.account_holder_name }}</p>
-                        </div>
-                        <div class="data-row">
-                            <label>IBAN</label>
-                            <div class="copy-box">
-                                <input type="text" value="{{ bank.IBAN }}" id="iban-{{ forloop.counter }}" readonly>
-                                <button type="button" onclick="copyText('iban-{{ forloop.counter }}')">COPIAR</button>
+                    </div>
+                    {% endif %}
+
+                    <div id="pix-details" class="payment-details">
+                        {% for bank in pix_accounts %}
+                        <div class="card-ui" style="margin: 0 0 10px 0; background: rgba(255,255,255,0.02);">
+                            <div style="font-size: 12px; color: var(--accent);">{{ bank.bank_name }}</div>
+                            <div style="font-size: 14px; margin: 5px 0;">Titular: <strong>{{ bank.account_holder_name }}</strong></div>
+                            <div style="font-size: 11px; color: var(--text-dim);">Chave PIX:</div>
+                            <div class="copy-panel">
+                                <span class="copy-text" id="pix-key-{{ forloop.counter }}">{{ bank.IBAN }}</span>
+                                <button type="button" onclick="copyData('pix-key-{{ forloop.counter }}')" style="background:var(--accent); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer; color:#000;">COPIAR</button>
                             </div>
                         </div>
-                        <div class="data-row total-highlight">
-                            <label>Valor a Transferir</label>
-                            <p class="display-final-amount">Kz 0.00</p>
+                        {% endfor %}
+                    </div>
+
+                    <div id="usdt-details" class="payment-details">
+                        <select id="usdt-wallet-select" class="val-btn" style="width: 100%; margin-bottom: 15px; text-align: left; background: var(--card); border: 1px solid var(--glass);">
+                            <option value="">Selecione a Rede de Envio</option>
+                            {% for wallet in usdt_wallets %}
+                                <option value="{{ wallet.IBAN }}">{{ wallet.bank_name }} - {{ wallet.account_holder_name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <div id="wallet-address-area" style="display: none;">
+                            <div class="qr-container">
+                                <img id="qr-code-img" src="" alt="QR Code">
+                                <p style="font-size: 10px; color: var(--gold); margin-top:10px;">Escaneie ou copie o endereço abaixo</p>
+                            </div>
+                            <div class="copy-panel">
+                                <span class="copy-text" id="wallet-addr"></span>
+                                <button type="button" onclick="copyData('wallet-addr')" style="background:var(--accent); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer; color:#000;">COPIAR</button>
+                            </div>
                         </div>
                     </div>
-                {% endfor %}
-                
-                <div class="upload-section">
-                    <label style="color: var(--pink); font-weight: bold;">ENVIAR COMPROVATIVO</label>
-                    <div class="file-drop" onclick="document.getElementById('file-upload').click()">
-                        <i class="fas fa-camera" style="display: block; font-size: 24px; margin-bottom: 10px;"></i>
-                        <span id="file-name">Clique para anexar foto</span>
-                        <input type="file" name="{{ form.proof_of_payment.name }}" id="file-upload" hidden accept="image/*">
-                    </div>
-                    <input type="text" name="payer_name" placeholder="Nome Completo do Pagador" class="name-input" required>
                 </div>
+                <button type="button" class="btn-glow" id="go-to-3" disabled>Ver dados e Continuar</button>
+            </div>
 
-                <button type="submit" class="btn-action btn-submit">CONFIRMAR DEPÓSITO</button>
+            <div id="step-3" style="display: none;">
+                <div style="padding: 0 15px;">
+                    <div class="card-ui" style="margin: 0 0 20px 0; border: 1px solid var(--gold);">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span class="balance-label">Total em USDT:</span>
+                            <span style="color: var(--gold); font-weight: 800;" id="conf-usdt">0.00</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                            <span class="balance-label">Total em BRL:</span>
+                            <span style="color: white; font-weight: 800;" id="conf-brl">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <label class="input-label">Anexar Comprovativo</label>
+                    <div class="upload-box" onclick="document.getElementById('proof-file').click()">
+                        <i class="fas fa-camera"></i>
+                        <div id="file-name" style="font-size: 12px; color: var(--text-dim);">Toque para carregar a imagem</div>
+                        <input type="file" name="proof_of_payment" id="proof-file" hidden accept="image/*" required>
+                    </div>
+
+                    <label class="input-label" style="margin-top: 20px;">Nome Completo do Pagador</label>
+                    <div class="amount-input-wrapper">
+                        <input type="text" name="payer_name" placeholder="Digite seu nome..." required style="font-size: 16px;">
+                    </div>
+                </div>
+                <button type="submit" class="btn-glow" style="background: linear-gradient(90deg, #00ff88, #00bd69);">Finalizar Depósito</button>
             </div>
         </form>
     {% endif %}
 </div>
 
 <script>
+    const BRL_RATE = 5.48; 
+
     document.addEventListener('DOMContentLoaded', () => {
-        const amountBtns = document.querySelectorAll('.q-btn');
-        const manualAmount = document.getElementById('manual-amount');
-        const amountInput = document.getElementById('id_amount');
-        const bankBtns = document.querySelectorAll('.bank-card');
-        const bankInput = document.getElementById('id_selected_bank');
+        const usdtInput = document.getElementById('usdt-input');
+        const brlText = document.getElementById('brl-conversion');
+        const next1 = document.getElementById('go-to-2');
 
-        manualAmount.addEventListener('input', (e) => {
-            amountInput.value = e.target.value;
-            updateDisplay(e.target.value);
-            document.getElementById('to-step-2').disabled = (e.target.value <= 0);
-            amountBtns.forEach(b => b.classList.remove('active'));
+        usdtInput.addEventListener('input', () => {
+            const val = parseFloat(usdtInput.value) || 0;
+            brlText.innerText = (val * BRL_RATE).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('final_amount_usdt').value = val;
+            next1.disabled = val <= 0;
         });
 
-        amountBtns.forEach(btn => {
+        document.querySelectorAll('.val-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                amountBtns.forEach(b => b.classList.remove('active'));
+                usdtInput.value = btn.dataset.val;
+                usdtInput.dispatchEvent(new Event('input'));
+                document.querySelectorAll('.val-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                manualAmount.value = btn.dataset.value;
-                amountInput.value = btn.dataset.value;
-                updateDisplay(btn.dataset.value);
-                document.getElementById('to-step-2').disabled = false;
             });
         });
 
-        function updateDisplay(v) {
-            document.querySelectorAll('.display-final-amount').forEach(el => el.innerText = "Kz " + v + ".00");
-        }
-
-        document.getElementById('to-step-2').addEventListener('click', () => showStep(2));
-
-        bankBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                bankBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                bankInput.value = btn.dataset.bankId;
-                document.getElementById('to-step-3').disabled = false;
+        document.querySelectorAll('.method-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                const method = card.dataset.method;
+                document.getElementById('id_payment_method').value = method;
+                
+                // Esconde todas as abas e mostra a selecionada
+                document.querySelectorAll('.payment-details').forEach(d => d.style.display = 'none');
+                const targetDetail = document.getElementById(`${method}-details`);
+                if (targetDetail) targetDetail.style.display = 'block';
+                
+                document.getElementById('go-to-3').disabled = false;
             });
         });
 
-        document.getElementById('to-step-3').addEventListener('click', () => {
-            const bid = bankInput.value;
-            document.querySelectorAll('.details-panel').forEach(p => p.style.display = 'none');
-            const target = document.getElementById(`details-${bid}`);
-            if(target) target.style.display = 'block';
-            showStep(3);
+        document.getElementById('usdt-wallet-select').addEventListener('change', function() {
+            const addr = this.value;
+            const area = document.getElementById('wallet-address-area');
+            if(addr) {
+                area.style.display = 'block';
+                document.getElementById('wallet-addr').innerText = addr;
+                document.getElementById('qr-code-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${addr}`;
+            } else {
+                area.style.display = 'none';
+            }
         });
 
-        function showStep(s) {
-            document.querySelectorAll('.step-content').forEach(c => c.style.display = 'none');
-            document.getElementById(`step-${s}`).style.display = 'block';
-            
-            document.querySelectorAll('.step-unit').forEach((u, i) => {
-                if (i + 1 <= s) u.classList.add('active');
-                else u.classList.remove('active');
+        document.getElementById('go-to-2').onclick = () => switchStep(2);
+        document.getElementById('go-to-3').onclick = () => {
+            document.getElementById('conf-usdt').innerText = usdtInput.value + " USDT";
+            document.getElementById('conf-brl').innerText = brlText.innerText;
+            switchStep(3);
+        };
+
+        function switchStep(n) {
+            document.querySelectorAll('[id^="step-"]').forEach(s => s.style.display = 'none');
+            document.getElementById(`step-${n}`).style.display = 'block';
+            document.querySelectorAll('.step-item').forEach((it, idx) => {
+                it.classList.toggle('active', idx < n);
             });
             window.scrollTo(0,0);
         }
 
-        document.getElementById('file-upload').addEventListener('change', function() {
-            document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : "Foto anexada";
-            document.getElementById('file-name').style.color = "var(--teal)";
-        });
+        document.getElementById('proof-file').onchange = function() {
+            if(this.files[0]) document.getElementById('file-name').innerText = "Arquivo: " + this.files[0].name;
+        };
     });
 
-    function copyText(id) {
-        const input = document.getElementById(id);
-        input.select();
-        navigator.clipboard.writeText(input.value);
-        alert("IBAN Copiado!");
+    function copyData(id) {
+        const textElement = document.getElementById(id);
+        const text = textElement.innerText || textElement.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Copiado com sucesso!");
+        }).catch(err => {
+            console.error('Erro ao copiar: ', err);
+        });
     }
 </script>
 {% endblock %}

@@ -4,159 +4,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Login - Ariel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>Login - 100xmagico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     <style>
         :root {
-            --ariel-teal: #20b2aa;
-            --ariel-pink: #ff85a2;
-            --ariel-gold: #ffd700;
-            --ariel-purple: #9370db;
-            --glass-white: rgba(255, 255, 255, 0.95);
+            --gold: #ffd700;
+            --dragon-red: #d90429;
+            --deep-red: #800000;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         html, body {
             margin: 0; padding: 0; width: 100%; min-height: 100vh;
-            overflow-x: hidden; position: relative;
-        }
-
-        body {
+            overflow-x: hidden;
             font-family: 'Poppins', sans-serif;
-            display: flex; flex-direction: column; align-items: center;
-            background: linear-gradient(135deg, #a1887f 0%, #ff85a2 20%, #20b2aa 100%);
-            background-attachment: fixed;
-            color: #333;
+            background: radial-gradient(circle at center, #ff0000 0%, #4a0000 100%);
         }
 
-        /* Efeito de Brilhos no Fundo */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(circle, #fff 1px, transparent 1px);
-            background-size: 50px 50px; opacity: 0.3; z-index: 0; pointer-events: none;
+        #bg-animation {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/chinese-lanterns.png');
+            opacity: 0.2; animation: moveBg 60s linear infinite;
         }
 
-        /* BARRA SUPERIOR */
+        @keyframes moveBg { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+
+        /* TELA DE CARREGAMENTO */
+        #magic-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #d90429, #4a0000);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white;
+            display: none;
+        }
+
+        .loader-circle {
+            width: 100px; height: 100px; border: 5px solid rgba(255,215,0,0.2);
+            border-top: 5px solid var(--gold); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+
+        .counter-text { font-size: 3.5rem; font-weight: bold; color: var(--gold); }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* HEADER & LANG SELECTOR (TEXTO PRETO) */
         .top-nav {
             width: 100%; display: flex; justify-content: space-between;
-            align-items: center; padding: 15px 20px; box-sizing: border-box; z-index: 10;
+            align-items: center; padding: 15px 20px; z-index: 10;
         }
 
-        .logo-ariel {
-            font-family: 'Great Vibes', cursive; font-size: 35px; color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .logo-100xmagico {
+            font-family: 'Great Vibes', cursive; font-size: 32px; 
+            color: var(--gold); text-shadow: 0 0 10px #ff0000;
         }
 
-        .language-selector {
-            background: var(--glass-white); padding: 5px 12px; border-radius: 20px;
-            display: flex; align-items: center; gap: 8px; border: 2px solid var(--ariel-pink);
+        .lang-container {
+            background: var(--gold);
+            border-radius: 20px; padding: 5px 12px; display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
 
-        .language-selector select {
-            border: none; background: transparent; font-weight: 700;
-            color: var(--ariel-teal); outline: none; cursor: pointer; font-size: 0.9rem;
+        .lang-container i { color: #000; font-size: 0.9rem; }
+
+        .lang-container select {
+            background: transparent; border: none; 
+            color: #000; font-size: 0.85rem; font-weight: 800; outline: none; cursor: pointer;
         }
 
-        /* CONTAINER PRINCIPAL */
+        .lang-container select option { color: #000; background: #fff; }
+
+        /* CONTAINER LOGIN */
         .login-container {
-            position: relative; z-index: 5; margin-top: 20px; margin-bottom: 100px;
-            background: var(--glass-white); padding: 35px 25px; border-radius: 30px;
-            width: 92%; max-width: 420px; box-shadow: 0 15px 35px rgba(255, 133, 162, 0.4);
-            border: 3px solid white; text-align: center; box-sizing: border-box;
-        }
-
-        .login-container::after {
-            content: "✨"; position: absolute; top: -25px; left: 50%;
-            transform: translateX(-50%); font-size: 40px;
+            position: relative; z-index: 5; margin: 20px auto 100px;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
+            padding: 35px 20px; border-radius: 20px; width: 92%; max-width: 400px;
+            border: 1.5px solid var(--gold); box-shadow: 0 0 20px rgba(217, 4, 41, 0.5);
+            text-align: center; transition: opacity 0.5s;
         }
 
         h2 {
-            font-family: 'Great Vibes', cursive; font-size: 2.8rem;
-            margin-bottom: 20px; color: var(--ariel-teal);
+            font-family: 'Noto Sans SC', sans-serif; color: var(--gold);
+            font-size: 1.8rem; margin-bottom: 25px; text-transform: uppercase;
         }
 
-        /* FORMULÁRIO */
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label {
-            font-size: 0.75rem; font-weight: 700; margin-left: 10px;
-            display: block; color: var(--ariel-purple); text-transform: uppercase;
+            font-size: 0.7rem; font-weight: 700; color: var(--gold);
+            margin-left: 10px; display: block; margin-bottom: 5px;
         }
 
         .input-wrapper { position: relative; display: flex; align-items: center; }
 
-        /* Seletor de País no Login */
-        .country-select {
-            position: absolute; left: 10px; display: flex; align-items: center;
-            border-right: 1px solid #eee; padding-right: 5px; height: 100%; z-index: 5;
-        }
-
-        .country-select select {
-            background: transparent; border: none; font-size: 0.85rem;
-            font-weight: 600; outline: none; cursor: pointer; color: var(--ariel-teal);
-        }
-
-        .input-wrapper i.main-icon {
-            position: absolute; left: 15px; color: var(--ariel-teal); font-size: 1.1rem;
-        }
-
-        /* Estilização dos Inputs do Django */
         .auth-form input {
-            width: 100%; padding: 14px 15px 14px 45px; border: 2px solid #ffdae3;
-            border-radius: 25px; background: #fff; font-size: 0.95rem;
-            outline: none; box-sizing: border-box; transition: 0.3s;
+            width: 100%; padding: 14px 15px 14px 45px;
+            border: 1px solid rgba(255,215,0,0.3); border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 0.95rem;
         }
 
-        .auth-form input:focus { border-color: var(--ariel-teal); }
+        .input-wrapper i.main-icon { position: absolute; left: 15px; color: var(--gold); z-index: 6; }
 
-        /* Espaço extra para o input de telefone com DDI */
+        .country-select {
+            position: absolute; left: 8px; display: flex; align-items: center;
+            border-right: 1px solid var(--gold); padding-right: 5px; height: 60%; z-index: 6;
+        }
+
+        .country-select select { background: transparent; border: none; color: white; outline: none; font-weight: bold; }
+        .country-select select option { color: #000; background: #fff; }
+
         .phone-input-field { padding-left: 85px !important; }
+        .toggle-password { position: absolute; right: 15px; cursor: pointer; color: var(--gold); z-index: 6; }
 
-        .toggle-password {
-            position: absolute; right: 15px; cursor: pointer; color: #ccc;
-        }
-
-        /* BARRA INFERIOR (REPETINDO O PADRÃO) */
+        /* NAV BAIXO */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
-            background: white; display: flex; justify-content: space-around;
-            align-items: center; border-top: 3px solid var(--ariel-pink);
-            z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            background: #111; display: flex; justify-content: space-around;
+            align-items: center; border-top: 2px solid var(--gold); z-index: 100;
         }
 
         .nav-item {
             text-decoration: none; color: #888; display: flex;
-            flex-direction: column; align-items: center; font-size: 0.75rem; font-weight: 700;
-            flex: 1; transition: 0.3s; border: none; background: none; cursor: pointer;
+            flex-direction: column; align-items: center; font-size: 0.7rem;
+            flex: 1; border: none; background: none; cursor: pointer; font-weight: bold;
         }
 
-        .nav-item i { font-size: 1.5rem; margin-bottom: 4px; }
-        .nav-item.active { color: var(--ariel-teal); }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
+        .nav-item.active { color: var(--gold); }
 
         .errorlist {
-            list-style: none; padding: 0; color: #ff4d4f; font-size: 0.8rem; font-weight: 600;
+            list-style: none; padding: 10px; color: #ff4d4f; font-size: 0.8rem; 
+            background: rgba(255,0,0,0.1); border-radius: 10px; margin-bottom: 15px;
         }
+
+        .casino-light {
+            position: fixed; width: 2px; height: 2px; background: white;
+            border-radius: 50%; box-shadow: 0 0 8px 1px gold;
+            animation: float 8s infinite; opacity: 0.6; z-index: 1;
+        }
+
+        @keyframes float { 0% { transform: translateY(100vh); opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
     </style>
 </head>
 <body>
 
+    <div id="bg-animation"></div>
+
+    <div id="magic-loader">
+        <div class="loader-circle"></div>
+        <div class="counter-text" id="count-up">0</div>
+        <div style="font-family: 'Great Vibes', cursive; color: var(--gold); font-size: 1.5rem; margin-top: 10px;">100xmagico</div>
+    </div>
+
     <nav class="top-nav">
-        <div class="logo-ariel">Ariel</div>
-        
-        <div class="language-selector">
-            <i class="fa-solid fa-globe"></i>
-            <select id="langSelect" onchange="translatePage(this.value)">
+        <div class="logo-100xmagico">100xmagico</div>
+        <div class="lang-container">
+            <i class="fa-solid fa-language"></i>
+            <select id="lang-selector" onchange="changeLanguage()">
                 <option value="pt">PT</option>
                 <option value="en">EN</option>
                 <option value="es">ES</option>
-                <option value="fr">FR</option>
-                <option value="ar">AR</option>
                 <option value="zh">ZH</option>
+                <option value="ar">AR</option>
+                <option value="fr">FR</option>
+                <option value="ru">RU</option>
+                <option value="jp">JP</option>
+                <option value="de">DE</option>
+                <option value="it">IT</option>
             </select>
         </div>
     </nav>
 
-    <div class="login-container">
+    <div class="login-container" id="form-box">
         <h2 id="txt-title">Entrar</h2>
         
         <form method="post" class="auth-form" id="login-form">
@@ -171,14 +193,18 @@
             {% endif %}
 
             <div class="form-group">
-                <label id="lbl-phone">TELEFONE</label>
+                <label id="lbl-phone">TELEFONE DA SORTE</label>
                 <div class="input-wrapper">
                     <div class="country-select">
                         <select name="ddi">
-                            <option value="+244">🇦🇴</option>
                             <option value="+55">🇧🇷</option>
                             <option value="+351">🇵🇹</option>
-                            <option value="+1">🇺🇸</option>
+                            <option value="+244">🇦🇴</option>
+                            <option value="+34">🇪🇸</option>
+                            <option value="+1">🇨🇦</option>
+                            <option value="+86">🇨🇳</option>
+                            <option value="+7">🇷🇺</option>
+                            <option value="+971">🇦🇪</option>
                         </select>
                     </div>
                     {{ form.username }}
@@ -186,9 +212,9 @@
             </div>
 
             <div class="form-group">
-                <label id="lbl-pass">SENHA</label>
+                <label id="lbl-pass">SENHA MÁGICA</label>
                 <div class="input-wrapper">
-                    <i class="fa-solid fa-shield-halved main-icon"></i>
+                    <i class="fa-solid fa-lock main-icon"></i>
                     {{ form.password }}
                     <i class="fa-solid fa-eye toggle-password" id="btn-toggle"></i>
                 </div>
@@ -197,7 +223,7 @@
     </div>
 
     <div class="bottom-nav">
-        <button type="button" onclick="document.getElementById('login-form').submit()" class="nav-item active">
+        <button type="button" onclick="startLoginAnimation()" class="nav-item active">
             <i class="fa-solid fa-right-to-bracket"></i>
             <span id="nav-login">ENTRAR</span>
         </button>
@@ -209,21 +235,72 @@
     </div>
 
     <script>
+        const translations = {
+            pt: { title: "Entrar", phone: "TELEFONE DA SORTE", pass: "SENHA MÁGICA", login: "ENTRAR", reg: "CRIAR CONTA", holder: "Seu número" },
+            en: { title: "Login", phone: "LUCKY PHONE", pass: "MAGIC PASSWORD", login: "LOGIN", reg: "CREATE ACCOUNT", holder: "Your number" },
+            es: { title: "Entrar", phone: "TELÉFONO SUERTE", pass: "CLAVE MÁGICA", login: "ENTRAR", reg: "CREAR CUENTA", holder: "Tu número" },
+            zh: { title: "登录", phone: "幸运电话", pass: "魔法密码", login: "登录", reg: "创建账号", holder: "你的号码" },
+            ar: { title: "تسجيل الدخول", phone: "هاتف الحظ", pass: "كلمة السر", login: "دخول", reg: "إنشاء حساب", holder: "رقمك" },
+            fr: { title: "Connexion", phone: "TÉLÉPHONE CHANCE", pass: "MOT DE PASSE", login: "ENTRER", reg: "CRÉER COMPTE", holder: "Votre número" },
+            ru: { title: "Вход", phone: "ТЕЛЕФОН УДАЧИ", pass: "МАГИЧЕСКИЙ ПАРОЛЬ", login: "ВОЙТИ", reg: "СОЗДАТЬ АККАУНТ", holder: "Ваш номер" },
+            jp: { title: "ログイン", phone: "ラッキー電話", pass: "魔法のパスワード", login: "ログイン", reg: "アカウント作成", holder: "電話番号" },
+            de: { title: "Anmelden", phone: "GLÜCKSTELEFON", pass: "PASSWORT", login: "LOGIN", reg: "KONTO ERSTELLEN", holder: "Ihre Nummer" },
+            it: { title: "Accedi", phone: "TELEFONO FORTUNA", pass: "PASSWORD", login: "ACCEDI", reg: "CREA ACCOUNT", holder: "Tuo numero" }
+        };
+
+        function changeLanguage() {
+            const lang = document.getElementById('lang-selector').value;
+            const t = translations[lang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('lbl-phone').innerText = t.phone;
+            document.getElementById('lbl-pass').innerText = t.pass;
+            document.getElementById('nav-login').innerText = t.login;
+            document.getElementById('nav-reg').innerText = t.reg;
+            
+            const userInput = document.querySelector('input[name="username"]');
+            if(userInput) userInput.placeholder = t.holder;
+            
+            document.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        }
+
+        function runCounter(callback) {
+            const loader = document.getElementById('magic-loader');
+            const counter = document.getElementById('count-up');
+            loader.style.display = 'flex';
+            let count = 0;
+            const interval = setInterval(() => {
+                count += 2;
+                counter.innerText = count;
+                if (count >= 100) {
+                    clearInterval(interval);
+                    if(callback) callback();
+                }
+            }, 25);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Ajuste dos inputs do Django para o nosso CSS
+            // Inicialização de partículas
+            for (let i = 0; i < 15; i++) {
+                let spark = document.createElement('div');
+                spark.className = 'casino-light';
+                spark.style.left = Math.random() * 100 + 'vw';
+                spark.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                document.body.appendChild(spark);
+            }
+
+            // Ajuste dos inputs do Django
             const userInput = document.querySelector('input[name="username"]');
             const passInput = document.querySelector('input[name="password"]');
 
             if (userInput) {
                 userInput.classList.add('phone-input-field');
-                userInput.placeholder = "9xx xxx xxx";
+                userInput.placeholder = "Seu número";
             }
             if (passInput) {
-                passInput.placeholder = "••••••";
-                passInput.id = "id_password_field";
+                passInput.placeholder = "******";
             }
 
-            // Alternar Visibilidade da Senha
+            // Toggle Senha
             const btnToggle = document.getElementById('btn-toggle');
             if (btnToggle && passInput) {
                 btnToggle.addEventListener('click', function() {
@@ -233,26 +310,17 @@
                     this.classList.toggle('fa-eye-slash');
                 });
             }
+
+            // Carregamento Inicial
+            runCounter(() => { document.getElementById('magic-loader').style.display = 'none'; });
         });
 
-        // Sistema de Idiomas Unificado
-        const translations = {
-            pt: { title: "Entrar", phone: "Telefone", pass: "Senha", login: "ENTRAR", reg: "CRIAR CONTA" },
-            en: { title: "Login", phone: "Phone", pass: "Password", login: "LOGIN", reg: "REGISTER" },
-            es: { title: "Entrar", phone: "Teléfono", pass: "Contraseña", login: "ENTRAR", reg: "REGISTRO" },
-            fr: { title: "Connexion", phone: "Téléphone", pass: "Mot de passe", login: "CONNEXION", reg: "S'INSCRIRE" },
-            ar: { title: "تسجيل الدخول", phone: "الهاتف", pass: "كلمة المرور", login: "تسجيل الدخول", reg: "تسجيل" },
-            zh: { title: "登录", phone: "电话", pass: "密码", login: "登录", reg: "注册" }
-        };
-
-        function translatePage(lang) {
-            const t = translations[lang];
-            document.getElementById('txt-title').innerText = t.title;
-            document.getElementById('lbl-phone').innerText = t.phone;
-            document.getElementById('lbl-pass').innerText = t.pass;
-            document.getElementById('nav-login').innerText = t.login;
-            document.getElementById('nav-reg').innerText = t.reg;
-            document.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        function startLoginAnimation() {
+            const form = document.getElementById('login-form');
+            document.getElementById('form-box').style.opacity = '0';
+            runCounter(() => {
+                form.submit();
+            });
         }
     </script>
 </body>

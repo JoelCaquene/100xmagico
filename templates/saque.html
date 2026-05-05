@@ -1,273 +1,191 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Levantamento | Princesa Ariel{% endblock %}
+{% block title %}Saque | 100XMAGICO{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
     
     :root { 
-        --dark: #0b0718; 
-        --card: #161129; 
-        --pink: #ff2d75; 
+        --bg-body: #1A0536; 
+        --panel: #2D0B5A; 
         --gold: #ffb800; 
-        --teal: #00f2ff; 
-        --glass: rgba(255, 255, 255, 0.05);
+        --pink: #FF2D75;
+        --teal: #00F2FF;
+        --success: #00ff88;
+        --danger: #ff4d4d;
     }
 
-    body { 
-        background: var(--dark); 
-        color: white; 
-        font-family: 'Poppins', sans-serif; 
-        margin: 0; 
-        overflow-x: hidden; 
+    body { background: var(--bg-body); color: white; font-family: 'Poppins', sans-serif; margin: 0; }
+
+    .main-container {
+        background: radial-gradient(circle at top, #2D0B5A 0%, #1A0536 100%);
+        min-height: 100vh; width: 100%; padding-bottom: 40px;
     }
 
-    /* FUNDO IDÊNTICO AO MENU */
-    .saque-bg {
-        background: radial-gradient(circle at top, #1a1140 0%, var(--dark) 100%);
-        min-height: 100vh;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-bottom: 40px;
-    }
-
-    /* HEADER */
-    .ariel-header { 
-        width: 100%;
-        height: 120px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        background: linear-gradient(rgba(11,7,24,0.7), var(--dark)), url('https://wallpaperaccess.com/full/1505374.jpg');
-        background-size: cover; 
-        background-position: center;
+    /* HEADER COM VOLTAR DIRETO */
+    .header-saque {
+        padding: 30px 20px; text-align: center;
         border-bottom: 1px solid var(--pink);
+        background: rgba(45, 11, 90, 0.9);
         position: relative;
     }
+    .header-saque h1 {
+        font-family: 'Cinzel', serif; font-size: 24px; margin: 0;
+        color: #fff; text-shadow: 0 0 15px var(--pink);
+    }
+    .back-nav { position: absolute; top: 25px; left: 15px; }
+    .back-arrow { color: var(--gold); font-size: 22px; text-decoration: none; }
 
-    .back-nav { position: absolute; top: 20px; left: 15px; }
-    .back-arrow {
-        color: white; font-size: 18px; background: var(--pink);
-        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; box-shadow: 0 0 15px var(--pink); text-decoration: none;
+    .saque-wrapper { width: 92%; max-width: 450px; margin: 20px auto; }
+
+    .card-magic {
+        background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
-    /* CARD DE SAQUE */
-    .saque-container {
-        width: 92%;
-        max-width: 400px;
-        margin-top: -30px;
-        z-index: 10;
+    /* ALERTAS DE MENSAGENS DO DJANGO */
+    .django-messages { margin-bottom: 20px; }
+    .alert {
+        padding: 12px; border-radius: 12px; font-size: 13px; text-align: center;
+        margin-bottom: 10px; border: 1px solid;
     }
+    .alert-error { background: rgba(255, 77, 77, 0.1); color: var(--danger); border-color: var(--danger); }
+    .alert-success { background: rgba(0, 255, 136, 0.1); color: var(--success); border-color: var(--success); }
 
-    .royal-saque-card {
-        background: var(--card);
-        border: 1px solid var(--glass);
-        border-radius: 25px;
-        padding: 25px 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-        position: relative;
+    .balance-card {
+        background: rgba(255, 45, 117, 0.05); border: 1px solid rgba(255, 45, 117, 0.2);
+        padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 25px;
     }
+    .balance-card span { font-size: 11px; color: var(--teal); text-transform: uppercase; }
+    .balance-card h2 { margin: 5px 0 0; font-size: 26px; font-weight: 700; }
+    .balance-brl { font-size: 14px; color: var(--gold); font-weight: 600; margin-top: 5px; display: block; }
 
-    .balance-view {
-        text-align: center;
-        margin-bottom: 25px;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 15px;
-        border: 1px dashed rgba(0, 242, 255, 0.3);
+    .amount-input-box {
+        background: #1A0536; border: 2px solid var(--pink); border-radius: 15px;
+        padding: 15px; margin-bottom: 15px; text-align: center;
     }
-    .balance-view span { font-size: 12px; color: var(--teal); display: block; text-transform: uppercase; }
-    .balance-view h2 { margin: 5px 0 0; font-size: 24px; color: #fff; }
-
-    /* INPUT E VALORES */
-    .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; font-size: 11px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; }
-    
-    .display-amount {
-        background: var(--dark) !important;
-        border: 1px solid var(--pink) !important;
-        color: var(--pink) !important;
-        width: 100%;
-        padding: 15px;
-        border-radius: 12px;
-        font-size: 22px;
-        font-weight: bold;
-        text-align: center;
-        outline: none;
+    .amount-display { 
+        background: transparent; border: none; color: white; 
+        font-size: 30px; font-weight: 700; width: 100%; text-align: center; outline: none;
     }
 
     .values-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-        margin-bottom: 20px;
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px;
     }
     .val-btn {
-        background: var(--glass);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: white;
-        padding: 10px 2px;
-        border-radius: 10px;
-        font-size: 10px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+        color: white; padding: 15px; border-radius: 15px; cursor: pointer;
+        display: flex; flex-direction: column; align-items: center; transition: 0.3s;
     }
-    .val-btn:active, .val-btn.selected {
-        background: var(--pink);
-        border-color: var(--pink);
-        box-shadow: 0 0 10px var(--pink);
-    }
+    .val-btn b { font-size: 16px; color: var(--teal); }
+    .val-btn small { font-size: 11px; color: var(--gold); }
+    .val-btn.active { background: var(--pink); border-color: var(--pink); }
+    .val-btn.active b, .val-btn.active small { color: #fff; }
 
-    /* RESUMO FINANCEIRO */
     .calc-box {
-        background: rgba(0,0,0,0.3);
-        border-radius: 15px;
-        padding: 15px;
-        margin-bottom: 25px;
+        background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; margin-bottom: 25px;
     }
-    .calc-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        margin-bottom: 8px;
-    }
-    .calc-row:last-child {
-        margin-bottom: 0;
-        padding-top: 8px;
-        border-top: 1px solid var(--glass);
-        color: var(--teal);
-        font-weight: bold;
-    }
+    .calc-line { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; color: #ccc; }
+    .calc-line.total { color: var(--success); font-weight: 700; border-top: 1px solid #444; padding-top: 8px; }
 
-    .confirm-btn {
-        width: 100%;
-        background: linear-gradient(90deg, var(--pink), #ff5e95);
-        color: white;
-        border: none;
-        padding: 18px;
-        border-radius: 15px;
-        font-weight: bold;
-        font-size: 16px;
-        letter-spacing: 1px;
-        cursor: pointer;
-        box-shadow: 0 10px 20px rgba(255, 45, 117, 0.3);
+    .btn-submit {
+        width: 100%; background: linear-gradient(90deg, var(--pink), #D61A5E);
+        color: #fff; border: none; padding: 18px; border-radius: 15px;
+        font-weight: 800; font-size: 16px; text-transform: uppercase; cursor: pointer;
     }
-    .confirm-btn:disabled { opacity: 0.3; filter: grayscale(1); }
-
-    /* ALERTAS */
-    .msg-royal {
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 12px;
-        text-align: center;
-        margin-bottom: 15px;
-        border: 1px solid;
-    }
-    .msg-error { background: rgba(255,0,0,0.1); color: #ff4d4d; border-color: #ff4d4d; }
-    .msg-success { background: rgba(0,255,0,0.1); color: #00ff00; border-color: #00ff00; }
-
 </style>
 
-<div class="saque-bg">
-    <div class="ariel-header">
+<div class="main-container">
+    <div class="header-saque">
         <div class="back-nav">
-            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-home"></i></a>
+            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
         </div>
-        <h1 style="font-family: 'Great Vibes'; font-size: 32px; margin: 0; text-shadow: 0 0 10px var(--pink);">Princesa Ariel</h1>
-        <p style="font-size: 10px; letter-spacing: 2px; color: var(--teal); margin: 0;">LEVANTAMENTO ROYAL</p>
+        <h1>100xmagico</h1>
     </div>
 
-    <div class="saque-container">
-        <div class="royal-saque-card">
-            
-            <div class="balance-view">
-                <span>Saldo Disponível</span>
-                <h2>{{ request.user.available_balance|default:"0" }} KZ</h2>
+    <div class="saque-wrapper">
+        {% if messages %}
+        <div class="django-messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-info-circle"></i> {{ message }}
             </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-            {% if messages %}
-                {% for message in messages %}
-                <div class="msg-royal msg-{{ message.tags }}">
-                    <i class="fas fa-info-circle"></i> {{ message }}
-                </div>
-                {% endfor %}
-            {% endif %}
-
-            {% if not has_bank_details %}
-                <div class="msg-royal msg-error">
-                    <i class="fas fa-exclamation-triangle"></i> Configure seu banco no Perfil.
-                </div>
-            {% endif %}
+        <div class="card-magic">
+            <div class="balance-card">
+                <span>Saldo Disponível</span>
+                <h2 id="u-usdt">USDT {{ user.available_balance }}</h2>
+                <span class="balance-brl" id="u-brl">R$ 0,00</span>
+            </div>
 
             <form method="post" id="formSaque">
                 {% csrf_token %}
-                
-                <div class="input-group">
-                    <label>Valor Selecionado (KZ)</label>
-                    <input type="number" id="id_amount_display" class="display-amount" placeholder="0" readonly>
-                    <div style="display:none;">{{ form.amount }}</div>
+                <div class="amount-input-box">
+                    <label style="font-size: 10px; color: #aaa;">MONTANTE</label>
+                    <input type="text" id="display_amount" class="amount-display" value="0.00 USDT" readonly>
+                    <input type="hidden" name="amount" id="real_amount" value="0">
                 </div>
 
                 <div class="values-grid">
-                    <button type="button" class="val-btn" onclick="updateVal(this, 2000)">2000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 6000)">6000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 15000)">15000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 55000)">55000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 120000)">120000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 200000)">200000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 500000)">500000k</button>
-                    <button type="button" class="val-btn" onclick="updateVal(this, 700000)">700000k</button>
+                    <button type="button" class="val-btn" onclick="selectVal(this, 3)"><b>3 USDT</b><small>R$ 16,44</small></button>
+                    <button type="button" class="val-btn" onclick="selectVal(this, 10)"><b>10 USDT</b><small>R$ 54,80</small></button>
+                    <button type="button" class="val-btn" onclick="selectVal(this, 50)"><b>50 USDT</b><small>R$ 274,00</small></button>
+                    <button type="button" class="val-btn" onclick="selectVal(this, 100)"><b>100 USDT</b><small>R$ 548,00</small></button>
+                    <button type="button" class="val-btn" onclick="selectVal(this, 500)"><b>500 USDT</b><small>R$ 2.740,00</small></button>
+                    <button type="button" class="val-btn" onclick="selectVal(this, 1000)"><b>1000 USDT</b><small>R$ 5.480,00</small></button>
                 </div>
 
                 <div class="calc-box">
-                    <div class="calc-row">
-                        <span>Taxa de Processamento (15%)</span>
-                        <span id="taxaTxt">0 KZ</span>
-                    </div>
-                    <div class="calc-row">
-                        <span>Líquido a Receber</span>
-                        <span id="receberTxt">0 KZ</span>
-                    </div>
+                    <div class="calc-line"><span>Câmbio Consistente</span><span>1 USDT = R$ 5,48</span></div>
+                    <div class="calc-line"><span>Taxa Aplicada (10%)</span><span id="taxaTxt">0.00 USDT</span></div>
+                    <div class="calc-line total"><span>Valor Líquido</span><span id="liquidoTxt">R$ 0,00</span></div>
                 </div>
 
-                <button type="submit" class="confirm-btn" {% if not has_bank_details %}disabled{% endif %}>
-                    SOLICITAR LEVANTAMENTO
+                <button type="submit" class="btn-submit" id="btnConfirm">
+                    Solicitar Saque Agora
                 </button>
             </form>
 
-            <p style="text-align: center; font-size: 10px; color: #666; margin-top: 20px;">
-                Mínimo: 3.000 KZ | Processamento em até 24h úteis.
+            <p style="text-align: center; font-size: 10px; color: #777; margin-top: 15px;">
+                Horário: 09:00 às 17:00 | Limite: 1 saque/dia
             </p>
         </div>
     </div>
 </div>
 
 <script>
-    function updateVal(btn, value) {
-        // Estilo dos botões
-        document.querySelectorAll('.val-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
+    const CAMBIO = 5.48;
+    const TAXA = 0.10;
 
-        // Atualiza campos
-        const display = document.getElementById('id_amount_display');
-        const hiddenInput = document.querySelector('input[name="amount"]');
-        
-        display.value = value;
-        hiddenInput.value = value;
-
-        // Cálculos
-        const taxa = value * 0.15;
-        const liquido = value - taxa;
-
-        document.getElementById('taxaTxt').innerText = taxa.toLocaleString() + ' KZ';
-        document.getElementById('receberTxt').innerText = liquido.toLocaleString() + ' KZ';
+    // Converte o saldo inicial
+    function updateHeaderBalance() {
+        const saldo = parseFloat("{{ user.available_balance }}".replace(',', '.')) || 0;
+        document.getElementById('u-brl').innerText = (saldo * CAMBIO).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
+
+    function selectVal(btn, val) {
+        // Estética
+        document.querySelectorAll('.val-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Dados para o Form
+        document.getElementById('display_amount').value = val + ".00 USDT";
+        document.getElementById('real_amount').value = val;
+
+        // Cálculos de exibição
+        const vTaxa = val * TAXA;
+        const vLiquidoBRL = (val - vTaxa) * CAMBIO;
+
+        document.getElementById('taxaTxt').innerText = vTaxa.toFixed(2) + " USDT";
+        document.getElementById('liquidoTxt').innerText = vLiquidoBRL.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    window.onload = updateHeaderBalance;
 </script>
 {% endblock %}

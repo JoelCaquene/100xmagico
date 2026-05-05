@@ -102,11 +102,16 @@ def user_logout(request):
     logout(request)
     return redirect('menu')
 
-# --- DEPÓSITO ---
+# --- DEPÓSITO INTERNACIONAL ---
 @login_required
 def deposito(request):
-    platform_bank_details = PlatformBankDetails.objects.all()
-    deposit_instruction = PlatformSettings.objects.first().deposit_instruction if PlatformSettings.objects.first() else 'Instruções de depósito não disponíveis.'
+    # Filtra o que é PIX e o que é USDT de acordo com o que você editou no admin
+    pix_accounts = PlatformBankDetails.objects.filter(type='PIX')
+    usdt_wallets = PlatformBankDetails.objects.filter(type='USDT')
+    
+    settings = PlatformSettings.objects.first()
+    deposit_instruction = settings.deposit_instruction if settings else ''
+    
     level_deposits = Level.objects.all().values_list('deposit_value', flat=True).distinct().order_by('deposit_value')
     level_deposits_list = [str(d) for d in level_deposits] 
 
@@ -116,19 +121,12 @@ def deposito(request):
             deposit = form.save(commit=False)
             deposit.user = request.user
             deposit.save()
-            return render(request, 'deposito.html', {
-                'platform_bank_details': platform_bank_details,
-                'deposit_instruction': deposit_instruction,
-                'level_deposits_list': level_deposits_list,
-                'deposit_success': True 
-            })
-        else:
-            messages.error(request, 'Erro ao enviar o depósito.')
+            return render(request, 'deposito.html', {'deposit_success': True})
     
     form = DepositForm()
     context = {
-        'platform_bank_details': platform_bank_details,
-        'deposit_instruction': deposit_instruction,
+        'pix_accounts': pix_accounts,
+        'usdt_wallets': usdt_wallets,
         'form': form,
         'level_deposits_list': level_deposits_list,
         'deposit_success': False,
@@ -151,37 +149,68 @@ def approve_deposit(request, deposit_id):
 # --- SAQUE ---
 @login_required
 def saque(request):
-    MIN_WITHDRAWAL_AMOUNT = 2000
+    MIN_WITHDRAWAL_AMOUNT = Decimal('3')
+    TAXA_SAQUE = Decimal('0.10')  
+    CAMBIO_BRL = Decimal('5.48')  
+    
     START_TIME = time(9, 0, 0)
-    END_TIME = time(17, 0, 0)
-    withdrawal_instruction = PlatformSettings.objects.first().withdrawal_instruction if PlatformSettings.objects.first() else ''
+    END_TIME = time(20, 0, 0)
+    
+    settings = PlatformSettings.objects.first()
+    withdrawal_instruction = settings.withdrawal_instruction if settings else ''
+    
     withdrawal_records = Withdrawal.objects.filter(user=request.user).order_by('-created_at')
+    
+    # AJUSTE NO HISTÓRICO: Calculamos o líquido apenas para mostrar na tela
+    for record in withdrawal_records:
+        # Aqui record.amount é o BRUTO que salvamos
+        valor_liquido_usdt = record.amount * (Decimal('1') - TAXA_SAQUE)
+        record.amount_brl = valor_liquido_usdt * CAMBIO_BRL
+        # Criamos um atributo temporário para o template mostrar o valor líquido em USDT
+        record.liquido_display = valor_liquido_usdt
+
     has_bank_details = BankDetails.objects.filter(user=request.user).exists()
     now = timezone.localtime(timezone.now()).time()
     today = timezone.localdate(timezone.now())
     is_time_to_withdraw = START_TIME <= now <= END_TIME
-    withdrawals_today_count = Withdrawal.objects.filter(user=request.user, created_at__date=today, status__in=['Pendente', 'Aprovado']).count()
+    
+    withdrawals_today_count = Withdrawal.objects.filter(
+        user=request.user, 
+        created_at__date=today, 
+        status__in=['Pendente', 'Aprovado']
+    ).count()
+    
     can_withdraw_today = withdrawals_today_count == 0
     
     if request.method == 'POST':
         form = WithdrawalForm(request.POST)
         if form.is_valid():
-            amount = form.cleaned_data['amount']
+            amount_bruto = Decimal(str(form.cleaned_data['amount']))
+            
             if not can_withdraw_today:
                 messages.error(request, 'Apenas 1 saque por dia.')
             elif not is_time_to_withdraw:
-                messages.error(request, 'Fora do horário de saque.')
+                messages.error(request, 'Fora do horário de saque (09:00 às 20:00).')
             elif not has_bank_details:
                 messages.error(request, 'Adicione coordenadas bancárias.')
-            elif amount < MIN_WITHDRAWAL_AMOUNT:
+            elif amount_bruto < MIN_WITHDRAWAL_AMOUNT:
                 messages.error(request, 'Valor mínimo insuficiente.')
-            elif request.user.available_balance < amount:
+            elif request.user.available_balance < amount_bruto:
                 messages.error(request, 'Saldo insuficiente.')
             else:
-                Withdrawal.objects.create(user=request.user, amount=amount)
-                request.user.available_balance -= amount
+                # MUDANÇA CHAVE AQUI:
+                # 1. Calculamos o líquido só para a mensagem
+                valor_liquido = amount_bruto * (Decimal('1') - TAXA_SAQUE)
+                
+                # 2. SALVAMOS O BRUTO (ex: 3.00) no banco de dados
+                # Assim o Admin faz o cálculo correto sobre os 3.00
+                Withdrawal.objects.create(user=request.user, amount=amount_bruto)
+                
+                # 3. Descontamos o BRUTO do saldo
+                request.user.available_balance -= amount_bruto
                 request.user.save()
-                messages.success(request, 'Saque solicitado.')
+                
+                messages.success(request, f'Saque de {valor_liquido:.2f} USDT solicitado com sucesso!')
                 return redirect('saque')
     else:
         form = WithdrawalForm()
@@ -194,6 +223,7 @@ def saque(request):
         'is_time_to_withdraw': is_time_to_withdraw,
         'MIN_WITHDRAWAL_AMOUNT': MIN_WITHDRAWAL_AMOUNT,
         'can_withdraw_today': can_withdraw_today,
+        'CAMBIO_BRL': CAMBIO_BRL,
     }
     return render(request, 'saque.html', context)
 

@@ -1,5 +1,5 @@
 """
-Django settings for ariel project.
+Django settings for 100xmagico project.
 """
 
 from pathlib import Path
@@ -22,11 +22,13 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 hosts_string = config('ALLOWED_HOSTS', default='')
 ALLOWED_HOSTS = [host.strip() for host in hosts_string.split(',') if host.strip()]
 
-# Adicionando seus domínios manualmente para garantir o funcionamento
+# Domínios de produção e locais (Vírgula corrigida abaixo)
 CUSTOM_DOMAINS = [
-    'princesa-ariel.store',
-    'www.princesa-ariel.store',
-    'princesa-ariel.onrender.com'
+    'princesa-100xmagico.store',
+    'www.princesa-100xmagico.store',
+    'princesa-100xmagico.onrender.com',
+    '127.0.0.1',
+    'localhost',
 ]
 
 for domain in CUSTOM_DOMAINS:
@@ -64,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ariel.urls'
+ROOT_URLCONF = '100xmagico.urls'
 
 TEMPLATES = [
     {
@@ -82,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ariel.wsgi.application'
+WSGI_APPLICATION = '100xmagico.wsgi.application'
 
 # ======================================================================
 # DATABASE
@@ -96,7 +98,7 @@ DATABASES = {
 
 # Internationalization
 LANGUAGE_CODE = 'pt-br'
-TIME_ZONE = 'Africa/Luanda'
+TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
@@ -122,7 +124,7 @@ if not os.path.exists(MEDIA_ROOT):
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # ======================================================================
-# SEGURANÇA E REDIRECIONAMENTO (AJUSTADO PARA EVITAR ERRO 520)
+# SEGURANÇA E REDIRECIONAMENTO
 # ======================================================================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.CustomUser'
@@ -145,7 +147,7 @@ if not DEBUG:
     # Redirecionamento de domínio
     PREPEND_WWW = False
 
-    # HSTS desativado momentaneamente para garantir a compatibilidade inicial
+    # HSTS
     SECURE_HSTS_SECONDS = 0
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False

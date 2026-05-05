@@ -1,1 +1,1 @@
-web: gunicorn ariel.wsgi
+web: gunicorn 100xmagico.wsgi:application

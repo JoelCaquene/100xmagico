@@ -1,262 +1,388 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Ariel Official Certification{% endblock %}
+{% block title %}100xmagico Official Certification{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
 <div class="legal-wrapper">
     
     <div class="legal-top-bar">
         <a href="{% url 'home' %}" class="btn-back">
-            <i class="fas fa-chevron-left"></i> BACK TO DASHBOARD
+            <i class="fas fa-shield-alt"></i> VOLTAR
         </a>
         <div class="secure-id">
-            SYSTEM AUTHENTICATED: <span class="code">#AR-2026-9921</span>
+            SISTEMA: <span class="code">ID-0098/AO-26</span>
         </div>
     </div>
 
     <section class="document-container">
-        <div class="doc-header-top">
-            <div class="emblem-placeholder">
-                <i class="fas fa-university"></i>
-            </div>
-            <div class="doc-meta">
-                <span class="status-tag active">VALID UNTIL 2028</span>
-                <span class="serial">No: 0098/AO-2026</span>
-            </div>
-        </div>
-
-        <div class="doc-body">
-            <h1 class="doc-title">OPERATIONAL CONCESSION CERTIFICATE</h1>
-            <h2 class="doc-subtitle">REPUBLIC OF ANGOLA & GLOBAL MARKETS</h2>
-            
-            <p class="legal-paragraph">
-                By the authority vested in the International Trade and Digital Asset Commission, it is hereby certified that <strong>ARIEL GROUP PLATFORM</strong> is authorized to operate within the digital financial ecosystem.
-            </p>
-
-            <div class="contract-dates">
-                <div class="date-box">
-                    <label>EFFECTIVE FROM</label>
-                    <div class="date">JAN 2026</div>
+        <div class="inner-border">
+            <div class="doc-header-top">
+                <div class="emblem-placeholder">
+                    <i class="fas fa-monument"></i>
                 </div>
-                <div class="date-box">
-                    <label>EXPIRATION DATE</label>
-                    <div class="date highlight">DEC 2028</div>
+                <div class="doc-meta">
+                    <span class="status-tag">DOCUMENTO OFICIAL</span>
+                    <span class="serial">Ref: #2026-9921-AGO</span>
+                    <span class="validity">VÁLIDO ATÉ: DEZ 2028</span>
                 </div>
             </div>
 
-            <p class="legal-small">
-                *Subject to the International Commerce Act 2026. This entity is registered to provide liquidity intermediation and task-based revenue distribution.
-            </p>
-        </div>
+            <div class="doc-body">
+                <div class="doc-watermark">CERTIFIED</div>
+                <h1 class="doc-title">CERTIFICADO DE CONCESSÃO OPERACIONAL</h1>
+                <h2 class="doc-subtitle">REPUBLICA DE ANGOLA & MERCADOS DIGITAIS GLOBAIS</h2>
+                
+                <div class="divider-elegant"></div>
 
-        <div class="doc-footer-legal">
-            <div class="stamp-group">
-                <div class="rubber-stamp red-stamp">
-                    APPROVED<br>2026/2028<br>LUANDA
-                </div>
-                <div class="official-signature">
-                    <img src="https://signaturely.com/wp-content/uploads/2020/07/signature-samples.jpg" class="sig-image">
-                    <span class="sig-name">Commissioner of Digital Trade</span>
-                </div>
-            </div>
-            <div class="wax-seal">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-        </div>
-    </section>
+                <p class="legal-paragraph">
+                    Pela autoridade conferida pela <strong>Comissão Internacional de Comércio e Ativos Digitais</strong>, fica por este meio certificado que a plataforma <strong>100XMAGICO GROUP PLATFORM</strong> está plenamente autorizada a operar dentro do ecossistema financeiro digital global.
+                </p>
 
-    <section class="document-container second-doc">
-        <div class="doc-body">
-            <div class="doc-watermark">AUTHENTIC</div>
-            <h1 class="doc-title">MONEY SERVICES BUSINESS LICENSE</h1>
-            <p class="legal-paragraph">
-                The entity <strong>ARIEL GLOBAL SERVICES</strong> has complied with all fiduciary requirements to act as a <strong>Tier 1 Liquidity Provider</strong>. This license guarantees the safety of user deposits and the integrity of task commissions.
-            </p>
+                <p class="legal-paragraph">
+                    Esta concessão garante que a entidade cumpre com os rigorosos padrões de transparência, distribuição de tarefas e segurança de dados exigidos para operações de intermediação de liquidez.
+                </p>
 
-            <div class="compliance-grid">
-                <div class="item"><i class="fas fa-check"></i> AML VERIFIED</div>
-                <div class="item"><i class="fas fa-check"></i> KYB AUTHENTICATED</div>
-                <div class="item"><i class="fas fa-check"></i> RESERVE 1:1 RATIO</div>
-            </div>
-        </div>
+                <div class="contract-dates">
+                    <div class="date-box">
+                        <label>DATA DE EMISSÃO</label>
+                        <div class="date">02 JAN 2026</div>
+                    </div>
+                    <div class="date-box">
+                        <label>VENCIMENTO</label>
+                        <div class="date highlight">31 DEZ 2028</div>
+                    </div>
+                </div>
 
-        <div class="doc-footer-legal">
-            <div class="stamp-group">
-                <div class="rubber-stamp blue-stamp">
-                    REGISTRAR OF COMPANIES<br>UNITED KINGDOM<br>CERTIFIED
-                </div>
-                <div class="official-signature">
-                    <img src="https://www.free-signature-generator.com/images/signature_output.png" class="sig-image">
-                    <span class="sig-name">Chief Compliance Officer</span>
-                </div>
+                <p class="legal-small">
+                    *Documento emitido em conformidade com o Ato de Comércio Internacional 2026.
+                </p>
             </div>
-            <div class="qr-auth">
-                <i class="fas fa-qrcode"></i>
-                <span>VERIFY ONLINE</span>
+
+            <div class="doc-footer-legal">
+                <div class="stamp-group">
+                    <div class="rubber-stamp-circle">
+                        <svg viewBox="0 0 100 100">
+                            <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent"/>
+                            <text>
+                                <textPath xlink:href="#circlePath">
+                                    • VERIFIED OPERATIONAL • 100XMAGICO • 2026 • 
+                                </textPath>
+                            </text>
+                        </svg>
+                        <div class="stamp-inner">APPROVED</div>
+                    </div>
+
+                    <div class="official-signature">
+                        <img src="https://signaturely.com/wp-content/uploads/2020/07/signature-samples.jpg" class="sig-image" alt="Signature">
+                        <span class="sig-name">Comissário de Comércio</span>
+                    </div>
+                </div>
+
+                <div class="wax-seal">
+                    <i class="fas fa-crown"></i>
+                </div>
             </div>
         </div>
     </section>
 
+    <section class="document-container blue-theme">
+        <div class="inner-border">
+            <div class="doc-body">
+                <div class="doc-watermark">AUTHENTIC</div>
+                <h1 class="doc-title">MONEY SERVICES BUSINESS LICENSE</h1>
+                <p class="legal-paragraph center">
+                    A entidade <strong>100XMAGICO GLOBAL SERVICES</strong> cumpriu integralmente todos os requisitos fiduciários.
+                </p>
+
+                <div class="compliance-grid">
+                    <div class="item">
+                        <i class="fas fa-shield-virus"></i>
+                        <span>AML VERIFIED</span>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-user-check"></i>
+                        <span>KYC AUTH</span>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>RESERVE 1:1</span>
+                    </div>
+                </div>
+
+                <div class="security-ribbon">
+                    PROTEÇÃO DE DEPÓSITOS GARANTIDA
+                </div>
+            </div>
+
+            <div class="doc-footer-legal">
+                <div class="stamp-group">
+                    <div class="rubber-stamp blue-stamp">
+                        <div class="stamp-header">REGISTRAR OF COMPANIES</div>
+                        <div class="stamp-body">CERTIFIED<br>UK</div>
+                        <div class="stamp-footer">#MSB-99810</div>
+                    </div>
+                    <div class="official-signature">
+                        <img src="https://www.free-signature-generator.com/images/signature_output.png" class="sig-image" alt="Signature">
+                        <span class="sig-name">Compliance Officer</span>
+                    </div>
+                </div>
+                <div class="qr-auth">
+                    <i class="fas fa-qrcode"></i>
+                    <span>VERIFICAÇÃO</span>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;700&family=Montserrat:wght@800&family=Roboto+Mono&display=swap');
-
-    body { background: #d1d5db; margin: 0; }
-
-    .legal-wrapper {
-        max-width: 900px;
-        margin: 0 auto;
-        padding-bottom: 60px;
-        font-family: 'Crimson Pro', serif;
+    :root {
+        --paper-color: #fdfdfb;
+        --stamp-red: rgba(190, 18, 18, 0.8);
+        --stamp-blue: rgba(29, 78, 216, 0.8);
     }
 
-    /* BARRA SUPERIOR */
+    /* Reset essencial para evitar rolagem horizontal */
+    * {
+        box-sizing: border-box;
+    }
+
+    body { 
+        background: #ced4da; 
+        margin: 0; 
+        padding: 0;
+        overflow-x: hidden; /* Garante que nada saia do corpo */
+        width: 100%;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .legal-wrapper {
+        width: 100%;
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 0 10px 60px 10px;
+    }
+
     .legal-top-bar {
-        background: #111827;
-        padding: 15px 20px;
+        background: #0f172a;
+        padding: 15px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         color: white;
-        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #10b981;
+        font-family: 'Inter', sans-serif;
     }
-    .btn-back { color: white; text-decoration: none; font-size: 12px; font-weight: bold; }
-    .secure-id { font-size: 10px; color: #9ca3af; }
-    .code { color: #10b981; font-family: 'Roboto Mono', monospace; }
 
-    /* DOCUMENTO CONTAINER */
+    .btn-back { color: #10b981; text-decoration: none; font-size: 11px; font-weight: bold; }
+    .secure-id { font-size: 9px; color: #9ca3af; text-align: right; }
+    .code { color: #fff; font-family: 'JetBrains Mono'; }
+
     .document-container {
-        background: #fff;
-        margin: 30px 15px;
-        padding: 40px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        background: var(--paper-color);
+        margin: 20px 0;
+        padding: 10px; /* Reduzido para telas menores */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         position: relative;
-        border: 1px solid #999;
-        background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+        border: 1px solid #c0c0c0;
+        width: 100%; /* Garante preenchimento total da wrapper */
+    }
+
+    .inner-border {
+        border: 1px solid #e5e7eb;
+        padding: 25px 15px; /* Padding dinâmico */
+        position: relative;
+        width: 100%;
     }
 
     .doc-header-top {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        border-bottom: 3px double #333;
-        padding-bottom: 15px;
+        align-items: center;
         margin-bottom: 30px;
+        flex-wrap: wrap; /* Permite quebra em telas muito pequenas */
+        gap: 10px;
     }
 
-    .emblem-placeholder { font-size: 40px; color: #1f2937; }
-    .doc-meta { text-align: right; font-family: sans-serif; }
-    .status-tag { display: block; background: #065f46; color: white; padding: 4px 8px; font-size: 9px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; }
-    .serial { font-size: 10px; color: #666; font-family: 'Roboto Mono', monospace; }
+    .emblem-placeholder { font-size: 40px; color: #111827; }
 
-    /* CORPO DO DOC */
-    .doc-title { font-family: 'Montserrat', sans-serif; font-size: 20px; text-align: center; margin: 0; color: #111; }
-    .doc-subtitle { font-size: 11px; text-align: center; color: #666; letter-spacing: 2px; text-transform: uppercase; margin: 5px 0 30px; }
+    .doc-meta { text-align: right; font-family: 'Inter', sans-serif; }
+    .status-tag { 
+        display: inline-block; 
+        background: #111827; 
+        color: #fff; 
+        padding: 2px 8px; 
+        font-size: 8px; 
+        font-weight: 700;
+    }
+    .serial { display: block; font-size: 9px; font-family: 'JetBrains Mono'; color: #374151; }
+    .validity { display: block; font-size: 9px; color: #b91c1c; font-weight: bold; }
 
-    .legal-paragraph { font-size: 16px; line-height: 1.6; color: #222; text-align: justify; margin-bottom: 25px; }
+    .doc-title { 
+        font-family: 'Cinzel', serif; 
+        font-size: 20px; 
+        text-align: center; 
+        margin: 0; 
+        color: #111; 
+        line-height: 1.2;
+    }
+    .doc-subtitle { 
+        font-family: 'Inter', sans-serif;
+        font-size: 10px; 
+        text-align: center; 
+        color: #4b5563; 
+        letter-spacing: 2px; 
+        text-transform: uppercase; 
+        margin: 10px 0 20px; 
+    }
+
+    .divider-elegant {
+        width: 80px;
+        height: 2px;
+        background: #111;
+        margin: 0 auto 20px;
+    }
+
+    .legal-paragraph { 
+        font-family: 'EB Garamond', serif;
+        font-size: 16px; 
+        line-height: 1.5; 
+        color: #1f2937; 
+        text-align: justify; 
+        margin-bottom: 15px;
+    }
 
     .contract-dates {
         display: flex;
-        justify-content: center;
-        gap: 40px;
-        background: #f3f4f6;
-        padding: 20px;
-        border: 1px solid #ddd;
+        justify-content: space-around;
+        background: rgba(0,0,0,0.03);
+        padding: 15px 5px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
         margin: 20px 0;
+        gap: 10px;
     }
-    .date-box label { display: block; font-size: 9px; color: #666; text-align: center; font-family: sans-serif; }
-    .date { font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: bold; color: #111; }
+    .date-box label { display: block; font-size: 9px; color: #666; text-align: center; margin-bottom: 3px;}
+    .date { font-family: 'JetBrains Mono'; font-size: 13px; font-weight: bold; color: #111; }
     .date.highlight { color: #b91c1c; }
 
-    .legal-small { font-size: 12px; font-style: italic; color: #4b5563; }
+    .compliance-grid { 
+        display: grid; 
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 8px; 
+        margin: 20px 0; 
+    }
+    .item { 
+        background: #fff;
+        padding: 10px 2px;
+        border: 1px solid #e5e7eb;
+        font-size: 8px; 
+        font-weight: bold; 
+        color: #1e40af;
+        text-align: center;
+    }
+    .item i { display: block; font-size: 16px; margin-bottom: 5px; }
 
-    /* COMPLIANCE GRID DOC 2 */
-    .compliance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; border-top: 1px solid #eee; padding-top: 15px; }
-    .item { font-size: 10px; font-weight: bold; font-family: sans-serif; color: #065f46; }
+    .security-ribbon {
+        background: #1e3a8a;
+        color: white;
+        padding: 6px;
+        text-align: center;
+        font-size: 9px;
+        font-weight: bold;
+    }
 
-    /* FOOTER LEGAL - ONDE FICAM AS ASSINATURAS */
     .doc-footer-legal {
-        margin-top: 50px;
+        margin-top: 40px;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
+        gap: 10px;
     }
 
-    .stamp-group { display: flex; align-items: flex-end; gap: 20px; }
+    .stamp-group { display: flex; align-items: flex-end; gap: 15px; flex-shrink: 1; }
 
-    /* CARIMBO REDONDO / RETANGULAR */
-    .rubber-stamp {
-        border-width: 3px;
-        border-style: solid;
-        padding: 8px;
-        font-size: 12px;
-        font-weight: 900;
-        text-align: center;
-        font-family: sans-serif;
-        text-transform: uppercase;
-        mix-blend-mode: multiply;
-        opacity: 0.8;
-    }
-    .red-stamp { border-color: #dc2626; color: #dc2626; transform: rotate(-10deg); border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-    .blue-stamp { border-color: #1d4ed8; color: #1d4ed8; transform: rotate(5deg); padding: 10px; border-style: double; font-size: 9px; }
-
-    /* ASSINATURA */
-    .official-signature {
-        text-align: center;
+    .rubber-stamp-circle {
         position: relative;
-    }
-    .sig-image {
-        width: 120px;
-        filter: grayscale(1) contrast(1.2) brightness(0.9);
+        width: 80px;
+        height: 80px;
+        color: var(--stamp-red);
+        fill: var(--stamp-red);
+        transform: rotate(-12deg);
         mix-blend-mode: multiply;
-        margin-bottom: -10px;
+    }
+    .stamp-inner {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        border: 2px solid var(--stamp-red);
+        padding: 2px;
+        font-size: 10px;
+        font-weight: 900;
+    }
+
+    .blue-stamp {
+        border: 1px solid var(--stamp-blue);
+        color: var(--stamp-blue);
+        padding: 5px;
+        font-size: 8px;
+        transform: rotate(5deg);
+        mix-blend-mode: multiply;
+        max-width: 100px;
+    }
+
+    .official-signature { text-align: center; max-width: 120px; }
+    .sig-image {
+        width: 100px;
+        mix-blend-mode: multiply;
+        filter: grayscale(1);
     }
     .sig-name {
         display: block;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: bold;
         border-top: 1px solid #333;
-        padding-top: 4px;
-        color: #111;
-        font-family: sans-serif;
+        padding-top: 3px;
     }
 
-    /* LACRE DE CERA */
     .wax-seal {
-        width: 60px; height: 60px;
+        width: 50px; height: 50px;
         background: #991b1b;
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex; align-items: center; justify-content: center;
         color: rgba(255,255,255,0.4);
-        font-size: 25px;
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 2px 2px 5px rgba(0,0,0,0.3);
+        font-size: 20px;
+        flex-shrink: 0;
     }
 
-    .qr-auth { text-align: center; color: #333; }
-    .qr-auth i { font-size: 40px; display: block; margin-bottom: 5px; }
-    .qr-auth span { font-size: 8px; font-weight: bold; font-family: sans-serif; }
+    .qr-auth { text-align: center; flex-shrink: 0; }
+    .qr-auth i { font-size: 30px; display: block; }
+    .qr-auth span { font-size: 8px; font-weight: bold; }
 
-    /* MARCA D'ÁGUA */
     .doc-watermark {
         position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg);
-        font-size: 80px; font-weight: 900;
+        transform: translate(-50%, -50%) rotate(-35deg);
+        font-size: 60px; font-weight: 900;
         color: rgba(0,0,0,0.02);
         pointer-events: none;
-        z-index: 0;
+        white-space: nowrap;
     }
 
-    @media (max-width: 600px) {
-        .document-container { padding: 25px 15px; }
-        .doc-footer-legal { flex-direction: column; align-items: center; gap: 30px; }
-        .stamp-group { flex-direction: column; align-items: center; }
-        .contract-dates { flex-direction: column; gap: 15px; }
+    /* Ajustes específicos para Telemóveis */
+    @media (max-width: 500px) {
+        .doc-header-top { justify-content: center; text-align: center; }
+        .doc-meta { text-align: center; width: 100%; }
+        .doc-footer-legal { flex-direction: column; align-items: center; text-align: center; gap: 30px; }
+        .stamp-group { flex-direction: row; justify-content: center; width: 100%; }
+        .contract-dates { flex-direction: column; align-items: center; }
+        .compliance-grid { grid-template-columns: 1fr 1fr 1fr; } /* Mantém 3 colunas mas diminui fonte se necessário */
+        .legal-paragraph { font-size: 15px; }
+        .inner-border { padding: 20px 10px; }
     }
 </style>
 {% endblock %}

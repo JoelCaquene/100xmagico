@@ -1,483 +1,318 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Tesouros Reais - Palácio das Pérolas de Ariel{% endblock %}
+{% block title %}100xmagico - Cinema Místico{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 
-<div class="ariel-casino-body">
+<div class="magico-container">
     
-    {# 1. HEADER CHIQUE E COMPACTO #}
-    <div class="casino-header">
-        <a href="{% url 'menu' %}" class="btn-back-magic">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-        <h2 class="magic-title">Tesouros Reais</h2>
-        <div class="balance-tag">
-            <i class="fas fa-gem"></i> {{ user.available_balance }} KZ
+    {# HEADER FIXO ESTILO CASSINO #}
+    <div class="casino-navbar">
+        <a href="{% url 'menu' %}" class="back-link"><i class="fas fa-chevron-left"></i></a>
+        <div class="brand">100X<span>MAGICO</span></div>
+        <div class="wallet-info">
+            <div class="usdt">
+                <i class="fas fa-wallet" style="color: #ffcc00;"></i> 
+                <span id="val-usdt">{{ user.available_balance }}</span> <small>USDT</small>
+            </div>
+            <div class="brl" id="val-brl">R$ 0,00</div>
         </div>
     </div>
 
-    {# 2. ÁREA DO JOGO (CASSINO PREMIUM) - MOLDURA DOURADA #}
-    <div class="game-container">
-        <div class="game-frame">
-            <div class="game-display" id="game-display">
-                
-                {# Cenário Único Desenhado em Código (SVG & CSS) #}
-                <div id="game-scene" class="scene">
-                    <div class="floating-bubbles"></div>
-                    
-                    {# IMAGEM DA PRINCESA (GIF ANIMADO NO STATIC) #}
-                    {# VOCÊ DEVE BAIXAR UM GIF E SALVAR EM: static/images/ariel_dance.gif #}
-                    <div id="central-character" class="ariel-dance-container">
-                        <img src="{% static 'images/ariel_dance.gif' %}" alt="Ariel Dançando" class="ariel-gif">
-                    </div>
-                </div>
+{# ÁREA DE CONTEÚDO COM SCROLL SUAVE #}
+<div class="scroll-content">
+    <div class="hero-banner">
+        <div class="banner-overlay">
+            <h2><i class="fas fa-magic"></i> TAREFAS MÁGICAS</h2>
+        </div>
+    </div>
+</div>
 
-                {# Overlay de Mensagem #}
-                <div id="status-overlay" class="status-overlay">
-                    <p id="task-text">LIBERE O TESOURO!</p>
-                </div>
+        {# GRID DE FILMES - CARDS GRANDES E CHAMATIVOS #}
+        <div class="movie-grid" id="movie-grid">
+            </div>
+    </div>
 
+    {# RODAPÉ COM LETREIRO DE GANHOS #}
+    <div class="casino-bottom">
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <span>💎 GANHOS REAIS: {{ user.phone_number|slice:":5" }}*** ACABA DE RECEBER COMISSÃO!</span>
+                <span>🔥 100xmagico: O REINO DA SORTE 🔥</span>
+                <span>🚀 SAQUES RÁPIDOS VIA PIX E WISE (CÂMBIO R$ 5,48) 🚀</span>
             </div>
         </div>
+    </div>
 
-        {# 3. PAINEL DE CONTROLE - DESIGN CASSINO PREMIUM #}
-        <div class="control-panel">
-            {# Contador Removido Conforme Pedido #}
+    {# MODAL DE AVALIAÇÃO PREMIUM #}
+    <div id="modal-rating" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-img-container">
+                <img id="modal-img" src="" alt="Filme">
+                <div class="img-gradient"></div>
+            </div>
+            <h3 id="modal-title">Título do Filme</h3>
+            <p>Atribua uma nota de 1 a 5 estrelas:</p>
+            
+            <div class="stars-row">
+                <i class="fas fa-star" data-v="1"></i>
+                <i class="fas fa-star" data-v="2"></i>
+                <i class="fas fa-star" data-v="3"></i>
+                <i class="fas fa-star" data-v="4"></i>
+                <i class="fas fa-star" data-v="5"></i>
+            </div>
 
             {% if not has_active_level %}
-                <button class="btn-play disabled" disabled>
-                    <i class="fas fa-lock"></i> VIP BLOQUEADO
-                </button>
-                <p class="warning-text">Ative um VIP para liberar o jogo</p>
+                <button class="btn-main disabled" disabled>ATIVE UM VIP PARA GANHAR</button>
             {% else %}
-                <button id="work-button" class="btn-play">
-                    <span class="btn-glow"></span>
-                    <i class="fas fa-play-circle"></i> JOGAR
-                </button>
+                <button id="btn-confirm" class="btn-main">CONFIRMAR AVALIAÇÃO</button>
             {% endif %}
+            <button onclick="closeModal()" class="btn-cancel">CANCELAR</button>
         </div>
     </div>
-
-    {# 4. RODAPÉ ESTILO CASSINO (PARA PREENCHER O ESPAÇO) #}
-    <div class="casino-footer-deco">
-        <div class="footer-divider-glow">
-            <i class="fas fa-crown"></i>
-            <span>PROVEDORES CERTIFICADOS</span>
-            <i class="fas fa-crown"></i>
-        </div>
-
-        <div class="chinese-grid-premium">
-            <div class="slot-premium-gold pulse-gold"><i class="fas fa-dragon"></i></div>
-            <div class="slot-premium-gold pulse-gold"><i class="fas fa-gem"></i></div>
-            <div class="slot-premium-gold pulse-gold"><i class="fas fa-crown"></i></div>
-            
-            <div class="slot-premium-neon pulse-blue"><i class="fas fa-bolt"></i></div>
-            <div class="slot-premium-neon pulse-pink"><i class="fas fa-heart"></i></div>
-            <div class="slot-premium-neon pulse-orange"><i class="fas fa-star"></i></div>
-        </div>
-
-        <div class="scrolling-ticker">
-            <div class="ticker-content">
-                <span>⚠️ PAGAMENTOS INSTANTÂNEOS VIA UNITEL MONEY • AFRICELL • MOVICEL ⚠️</span>
-                <span>👑 ARIEL REINO DA RENDA • PAGAMENTOS 24H 👑</span>
-            </div>
-        </div>
-    </div>
-
-    {# 5. MENSAGENS DJANGO #}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="magic-toast">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
 </div>
 
 <script>
+    const CAMBIO_FIXO = 5.48;
+    let selectedRating = 0;
+
+    // 10 Filmes Chineses com Imagens Chamativas e Reais (Alta Resolução)
+    const movies = [
+        {t: "O Mestre Yin Yang", img: "https://images.unsplash.com/photo-1590212151175-e58edd96185b?q=80&w=600&auto=format&fit=crop"},
+        {t: "A Lenda do Rei Macaco", img: "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?q=80&w=600&auto=format&fit=crop"},
+        {t: "Guerreiros do Futuro", img: "https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=600&auto=format&fit=crop"},
+        {t: "Nezha: O Renascer", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop"},
+        {t: "O Império das Sombras", img: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=600&auto=format&fit=crop"},
+        {t: "Jade Dynasty", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop"},
+        {t: "A Grande Muralha", img: "https://images.unsplash.com/photo-1529924559135-e84eba7c4099?q=80&w=600&auto=format&fit=crop"},
+        {t: "Detetive Dee", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=600&auto=format&fit=crop"},
+        {t: "Dragão Branco", img: "https://images.unsplash.com/photo-1438029071396-1e831a7fa6d8?q=80&w=600&auto=format&fit=crop"},
+        {t: "Portal da Magia", img: "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=600&auto=format&fit=crop"}
+    ];
+
     document.addEventListener("DOMContentLoaded", function() {
-        const workButton = document.getElementById('work-button');
-        const taskText = document.getElementById('task-text');
-        const centralCharacter = document.getElementById('central-character');
+        // Cálculo de Saldo BRL
+        const usdt = parseFloat(document.getElementById('val-usdt').innerText) || 0;
+        document.getElementById('val-brl').innerText = `R$ ${(usdt * CAMBIO_FIXO).toFixed(2)} (Wise)`;
 
-        let tasksCompletedToday = {{ tasks_completed_today|default:0 }};
-        let maxTasks = {{ max_tasks|default:1 }};
+        // Renderizar Filmes
+        const grid = document.getElementById('movie-grid');
+        movies.forEach(m => {
+            const el = document.createElement('div');
+            el.className = 'movie-card';
+            el.innerHTML = `
+                <img src="${m.img}" alt="${m.t}" class="m-img">
+                <div class="m-overlay">
+                    <h4>${m.t}</h4>
+                    <button onclick="openModal('${m.t}', '${m.img}')">AVALIAR</button>
+                </div>
+            `;
+            grid.appendChild(el);
+        });
 
-        // Verifica status inicial - SE JÁ JOGOU HOJE, DESATIVA
-        if (tasksCompletedToday >= 1) {
-            disablePlayButton("CONCLUÍDO HOJE");
-        }
+        // Lógica de Estrelas
+        const stars = document.querySelectorAll('.stars-row i');
+        stars.forEach(s => {
+            s.onclick = function() {
+                selectedRating = this.dataset.v;
+                stars.forEach(st => st.classList.remove('active'));
+                for(let i=0; i<selectedRating; i++) stars[i].classList.add('active');
+            }
+        });
 
-        if (workButton) {
-            workButton.addEventListener('click', function() {
-                // Inicia Animação de Cassino (5 segundos)
-                startArielAnimation();
+        // Botão Confirmar
+        const btnConfirm = document.getElementById('btn-confirm');
+        if(btnConfirm) {
+            btnConfirm.onclick = function() {
+                if(selectedRating == 0) return alert("Selecione uma nota!");
+                this.disabled = true;
+                this.innerText = "ENVIANDO...";
 
-                // Chama o Backend via Fetch
                 fetch("{% url 'process_task' %}", {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    }
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' }
                 })
-                .then(response => response.json())
+                .then(r => r.json())
                 .then(data => {
-                    // Espera os 5 segundos da animação
-                    setTimeout(() => {
-                        if (data.success) {
-                            tasksCompletedToday++;
-                            showSuccess(`+${data.daily_gain} KZ`);
-                            // DESATIVA O BOTÃO PERMANENTEMENTE ATÉ O DIA SEGUINTE
-                            disablePlayButton("CONCLUÍDO HOJE");
-                        } else {
-                            showError(data.message);
-                            resetGame();
-                        }
-                    }, 5000);
-                })
-                .catch(error => {
-                    showError("ERRO DE CONEXÃO REAIS");
-                    resetGame();
+                    if(data.success) {
+                        alert("Avaliação concluída com sucesso!");
+                        window.location.reload();
+                    } else {
+                        alert(data.message);
+                        closeModal();
+                    }
                 });
-            });
-        }
-
-        function startArielAnimation() {
-            workButton.disabled = true;
-            workButton.style.opacity = "0.7";
-            taskText.innerText = "BUSCANDO PÉROLAS REAIS...";
-            // Ativa animação de cassino (pulsação)
-            centralCharacter.classList.add('animating'); 
-        }
-
-        function resetGame() {
-            workButton.disabled = false;
-            workButton.style.opacity = "1";
-            taskText.innerText = "JOGAR NOVAMENTE?";
-            centralCharacter.classList.remove('animating');
-        }
-
-        function disablePlayButton(text) {
-            if(workButton) {
-                workButton.disabled = true;
-                workButton.innerHTML = `<i class="fas fa-calendar-check"></i> ${text}`;
-                workButton.className = "btn-play finished";
-                workButton.style.opacity = "0.7";
-            }
-            taskText.innerText = text;
-        }
-
-        function showSuccess(msg) {
-            taskText.innerHTML = `<span style="color: #fff; font-weight: 900; font-size: 20px; text-shadow: 0 0 10px rgba(0,0,0,0.5);">${msg}</span>`;
-            centralCharacter.classList.add('success-burst');
-            setTimeout(() => centralCharacter.classList.remove('success-burst'), 1000);
-        }
-
-        function showError(msg) {
-            taskText.style.color = "#ff4d4d";
-            taskText.innerText = msg;
+            };
         }
     });
+
+    function openModal(t, img) {
+        document.getElementById('modal-title').innerText = t;
+        document.getElementById('modal-img').src = img;
+        document.getElementById('modal-rating').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal-rating').style.display = 'none';
+        selectedRating = 0;
+        document.querySelectorAll('.stars-row i').forEach(s => s.classList.remove('active'));
+    }
 </script>
 
 <style>
-    /* RESET E BÁSICOS - PALETA PREMIUM */
     :root {
-        --ariel-pink: #d81b60; /* Rosa Chique/Forte */
-        --ariel-teal: #00e5ff; /* Turquesa Cintilante */
-        --ariel-gold: #ffd700; /* Ouro Puro */
-        --body-bg: #fad0c4;
-        --white-pearl: #ffffff;
-        --modal-dark: #121217;
+        --gold: #ffcc00;
+        --dark-bg: #0a0a0c;
+        --card-bg: #16161e;
+        --accent: #ff003c;
     }
 
     body {
-        background: linear-gradient(135deg, var(--body-bg) 0%, #ffc1d1 100%) no-repeat fixed;
-        min-height: 100vh;
-        font-family: 'Montserrat', sans-serif;
-        color: #fff;
         margin: 0;
-        overflow-x: hidden;
-        display: flex;
-        justify-content: center;
+        padding: 0;
+        background: var(--dark-bg);
+        font-family: 'Montserrat', sans-serif;
+        color: white;
+        overflow: hidden;
     }
 
-    .ariel-casino-body {
-        width: 100%;
-        max-width: 450px;
+    .magico-container {
+        width: 100vw;
+        height: 100vh;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        padding-bottom: 0px;
     }
 
-    /* 1. HEADER CHIQUE E COMPACTO */
-    .casino-header {
-        width: 100%;
+    /* NAVBAR COMPACTA E MODERNA */
+    .casino-navbar {
+        height: 70px;
+        background: rgba(0,0,0,0.95);
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
-        padding: 15px;
-        box-sizing: border-box;
+        padding: 0 20px;
+        border-bottom: 2px solid var(--gold);
+        z-index: 100;
     }
 
-    .btn-back-magic {
-        width: 35px;
-        height: 35px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
+    .brand { font-family: 'Goldman', sans-serif; font-size: 20px; font-weight: 900; color: #fff; }
+    .brand span { color: var(--gold); }
+    .back-link { color: var(--gold); font-size: 1.2rem; }
+
+    .wallet-info { text-align: right; }
+    .usdt { font-weight: 900; font-size: 16px; color: #fff; }
+    .brl { font-size: 11px; color: #00ff00; font-weight: 700; margin-top: 2px; }
+
+    /* ÁREA DE SCROLL */
+    .scroll-content {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 100px;
+        background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0c 100%);
+    }
+
+    .hero-banner {
+        height: 120px;
+        background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), linear-gradient(45deg, #ff003c, #800000);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--ariel-pink);
-        text-decoration: none;
-        backdrop-filter: blur(5px);
-        font-size: 14px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
+    .banner-overlay { text-align: center; }
+    .hero-banner h2 { margin: 0; font-family: 'Goldman'; font-size: 18px; letter-spacing: 2px; }
+    .badge-vip { background: var(--gold); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 900; }
 
-    .magic-title {
-        font-family: 'Great Vibes', cursive;
-        font-size: 26px;
-        color: var(--ariel-pink);
-        text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
-        margin: 0;
-    }
-
-    .balance-tag {
-        background: rgba(255, 255, 255, 0.5);
-        padding: 5px 12px;
-        border-radius: 15px;
-        color: var(--ariel-pink);
-        font-weight: 800;
-        font-size: 11px;
-        border: 2px solid var(--white-pearl);
-    }
-
-    /* 2. GAME FRAME PREMIUM COMPACTO */
-    .game-container {
-        width: 90%;
-        margin-top: 5px;
-        margin-bottom: 20px;
-    }
-
-    .game-frame {
-        background: #fff;
-        padding: 5px;
-        border-radius: 20px;
-        box-shadow: 0 15px 40px rgba(216, 27, 96, 0.25);
-        border: 4px solid var(--ariel-gold);
-    }
-
-    .game-display {
-        height: 280px; /* Altura otimizada */
-        background: #8ec5fc;
-        background-image: linear-gradient(62deg, #c3e5fc 0%, #fcd4e9 100%);
-        border-radius: 15px;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .scene { width: 100%; height: 100%; position: relative; display: flex; justify-content: center; align-items: center;}
-
-    /* ARIEL DANCE CONTAINER */
-    .ariel-dance-container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    .ariel-gif {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Ajusta o GIF para preencher o espaço (fit) */
-    }
-
-    /* OVERLAY */
-    .status-overlay {
-        position: absolute; bottom: 15px;
-        background: rgba(216, 27, 96, 0.6);
-        width: 80%; padding: 10px;
-        border-radius: 50px;
-        text-align: center;
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    #task-text {
-        margin: 0; font-weight: 800; letter-spacing: 1.5px;
-        font-size: 11px; text-transform: uppercase;
-        color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-
-    /* 3. CONTROLS CASSINO COMPACTOS */
-    .control-panel {
-        margin-top: 15px;
-        text-align: center;
-    }
-
-    .btn-play {
-        width: 100%;
-        height: 55px; /* Altura compactada */
-        border-radius: 50px;
-        border: none;
-        background: linear-gradient(180deg, #ff6b8a, #d81b60);
-        color: white;
-        font-size: 20px;
-        font-weight: 900;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(216, 27, 96, 0.4);
-        transition: transform 0.2s, background 0.3s;
-    }
-
-    .btn-play:active { transform: scale(0.96); }
-
-    .btn-play.disabled {
-        background: #b0bec5;
-        box-shadow: none;
-        cursor: not-allowed;
-    }
-
-    .btn-play.finished {
-        background: #4caf50 !important; /* Verde Concluído */
-        box-shadow: none;
-        cursor: not-allowed;
-    }
-
-    .warning-text {
-        color: #fff;
-        font-size: 10px;
-        margin-top: 8px;
-        font-weight: 600;
-        opacity: 0.8;
-    }
-
-    /* 4. RODAPÉ DE CASSINO DECORATIVO */
-    .casino-footer-deco {
-        width: 100%;
-        background: linear-gradient(180deg, #1a1a24 0%, #05030a 100%);
-        padding: 20px 10px;
-        border-top: 2px solid var(--ariel-gold);
-        box-shadow: 0 -10px 30px rgba(255, 215, 0, 0.15);
-        margin-top: auto; /* Empurra para o final */
-        box-sizing: border-box;
-    }
-
-    .footer-divider-glow {
-        text-align: center;
-        color: var(--ariel-gold);
-        font-weight: 900;
-        font-size: 12px;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .chinese-grid-premium {
+    /* GRID E CARDS GRANDES */
+    .movie-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-bottom: 25px;
+        grid-template-columns: 1fr 1fr; /* Duas colunas padrão mobile */
+        gap: 15px;
+        padding: 20px;
     }
 
-    .slot-premium-gold, .slot-premium-neon {
-        height: 50px;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: 0.3s;
-        font-size: 20px;
-    }
-
-    .slot-premium-gold { color: var(--ariel-gold); border: 1px solid rgba(255, 215, 0, 0.3); }
-    
-    .pulse-gold { animation: pulseGold 2s infinite alternate; }
-    .pulse-blue { color: var(--ariel-teal); border-color: var(--ariel-teal); animation: pulseBlue 2s infinite alternate; }
-    .pulse-pink { color: var(--ariel-pink); border-color: var(--ariel-pink); animation: pulsePink 2s infinite alternate; }
-    .pulse-orange { color: #ff6a00; border-color: #ff6a00; animation: pulseOrange 2s infinite alternate; }
-
-    @keyframes pulseGold { to { box-shadow: 0 0 15px rgba(255,215,0,0.4); transform: scale(1.02); } }
-    @keyframes pulseBlue { to { box-shadow: 0 0 15px var(--ariel-teal); } }
-    @keyframes pulsePink { to { box-shadow: 0 0 15px var(--ariel-pink); } }
-
-    /* Letreiro Profissional */
-    .scrolling-ticker {
-        background: rgba(255, 215, 0, 0.05);
-        border-top: 1px solid rgba(255, 215, 0, 0.2);
-        border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-        padding: 5px 0;
+    .movie-card {
+        position: relative;
+        border-radius: 15px;
         overflow: hidden;
-    }
-    .ticker-content {
-        display: flex;
-        white-space: nowrap;
-        animation: tickerMove 20s linear infinite;
-    }
-    .ticker-content span {
-        color: var(--ariel-gold);
-        font-size: 9px;
-        font-weight: bold;
-        margin-right: 50px;
-    }
-    @keyframes tickerMove {
-        0% { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+        aspect-ratio: 2/3; /* Formato pôster de cinema */
+        border: 1px solid rgba(255,204,0,0.2);
+        background: var(--card-bg);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
 
-    /* ANIMATIONS PREMIUM */
-    .ariel-dance-container.animating {
-        animation: casinoPulse 1s ease-in-out infinite;
+    .m-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
-    @keyframes successExplosion {
-        0% { transform: scale(1); }
-        40% { transform: scale(1.1); box-shadow: 0 0 50px rgba(255,255,255,0.5); }
-        100% { transform: scale(1); }
+    .m-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 10px;
+        background: linear-gradient(transparent, rgba(0,0,0,0.95) 60%);
+        text-align: center;
     }
 
-    .btn-glow {
-        position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
-        animation: rotateGlow 3s linear infinite;
+    .m-overlay h4 { margin: 0 0 10px; font-size: 13px; font-weight: 700; height: 32px; overflow: hidden; }
+    .m-overlay button {
+        background: var(--gold);
+        border: none;
+        color: #000;
+        padding: 8px 0;
+        width: 100%;
+        border-radius: 20px;
+        font-weight: 900;
+        font-size: 11px;
+        text-transform: uppercase;
+        cursor: pointer;
     }
 
-    @keyframes rotateGlow {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+    /* FOOTER */
+    .casino-bottom {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: #000;
+        border-top: 2px solid var(--gold);
+        padding: 10px 0;
+        z-index: 101;
     }
 
-    .magic-toast {
-        position: fixed; bottom: 15px;
-        background: #fff; color: var(--ariel-pink);
-        padding: 8px 25px; border-radius: 30px;
-        font-weight: 800; font-size: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        animation: slideUp 0.5s forwards; z-index: 9999;
-    }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; }
+    .ticker { display: flex; animation: scrollTicker 20s linear infinite; }
+    .ticker span { padding-right: 50px; color: var(--gold); font-size: 11px; font-weight: bold; }
 
-    @keyframes slideUp { from { bottom: -50px; } to { bottom: 15px; } }
+    @keyframes scrollTicker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    @keyframes casinoPulse {
-        0%, 100% { filter: drop-shadow(0 0 10px var(--white-pearl)); }
-        50% { filter: drop-shadow(0 0 25px var(--white-pearl)); }
+    /* MODAL */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000;
     }
+    .modal-card {
+        background: var(--card-bg); width: 85%; max-width: 350px; padding-bottom: 25px;
+        border-radius: 25px; border: 2px solid var(--gold); text-align: center; overflow: hidden;
+    }
+    .modal-img-container { position: relative; height: 220px; }
+    .modal-img-container img { width: 100%; height: 100%; object-fit: cover; }
+    .img-gradient { position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(transparent, var(--card-bg)); }
+
+    .stars-row { font-size: 30px; margin: 20px 0; color: #333; }
+    .stars-row i { margin: 0 5px; cursor: pointer; transition: 0.3s; }
+    .stars-row i.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+
+    .btn-main {
+        width: 80%; background: var(--gold); color: #000; border: none; padding: 15px;
+        border-radius: 40px; font-weight: 900; font-size: 16px; cursor: pointer;
+    }
+    .btn-main.disabled { background: #555; color: #888; }
+    .btn-cancel { background: none; border: none; color: #888; margin-top: 15px; font-weight: 600; cursor: pointer; }
 </style>
 {% endblock %}
