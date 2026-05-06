@@ -277,7 +277,7 @@ def process_task(request):
             earnings=total_task_earnings
         ) 
         
-        # 5. Adiciona o ganho total ao saldo do usuário
+        # 5. Adiciona o ganho total ao saldo do usuário ok
         user.available_balance += total_task_earnings
         user.save()
 
