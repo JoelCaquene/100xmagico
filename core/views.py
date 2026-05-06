@@ -146,7 +146,7 @@ def approve_deposit(request, deposit_id):
         messages.success(request, 'Depósito aprovado.')
     return redirect('renda')
 
-# --- SAQUE ---
+# --- SAQUE AQUI ---
 @login_required
 def saque(request):
     MIN_WITHDRAWAL_AMOUNT = Decimal('3')
