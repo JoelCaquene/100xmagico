@@ -21,8 +21,6 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
         return self.create_user(phone_number, password, **extra_fields)
 
-# ---
-
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=20, unique=True, verbose_name="Número de Telefone")
     full_name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Nome Completo")
@@ -35,6 +33,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     subsidy_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Saldo de Subsídios")
     level_active = models.BooleanField(default=False, verbose_name="Nível Ativo")
     roulette_spins = models.IntegerField(default=0, verbose_name="Giros da Roleta")
+    
+    # ESTA É A LINHA QUE TRAVA O ESTAGIÁRIO PARA SEMPRE
+    is_intern_expired = models.BooleanField(default=False, verbose_name="Estágio Expirado")
 
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
@@ -52,8 +53,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                     self.invite_code = new_invite_code
                     break
         super().save(*args, **kwargs)
-
-# ---
 
 class PlatformSettings(models.Model):
     whatsapp_link = models.URLField(

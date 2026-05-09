@@ -1,278 +1,160 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Minha Equipa | 100XMAGICO{% endblock %}
+{% block title %}Equipa | 100XMAGICO{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
-    
     :root { 
-        --bg: #050308; 
-        --card-bg: rgba(22, 17, 41, 0.7); 
-        --pink: #ff2d75; 
-        --teal: #00f2ff; 
-        --gold: #ffb800; 
-        --purple: #9f7aea;
-        --glass-border: rgba(255, 255, 255, 0.08);
+        --primary: #007AFF;
+        --success: #34C759;
+        --text-main: #1C1C1E;
+        --text-muted: #8E8E93;
+        --gold: #AF8B1E;
+        --gray-bg: #F2F2F7;
     }
 
-    body { 
-        background: var(--bg); 
-        color: white; 
-        font-family: 'Poppins', sans-serif; 
-        margin: 0; 
-        overflow-x: hidden; 
-    }
+    body { background: #FFFFFF !important; color: var(--text-main); font-family: 'Poppins', sans-serif; margin: 0; }
+    .container { width: 100%; max-width: 500px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
 
-    /* FUNDO TEXTURIZADO PROFISSIONAL */
-    .dashboard-bg {
-        background-image: 
-            radial-gradient(circle at top, #1e1345 0%, var(--bg) 80%),
-            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5V19SAAAAEHRSTlMAEBESExQVGBkaGxwdHh8g9S1ZkgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfmBQUIISgXN3MhAAAAUElEQVQ4y2NgYGRiYmZhhgFmFmYWVlY2dg5OLm4eXj7+AISBRE5uHl6wIKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCInwAAA9OQEbE9m48AAAAABJRU54ErkJggg==');
-        background-size: auto, 50px 50px;
-        min-height: 100vh;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-bottom: 80px;
-        box-sizing: border-box;
-    }
+    /* HEADER & INVITE */
+    .header h1 { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 20px; }
+    .invite-card { background: var(--gray-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+    .invite-row { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
+    .invite-link { font-size: 12px; color: var(--primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 75%; }
+    .copy-btn { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 12px; cursor: pointer; }
 
-    /* HEADER */
-    .brand-header { 
-        width: 100%;
-        height: 110px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        border-bottom: 1px solid var(--glass-border);
-        margin-bottom: 25px;
-        position: relative;
-    }
+    /* TABS */
+    .tabs { display: flex; background: var(--gray-bg); padding: 4px; border-radius: 10px; margin-bottom: 20px; }
+    .tab-item { flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 8px; color: var(--text-muted); }
+    .tab-item.active { background: #FFFFFF; color: var(--text-main); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-    .back-nav { position: absolute; top: 25px; left: 15px; }
-    .back-arrow {
-        color: white; font-size: 14px; background: rgba(255, 45, 117, 0.15);
-        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; border: 1px solid var(--pink); text-decoration: none;
-        transition: 0.3s;
-    }
-    .back-arrow:hover { background: var(--pink); box-shadow: 0 0 15px var(--pink); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .header-title {
-        font-family: 'Cinzel', serif;
-        font-size: 24px; 
-        font-weight: 700;
-        margin: 0; 
-        letter-spacing: 3px;
-        background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+    /* STATS CARDS */
+    .stat-card { border: 1px solid #E5E5EA; border-radius: 16px; padding: 15px; margin-bottom: 15px; }
+    .card-title { display: flex; align-items: center; gap: 10px; font-weight: 800; margin-bottom: 12px; font-size: 14px; }
+    .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-box { background: var(--gray-bg); padding: 10px; border-radius: 10px; }
+    .stat-label { font-size: 10px; color: var(--text-muted); display: block; }
+    .stat-value { font-size: 15px; font-weight: 700; }
 
-    /* INVITE SECTION */
-    .invite-container {
-        width: 90%;
-        max-width: 450px;
-        margin-bottom: 25px;
-    }
-    .invite-box {
-        background: var(--card-bg);
-        border: 1px solid var(--glass-border);
-        padding: 15px;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        backdrop-filter: blur(10px);
-    }
-    .invite-box span { font-size: 11px; color: var(--teal); opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
-    .copy-btn {
-        background: var(--pink);
-        border: none; color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer;
-        transition: 0.3s;
-    }
+    .comm-row { border-top: 1px dashed #DDD; margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--success); }
 
-    /* CARDS VERTICAIS - UM POR LINHA */
-    .team-list {
-        width: 90%;
-        max-width: 450px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .royal-card {
-        background: var(--card-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 20px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        backdrop-filter: blur(10px);
-        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .royal-card:hover { transform: scale(1.02); background: rgba(30, 24, 55, 0.8); border-color: rgba(255,255,255,0.2); }
-
-    .card-icon {
-        width: 60px; height: 60px;
-        border-radius: 18px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 24px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid var(--glass-border);
-        position: relative;
-    }
-    
-    /* Pulsação nos ícones */
-    .card-icon::after {
-        content: ''; position: absolute; width: 100%; height: 100%;
-        border-radius: 18px; border: 1px solid currentColor;
-        opacity: 0.3; animation: pulse 2s infinite;
-    }
-
-    .card-content { flex: 1; }
-    .card-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
-    .card-value { display: block; font-size: 22px; font-weight: 700; color: #fff; margin: 2px 0; }
-    .card-meta { font-size: 11px; color: var(--teal); font-weight: 500; }
-
-    /* CARD DE SUBSIDIO (Destaque Gold) */
-    .subsidy-card {
-        border: 1px solid var(--gold);
-        background: linear-gradient(135deg, rgba(22, 17, 41, 0.9), #2a1f0a);
-    }
-    .gold-text { color: var(--gold) !important; }
-    .brl-value { color: #2ecc71; font-weight: 700; font-size: 16px; margin-top: 5px; display: block; }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.3; }
-        50% { transform: scale(1.2); opacity: 0; }
-        100% { transform: scale(1); opacity: 0.3; }
-    }
-
-    /* FOOTER / REGRAS */
-    .rules-card {
-        width: 90%; max-width: 450px;
-        margin-top: 30px;
-        padding: 20px;
-        background: rgba(255, 45, 117, 0.05);
-        border-radius: 20px;
-        border-left: 4px solid var(--pink);
-    }
-    .rules-card h4 { margin: 0 0 12px; color: var(--pink); font-size: 14px; text-transform: uppercase; }
-    .rule-item { font-size: 11px; color: #bbb; margin-bottom: 10px; display: flex; gap: 10px; align-items: flex-start; }
-    .rule-item i { color: var(--teal); margin-top: 2px; }
-
+    /* LISTA DE MEMBROS */
+    .member-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #EEE; }
+    .member-phone { font-weight: 700; font-size: 14px; display: block; }
+    .member-date { font-size: 11px; color: var(--text-muted); }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; }
+    .badge-vip { background: #FFF9E6; color: var(--gold); border: 1px solid var(--gold); }
+    .badge-intern { background: #F2F2F7; color: var(--text-muted); }
 </style>
 
-<div class="dashboard-bg">
-    <div class="brand-header">
-        <div class="back-nav">
-            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
+<div class="container">
+    <div class="header"><h1>Minha Equipa</h1></div>
+
+    <div class="invite-card">
+        <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Link de Convite</span>
+        <div class="invite-row">
+            <span class="invite-link" id="linkText">{{ invite_link }}</span>
+            <button class="copy-btn" onclick="copyLink()">Copiar</button>
         </div>
-        <h1 class="header-title">100XMAGICO</h1>
-        <span style="font-size: 9px; color: var(--teal); letter-spacing: 4px; text-transform: uppercase;">Global Team Network</span>
     </div>
 
-    <div class="invite-container">
-        <div class="invite-box">
-            <span id="invite-link">{{ invite_link }}</span>
-            <button class="copy-btn" id="copyBtn"><i class="fas fa-copy"></i></button>
-        </div>
-        <p style="font-size: 11px; text-align: center; margin-top: 10px; color: #777;">ID de Convite: <b style="color: #fff;">{{ user.invite_code }}</b></p>
+    <div class="tabs">
+        <div class="tab-item active" onclick="switchTab(event, 'stats')">Estatísticas</div>
+        <div class="tab-item" onclick="switchTab(event, 'members')">Convidados</div>
     </div>
 
-    <div class="team-list">
-        
-        <div class="royal-card">
-            <div class="card-icon" style="color: var(--pink);"><i class="fas fa-user-tie"></i></div>
-            <div class="card-content">
-                <span class="card-label">Nível 1 (Membros Diretos)</span>
-                <span class="card-value">{{ level_a_count }}</span>
-                <div class="card-meta">Comissão: 10% | Ativos: {{ level_a_investors }}</div>
+    <div id="stats" class="tab-content active">
+        <div class="stat-card">
+            <div class="card-title"><i class="fas fa-users" style="color: var(--primary);"></i> Nível 1 (Diretos)</div>
+            <div class="grid-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Convidados</span>
+                    <span class="stat-value">{{ level_a_count }}</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Investidores</span>
+                    <span class="stat-value">{{ level_a_investors }}</span>
+                </div>
+            </div>
+            <div class="comm-row">
+                <span>Comissão Convite: 10%</span>
+                <span>Tarefas: 5%</span>
             </div>
         </div>
 
-        <div class="royal-card">
-            <div class="card-icon" style="color: var(--teal);"><i class="fas fa-users"></i></div>
-            <div class="card-content">
-                <span class="card-label">Nível 2 (Membros Indiretos)</span>
-                <span class="card-value">{{ level_b_count }}</span>
-                <div class="card-meta">Comissão: 1% | Ativos: {{ level_b_investors }}</div>
+        <div class="stat-card">
+            <div class="card-title"><i class="fas fa-network-wired" style="color: var(--success);"></i> Nível 2 (Indiretos)</div>
+            <div class="grid-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Convidados</span>
+                    <span class="stat-value">{{ level_b_count }}</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Investidores</span>
+                    <span class="stat-value">{{ level_b_investors|default:"0" }}</span>
+                </div>
+            </div>
+            <div class="comm-row">
+                <span>Comissão Convite: 2%</span>
+                <span>Tarefas: 2%</span>
             </div>
         </div>
 
-        <div class="royal-card">
-            <div class="card-icon" style="color: var(--purple);"><i class="fas fa-sitemap"></i></div>
-            <div class="card-content">
-                <span class="card-label">Nível 3 (Membros de Rede)</span>
-                <span class="card-value">{{ level_c_count }}</span>
-                <div class="card-meta">Comissão: 1% | Ativos: {{ level_c_investors }}</div>
-            </div>
+        <div class="stat-card" style="border-color: var(--gold); background: #FFFDF5;">
+            <span class="stat-label" style="color: var(--gold); font-weight: 700;">TOTAL ACUMULADO EM SUBSÍDIOS</span>
+            <div style="font-size: 24px; font-weight: 800; color: var(--gold); margin: 5px 0;">Kz {{ subsidy_balance|default:"0.00" }}</div>
+            <div id="brl-val" style="font-size: 13px; font-weight: 600; color: var(--success);">R$ 0,00</div>
         </div>
-
-        <div class="royal-card subsidy-card">
-            <div class="card-icon" style="color: var(--gold);"><i class="fas fa-gem"></i></div>
-            <div class="card-content">
-                <span class="card-label gold-text">Total Bónus de Subsídio</span>
-                <span class="card-value gold-text">USDT {{ subsidy_balance|default:"0.00" }}</span>
-                <span class="brl-value" id="val-brl-total">R$ 0,00</span>
-                <div class="card-meta" style="color: #fff; opacity: 0.5;">Total Equipa: {{ team_count }}</div>
-            </div>
-        </div>
-
     </div>
 
-    <div class="rules-card">
-        <h4><i class="fas fa-info-circle"></i> Regras de Equipa</h4>
-        <div class="rule-item">
-            <i class="fas fa-check-double"></i>
-            <span><b>Ganhos Nível A:</b> 10% de comissão sobre ativações VIP diretas.</span>
+    <div id="members" class="tab-content">
+        <h3 style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Membros Diretos (Nível 1)</h3>
+        {% for guest in level_a_members %}
+        <div class="member-item">
+            <div class="member-info">
+                <span class="member-phone">{{ guest.phone_number|slice:":3" }}****{{ guest.phone_number|slice:"-3:" }}</span>
+                <span class="member-date">Inscrição: {{ guest.date_joined|date:"d/m/Y" }}</span>
+            </div>
+            
+            {% if guest.level_active %}
+                <span class="badge badge-vip">VIP ATIVO</span>
+            {% else %}
+                <span class="badge badge-intern">ESTAGIÁRIO</span>
+            {% endif %}
         </div>
-        <div class="rule-item">
-            <i class="fas fa-check-double"></i>
-            <span><b>Rede B e C:</b> 1% de bonificação sobre ativações da rede secundária.</span>
+        {% empty %}
+        <div style="text-align: center; padding: 40px;">
+            <p style="color: #CCC;">Nenhum afiliado encontrado.</p>
         </div>
-        <div class="rule-item" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 5px;">
-            <i class="fas fa-exclamation-triangle" style="color: var(--pink);"></i>
-            <span style="color: var(--pink);">As comissões são creditadas apenas em novas ativações de planos.</span>
-        </div>
+        {% endfor %}
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Câmbio Wise Simulado
-        const taxaWise = 5.48;
-        
-        // Pegar o valor em USDT vindo do Django
-        const valUsdt = parseFloat("{{ subsidy_balance|default:'0' }}".replace(',', '.')) || 0;
-        
-        // Calcular e Formatar em BRL
-        const totalBrl = valUsdt * taxaWise;
-        document.getElementById('val-brl-total').innerText = totalBrl.toLocaleString('pt-BR', { 
-            style: 'currency', 
-            currency: 'BRL' 
-        });
+    function switchTab(evt, tabName) {
+        var i, tabContent, tabLinks;
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) { tabContent[i].style.display = "none"; }
+        tabLinks = document.getElementsByClassName("tab-item");
+        for (i = 0; i < tabLinks.length; i++) { tabLinks[i].classList.remove("active"); }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+    }
 
-        // Copiar Link
-        document.getElementById('copyBtn').addEventListener('click', function() {
-            const link = document.getElementById('invite-link').innerText;
-            navigator.clipboard.writeText(link).then(() => {
-                const btn = this;
-                btn.innerHTML = '<i class="fas fa-check"></i>';
-                btn.style.background = '#2ecc71';
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-copy"></i>';
-                    btn.style.background = '';
-                }, 2000);
-            });
-        });
+    function copyLink() {
+        const link = document.getElementById('linkText').innerText;
+        navigator.clipboard.writeText(link).then(() => { alert("Copiado!"); });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const valKz = parseFloat("{{ subsidy_balance|default:'0' }}".replace(',', '.'));
+        const totalBrl = valKz * 0.0065; // Ajuste sua taxa se necessário
+        document.getElementById('brl-val').innerText = totalBrl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     });
 </script>
 {% endblock %}

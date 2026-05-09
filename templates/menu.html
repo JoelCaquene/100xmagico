@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}100xmagico - O Reino da Renda{% endblock %}
+{% block title %}100xmagico - Tech Evaluation{% endblock %}
 
 {% block content %}
+<div id="welcomeModal" class="modal-overlay">
+    <div class="modal-img-container">
+        <img src="{% static 'images/welcome_popup.png' %}" alt="Boas-vindas" class="img-welcome">
+        <button class="close-modal-x" onclick="closeModal()">×</button>
+    </div>
+</div>
+
 <div class="floating-support">
-    <a href="{{ whatsapp_link }}" class="btn-float wa-float"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://t.me/+YhrQf0fKdQQ1ZDQ0" class="btn-float tg-float"><i class="fab fa-telegram-plane"></i></a>
+    <a href="{{ whatsapp_link }}" class="btn-float wa-float"><i class="fa-brands fa-whatsapp"></i></a>
+    <a href="https://t.me/+YhrQf0fKdQQ1ZDQ0" class="btn-float tg-float"><i class="fa-brands fa-telegram"></i></a>
 </div>
 
 <div class="stats-top-bar">
     <div class="stat-item">
-        <small data-lang="label_balance">USDT</small>
-        <span class="glow-text">USDT {{ user.available_balance }}</span>
+        <small>SALDO AOA</small>
+        <span class="glow-text">Kz {{ user.available_balance }}</span>
     </div>
     <div class="stat-item">
-        <small data-lang="label_subsidy">Câmbio</small>
+        <small>CÂMBIO WISE</small>
         <span class="glow-text-alt" id="real-exchange-val">R$ 0,00</span>
-    </div>
-    <div class="stat-item">
-        <small>VIP</small>
-        <span class="vip-tag">{% if active_level %}{{ active_level.level.name }}{% else %}0{% endif %}</span>
     </div>
     <div class="stat-item">
         <select id="langSelect" class="lang-picker" onchange="changeLanguage()">
@@ -31,304 +34,251 @@
     </div>
 </div>
 
-<script>
-    (function() {
-        const saldo = parseFloat("{{ user.available_balance }}".replace(',', '.')) || 0;
-        const taxa = 5.48;
-        const calc = saldo * taxa;
-        document.getElementById('real-exchange-val').innerText = calc.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    })();
-</script>
-
 <div class="main-scroll-container">
     <div class="magic-header">
         <h1 class="logo-text">100xmagico</h1>
-        <p class="logo-sub" data-lang="header_sub">PLATAFORMA DE LONGO PRAZO</p>
+        <p class="logo-sub">TECH EVALUATION GLOBAL</p>
     </div>
 
     <div class="magic-carousel">
         <div class="carousel-track">
-            <img src="https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?q=80&w=600" alt="1">
-            <img src="https://images.unsplash.com/photo-1518544801976-3e159e50e5bb?q=80&w=600" alt="2">
-            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600" alt="4">
-            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600" alt="5">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600" alt="Tech 1">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" alt="Tech 2">
+            <img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?q=80&w=600" alt="Tech 3">
+            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600" alt="Tech 4">
         </div>
     </div>
 
     <div class="action-grid">
         <a href="{% url 'deposito' %}" class="card-link">
-            <div class="icon-box i-pink"><i class="fas fa-gem"></i></div>
-            <span data-lang="btn_recharge">Recarga</span>
+            <div class="icon-box i-blue"><i class="fa-solid fa-bolt-lightning"></i></div>
+            <span>Deposito</span>
         </a>
         <a href="{% url 'tarefa' %}" class="card-link">
-            <div class="icon-box i-teal"><i class="fas fa-magic"></i></div>
-            <span data-lang="btn_task">Tarefa</span>
+            <div class="icon-box i-purple"><i class="fa-solid fa-microchip"></i></div>
+            <span>Avaliar</span>
         </a>
         <a href="{% url 'roleta' %}" class="card-link">
-            <div class="icon-box i-gold"><i class="fas fa-star"></i></div>
-            <span data-lang="btn_prizes">Prêmio</span>
+            <div class="icon-box i-orange"><i class="fa-solid fa-rocket"></i></div>
+            <span>Bônus</span>
         </a>
         <a href="{% url 'sobre' %}" class="card-link">
-            <div class="icon-box i-purple"><i class="fas fa-crown"></i></div>
-            <span data-lang="btn_legal">Legalidade</span>
+            <div class="icon-box i-green"><i class="fa-solid fa-satellite-dish"></i></div>
+            <span>Empresa</span>
         </a>
     </div>
 
-    <div class="promo-banner">
-        <div class="promo-content">
-            <span class="badge" data-lang="badge_vip">OFERTA VIP</span>
-            <h4 data-lang="promo_title">🌸 GANHA MAIS UM VIP GRÁTES</h4>
-            <p data-lang="promo_sub">COM 5 AFILIADOS ACTIVOS, OFERTAMOS MAIS UM VIP</p>
-        </div>
-        <i class="fas fa-wifi promo-icon"></i>
-    </div>
-
-    <div class="crypto-section">
-        <h5 data-lang="crypto_title">Mercado em Tempo Real</h5>
-        <div class="coin-row"><span>BTC/USDT</span><span class="c-up">$64,120.50</span></div>
-        <div class="coin-row"><span>ETH/USDT</span><span class="c-up">$3,150.12</span></div>
-        <div class="coin-row"><span>SOL/USDT</span><span class="c-down">$142.05</span></div>
-        <div class="coin-row"><span>BNB/USDT</span><span class="c-up">$580.40</span></div>
-        <div class="coin-row"><span>USDT/KZ</span><span class="c-stable">942.00</span></div>
-        <div class="coin-row"><span>ADA/USDT</span><span class="c-up">$0.45</span></div>
-        <div class="coin-row"><span>XRP/USDT</span><span class="c-down">$0.59</span></div>
-        <div class="coin-row"><span>DOT/USDT</span><span class="c-up">$7.10</span></div>
-        <div class="coin-row"><span>MATIC/USDT</span><span class="c-up">$0.68</span></div>
-        <div class="coin-row"><span>DOGE/USDT</span><span class="c-up">$0.15</span></div>
-    </div>
-
-    <div class="casino-footer">
-        <p class="footer-label" data-lang="footer_certified">PROVEDORES CERTIFICADOS</p>
-        <div class="slot-grid">
-            <div class="slot pulse-gold"><i class="fas fa-dragon"></i></div>
-            <div class="slot pulse-pink"><i class="fas fa-gem"></i></div>
-            <div class="slot pulse-blue"><i class="fas fa-bolt"></i></div>
-        </div>
+    <div class="tech-list-section">
+        <h3 class="section-title">Top 10 Tech Giants & Satellites</h3>
         
-
+        <div class="tech-card-container">
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-brands fa-apple"></i> <h4>Apple Inc.</h4></div>
+                <p>Líder em ecossistemas fechados e hardware premium global.</p>
+            </div>
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-brands fa-windows"></i> <h4>Microsoft</h4></div>
+                <p>Gigante de Cloud Computing, IA corporativa e produtividade.</p>
+            </div>
+            <div class="tech-card gold-card">
+                <div class="card-header"><i class="fa-solid fa-satellite"></i> <h4>Starlink (SpaceX)</h4></div>
+                <p>Revolução em internet via satélite de baixa órbita terrestre.</p>
+            </div>
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-solid fa-memory"></i> <h4>NVIDIA</h4></div>
+                <p>O motor da Inteligência Artificial e processamento gráfico.</p>
+            </div>
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-brands fa-amazon"></i> <h4>Amazon Tech</h4></div>
+                <p>Dominância em serviços de infraestrutura de rede AWS.</p>
+            </div>
+             <div class="tech-card">
+                <div class="card-header"><i class="fa-brands fa-google"></i> <h4>Alphabet (Google)</h4></div>
+                <p>Líder em processamento de dados e algoritmos de busca.</p>
+            </div>
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-solid fa-car-side"></i> <h4>Tesla Automation</h4></div>
+                <p>Energia sustentável e robótica avançada aplicada.</p>
+            </div>
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-brands fa-facebook-messenger"></i> <h4>Meta Reality</h4></div>
+                <p>Desenvolvimento de metaverso e redes de conexão global.</p>
+            </div>
+            <div class="tech-card">
+                <div class="card-header"><i class="fa-solid fa-circuit-board"></i> <h4>TSMC</h4></div>
+                <p>A maior fundição de semicondutores e chips do planeta.</p>
+            </div>
+            <div class="tech-card gold-card">
+                <div class="card-header"><i class="fa-solid fa-tower-broadcast"></i> <h4>Viasat Satellites</h4></div>
+                <p>Comunicações geoestacionárias e defesa tecnológica.</p>
+            </div>
+        </div>
     </div>
+
     <div style="height: 100px;"></div> 
 </div>
 
 <nav class="bottom-nav">
     <a href="{% url 'nivel' %}" class="nav-btn">
-        <i class="fas fa-layer-group"></i>
-        <span data-lang="nav_assets">Activos</span>
+        <i class="fa-solid fa-server"></i>
+        <span>Planos</span>
     </a>
-    <a href="{% url 'renda' %}" class="nav-btn">
-        <i class="fas fa-hand-holding-usd"></i>
-        <span data-lang="nav_income">Renda</span>
+    <a href="{% url 'renda' %}" class="nav-btn active">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Cassino</span>
     </a>
     <a href="{% url 'equipa' %}" class="nav-btn">
-        <i class="fas fa-users"></i>
-        <span data-lang="nav_team">Convite</span>
+        <i class="fa-solid fa-share-nodes"></i>
+        <span>Afiliados</span>
     </a>
     <a href="{% url 'perfil' %}" class="nav-btn">
-        <i class="fas fa-user-ninja"></i>
-        <span data-lang="nav_more">Mais</span>
+        <i class="fa-solid fa-gear"></i>
+        <span>Conta</span>
     </a>
 </nav>
 
 <style>
     :root {
-        --pink: #FF2D75;
-        --teal: #00F2FF;
-        --gold: #FFB800;
-        --bg: linear-gradient(180deg, #2D0B5A 0%, #1A0536 100%);
+        --tech-blue: #007AFF;
+        --tech-purple: #5856D6;
+        --gold: #FF9500;
+        --soft-white: #F2F2F7;
     }
 
     body {
         margin: 0;
-        background: #1A0536;
-        color: white;
+        background: #FFFFFF; /* FUNDO BRANCO */
+        color: #1C1C1E;
         font-family: 'Poppins', sans-serif;
-        overflow: hidden; /* Remove rolagem do body */
+        overflow: hidden;
         width: 100vw;
     }
 
-    /* BARRA TOPO */
-    .stats-top-bar {
+    /* EFEITO DE BRILHO NO FUNDO */
+    body::before {
+        content: "";
         position: fixed;
-        top: 0; width: 100%;
-        height: 60px;
-        background: rgba(45, 11, 90, 0.9);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 1000;
-        border-bottom: 1px solid var(--pink);
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% -20%, rgba(0,122,255,0.1), transparent);
+        z-index: -1;
     }
 
-    .stat-item small { display: block; font-size: 9px; color: #ccc; }
-    .stat-item span { font-weight: bold; font-size: 12px; }
-    .glow-text { color: var(--teal); text-shadow: 0 0 8px var(--teal); }
-    .glow-text-alt { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
-    .vip-tag { background: var(--pink); padding: 2px 6px; border-radius: 5px; font-size: 10px !important; }
+    /* BARRA TOPO PROFISSIONAL */
+    .stats-top-bar {
+        position: fixed; top: 0; width: 100%; height: 65px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        display: flex; justify-content: space-around; align-items: center;
+        z-index: 1000; border-bottom: 1px solid #E5E5EA;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
 
-    /* CONTAINER ROLÁVEL */
+    .stat-item small { display: block; font-size: 10px; color: #8E8E93; font-weight: 600; }
+    .stat-item span { font-weight: 800; font-size: 14px; }
+    .glow-text { color: var(--tech-blue); }
+    .glow-text-alt { color: #008134; } /* Verde Wise */
+
+    .lang-picker { border: none; background: #F2F2F7; padding: 5px 10px; border-radius: 8px; font-weight: bold; }
+
     .main-scroll-container {
-        margin-top: 60px;
-        height: calc(100vh - 130px);
-        overflow-y: auto;
-        overflow-x: hidden; /* Garante que nada saia pros lados */
-        padding-bottom: 20px;
+        margin-top: 65px; height: calc(100vh - 135px);
+        overflow-y: auto; overflow-x: hidden; padding-bottom: 20px;
     }
 
-    /* HEADER */
-    .magic-header { text-align: center; padding: 20px 0; background: rgba(255,255,255,0.05); }
-    .logo-text { font-family: 'Great Vibes', cursive; font-size: 35px; margin: 0; color: #fff; text-shadow: 0 0 15px var(--pink); }
-    .logo-sub { font-size: 9px; letter-spacing: 3px; color: var(--teal); }
+    .magic-header { text-align: center; padding: 25px 0; }
+    .logo-text { font-weight: 900; font-size: 32px; margin: 0; color: #000; letter-spacing: -1px; }
+    .logo-sub { font-size: 10px; font-weight: 700; color: var(--tech-blue); letter-spacing: 2px; }
 
-    /* CARROSSEL AJUSTADO PARA 4 IMAGENS */
-    .magic-carousel { width: 92%; margin: 15px auto; height: 140px; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+    /* CARROSSEL */
+    .magic-carousel { width: 92%; margin: 10px auto; height: 150px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     .carousel-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite ease-in-out; }
     .carousel-track img { width: 25%; object-fit: cover; }
-    @keyframes slide {
+
+    @keyframes slide { 
         0%, 20% { transform: translateX(0); }
         25%, 45% { transform: translateX(-25%); }
         50%, 70% { transform: translateX(-50%); }
         75%, 95% { transform: translateX(-75%); }
     }
 
-    /* GRID AÇÕES */
-    .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; }
-    .card-link { text-decoration: none; color: white; text-align: center; font-size: 10px; font-weight: bold; }
-    .icon-box { width: 50px; height: 50px; margin: 0 auto 8px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-    .i-pink { color: var(--pink); border-color: var(--pink); }
-    .i-teal { color: var(--teal); border-color: var(--teal); }
-    .i-gold { color: var(--gold); border-color: var(--gold); }
-    .i-purple { color: #A020F0; border-color: #A020F0; }
-
-    /* PROMO BANNER */
-    .promo-banner { background: linear-gradient(90deg, #4B0082, #800080); margin: 0 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--pink); }
-    .badge { background: var(--pink); font-size: 8px; padding: 3px 7px; border-radius: 4px; }
-    .promo-content h4 { margin: 5px 0 0; font-size: 14px; }
-    .promo-content p { margin: 0; font-size: 11px; opacity: 0.8; }
-    .promo-icon { font-size: 30px; opacity: 0.3; }
-
-    /* CRYPTO */
-    .crypto-section { margin: 20px 15px; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; }
-    .crypto-section h5 { margin: 0 0 10px; color: var(--gold); font-size: 13px; text-align: center; }
-    .coin-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
-    .c-up { color: #00FF88; } .c-down { color: #FF4444; }
-
-    /* NAVEGAÇÃO FIXA BAIXO */
-    .bottom-nav {
-        position: fixed;
-        bottom: 0; width: 100%;
-        height: 70px;
-        background: #2D0B5A;
-        border-top: 2px solid var(--pink);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 1000;
+    /* GRID AÇÕES MODERNOS */
+    .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 15px; }
+    .card-link { text-decoration: none; color: #1C1C1E; text-align: center; font-size: 11px; font-weight: 600; }
+    .icon-box { 
+        width: 60px; height: 60px; margin: 0 auto 8px; border-radius: 18px; 
+        display: flex; align-items: center; justify-content: center; font-size: 24px;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.08); transition: 0.3s; background: #fff;
     }
-    .nav-btn { text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; opacity: 0.7; transition: 0.3s; }
-    .nav-btn i { font-size: 20px; margin-bottom: 4px; }
+    .icon-box:active { transform: scale(0.9); }
+    .i-blue { color: #007AFF; }
+    .i-purple { color: #AF52DE; }
+    .i-orange { color: #FF9500; }
+    .i-green { color: #34C759; }
+
+    /* TECH CARDS SECTION */
+    .tech-list-section { padding: 0 15px; }
+    .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; border-left: 4px solid var(--tech-blue); padding-left: 10px; }
+    .tech-card-container { display: flex; flex-direction: column; gap: 12px; }
+    
+    .tech-card { 
+        background: #F2F2F7; border-radius: 15px; padding: 15px; 
+        border: 1px solid #E5E5EA; transition: 0.3s;
+        animation: fadeInUp 0.5s ease backwards;
+    }
+    .gold-card { background: #FFF9E5; border-color: #FFD700; }
+    .tech-card h4 { margin: 0; font-size: 14px; font-weight: 700; }
+    .tech-card p { margin: 5px 0 0; font-size: 11px; color: #48484A; line-height: 1.4; }
+    .card-header { display: flex; align-items: center; gap: 10px; color: #1C1C1E; margin-bottom: 5px; }
+    .card-header i { font-size: 18px; color: var(--tech-blue); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+        position: fixed; bottom: 0; width: 100%; height: 75px;
+        background: #fff; border-top: 1px solid #E5E5EA;
+        display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+    }
+    .nav-btn { text-decoration: none; color: #8E8E93; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .nav-btn i { font-size: 22px; }
     .nav-btn span { font-size: 10px; font-weight: bold; }
-    .nav-btn:hover { opacity: 1; color: var(--pink); }
+    .nav-btn.active { color: var(--tech-blue); }
+
+    /* MODAL POPUP */
+    .modal-overlay { 
+        position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+        z-index: 9999; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-img-container { position: relative; width: 85%; max-width: 400px; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .img-welcome { width: 100%; border-radius: 20px; display: block; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+    .close-modal-x { 
+        position: absolute; top: -15px; right: -15px; width: 35px; height: 35px; 
+        background: var(--tech-blue); border: none; color: white; border-radius: 50%;
+        font-size: 20px; font-weight: bold; cursor: pointer;
+    }
+    @keyframes pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
     /* SUPORTE */
-    .floating-support { position: fixed; left: 15px; top: 50%; transform: translateY(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
-    .btn-float { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+    .floating-support { position: fixed; right: 15px; bottom: 90px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+    .btn-float { width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     .wa-float { background: #25D366; } .tg-float { background: #0088CC; }
 
-    /* MODAL */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; align-items: center; justify-content: center; }
-    .modal-content-mini { background: #3B0D70; width: 280px; padding: 25px; border-radius: 20px; border: 2px solid var(--pink); text-align: center; }
-    .close-modal-btn { background: var(--pink); border: none; color: white; padding: 8px 25px; border-radius: 20px; margin-top: 15px; cursor: pointer; font-weight: bold; }
-
-    /* CASSINO FOOTER */
-    .casino-footer { text-align: center; padding: 20px 0; }
-    .footer-label { font-size: 10px; color: var(--gold); letter-spacing: 2px; }
-    .slot-grid { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
-    .slot { width: 50px; height: 50px; background: #1A0536; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-    .pulse-gold { color: var(--gold); box-shadow: 0 0 10px var(--gold); }
-    .pulse-pink { color: var(--pink); box-shadow: 0 0 10px var(--pink); }
-    .pulse-blue { color: var(--teal); box-shadow: 0 0 10px var(--teal); }
-
-    .ticker-box { background: var(--gold); color: #000; padding: 5px 0; overflow: hidden; margin-top: 20px; }
-    .ticker-text { white-space: nowrap; animation: ticker 15s linear infinite; font-size: 11px; font-weight: bold; }
-    @keyframes ticker { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 </style>
 
 <script>
     function closeModal() { document.getElementById('welcomeModal').style.display = 'none'; }
 
-    const translations = {
-        'pt': {
-            welcome_title: 'BEM-VINDA, PRINCESA',
-            welcome_sub: 'acesso exclusivo ao reino',
-            label_balance: 'Saldo',
-            label_subsidy: 'Câmbio',
-            header_sub: 'BELEZA & INVESTIMENTO',
-            btn_recharge: 'Recarga',
-            btn_task: 'Jogo',
-            btn_prizes: 'Prêmios',
-            btn_legal: 'Legalidade',
-            badge_vip: 'OFERTA VIP',
-            promo_title: '🌸 Ganha VIP Gratuito',
-            promo_sub: 'Traga 5 afiliados activos!',
-            crypto_title: 'Mercado em Tempo Real',
-            nav_assets: 'Activos',
-            nav_income: 'Receita',
-            nav_team: 'Reino',
-            nav_more: 'Mais',
-            footer_certified: 'PROVEDORES CERTIFICADOS',
-        },
-        'en': {
-            welcome_title: 'WELCOME, PRINCESS',
-            welcome_sub: 'exclusive kingdom access',
-            label_balance: 'Balance',
-            label_subsidy: 'Câmbio',
-            header_sub: 'BEAUTY & INVESTMENT',
-            btn_recharge: 'Recharge',
-            btn_task: 'Game',
-            btn_prizes: 'Prizes',
-            btn_legal: 'Legal',
-            badge_vip: 'VIP OFFER',
-            promo_title: '🌸 Free Internet',
-            promo_sub: 'VIP 3+ get 5 GB!',
-            crypto_title: 'Real-Time Market',
-            nav_assets: 'Assets',
-            nav_income: 'Income',
-            nav_team: 'Kingdom',
-            nav_more: 'More',
-            footer_certified: 'CERTIFIED PROVIDERS',
-            ticker_text: '⚠️ INSTANT PAYMENTS VIA UNITEL MONEY • AFRICELL • MOVICEL • 100xmagico 👑'
-        },
-        'zh': {
-            welcome_title: '欢迎，公主',
-            welcome_sub: '独家王国访问权限',
-            label_balance: '余额',
-            label_subsidy: '补贴',
-            header_sub: '美容与投资',
-            btn_recharge: '充值',
-            btn_task: '游戏',
-            btn_prizes: '奖品',
-            btn_legal: '法律',
-            badge_vip: 'VIP优惠',
-            promo_title: '🌸 免费上网',
-            promo_sub: 'VIP 3+ 获得 5 GB!',
-            crypto_title: '实时市场',
-            nav_assets: '资产',
-            nav_income: '收入',
-            nav_team: '王国',
-            nav_more: '更多',
-            footer_certified: '认证供应商',
-            ticker_text: '⚠️ 通过 UNITEL MONEY • AFRICELL • MOVICEL 即时支付 • 100xmagico 👑'
-        }
-    };
+    // Simulação de Câmbio Wise R$
+    (function() {
+        const saldoAoa = parseFloat("{{ user.available_balance }}".replace(',', '.')) || 0;
+        const taxaWise = 0.0065; // Exemplo de taxa Kz para R$
+        const calc = saldoAoa * taxaWise;
+        document.getElementById('real-exchange-val').innerText = calc.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    })();
 
     function changeLanguage() {
         const lang = document.getElementById('langSelect').value;
-        const dict = translations[lang];
-        document.querySelectorAll('[data-lang]').forEach(el => {
-            const key = el.getAttribute('data-lang');
-            if (dict[key]) el.innerText = dict[key];
-        });
+        alert("Idioma alterado para: " + lang);
     }
 </script>
 {% endblock %}

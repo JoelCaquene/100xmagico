@@ -1,35 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Planos | 100XMAGICO{% endblock %}
+{% block title %}Planos Corporativos | 100XMAGICO{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     
     :root { 
-        --bg: #050308; 
-        --card-bg: rgba(22, 17, 41, 0.7); 
-        --primary: #00f2ff; /* Teal */
-        --accent: #ffb800; /* Gold */
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --text-dim: #a1a1a1;
+        --bg: #FFFFFF; 
+        --card-bg: #F8F9FA; 
+        --primary: #0062FF; /* Tech Blue */
+        --accent: #00C853; /* Success Green */
+        --border: #E9ECEF;
+        --text-main: #1A1D23;
+        --text-dim: #6C757D;
     }
 
     body { 
         background: var(--bg); 
-        color: white; 
-        font-family: 'Poppins', sans-serif; 
+        color: var(--text-main); 
+        font-family: 'Inter', sans-serif; 
         margin: 0; 
     }
 
-    /* FUNDO PROFISSIONAL */
-    .dashboard-bg {
-        background-image: 
-            radial-gradient(circle at top, #161129 0%, var(--bg) 80%),
-            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5V19SAAAAEHRSTlMAEBESExQVGBkaGxwdHh8g9S1ZkgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfmBQUIISgXN3MhAAAAUElEQVQ4y2NgYGRiYmZhhgFmFmYWVlY2dg5OLm4eXj7+AISBRE5uHl6wIKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCInwAAA9OQEbE9m48AAAAABJRU54ErkJggg==');
-        background-size: auto, 50px 50px;
+    .dashboard-container {
         min-height: 100vh;
         width: 100%;
         display: flex;
@@ -38,189 +34,211 @@
         padding-bottom: 50px;
     }
 
-    /* HEADER */
+    /* HEADER TECH */
     .brand-header { 
         width: 100%;
-        height: 100px; 
+        height: 80px; 
         display: flex; 
         align-items: center; 
         justify-content: center;
-        border-bottom: 1px solid var(--glass-border);
-        margin-bottom: 25px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 30px;
         position: relative;
+        background: #fff;
     }
 
-    .back-nav { position: absolute; left: 15px; }
+    .back-nav { position: absolute; left: 20px; }
     .back-arrow {
-        color: white; font-size: 14px; background: rgba(0, 242, 255, 0.1);
-        width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; border: 1px solid var(--primary); text-decoration: none;
+        color: var(--text-main); font-size: 16px;
+        width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        border-radius: 12px; border: 1px solid var(--border); text-decoration: none;
+        transition: 0.2s;
     }
+    .back-arrow:hover { background: var(--card-bg); }
 
     .header-title {
-        font-family: 'Cinzel', serif;
-        font-size: 22px; 
-        letter-spacing: 2px;
-        background: linear-gradient(to bottom, #fff 0%, var(--primary) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        font-size: 20px; 
+        letter-spacing: -0.5px;
+        color: var(--text-main);
     }
 
-    /* CONTAINER DE CARDS */
+    /* LISTA DE CARDS */
     .vip-list {
         width: 92%;
-        max-width: 480px;
+        max-width: 450px;
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 20px;
     }
 
     .vip-card {
         background: var(--card-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 22px;
-        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 24px;
         position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-        transition: 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .vip-card.level-active-princess {
-        border: 1px solid var(--primary);
-        box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+    .vip-card.active-plan {
+        border: 2px solid var(--primary);
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(0, 98, 255, 0.08);
     }
 
-    /* CARD HEADER */
+    /* ICONES TECNOLÓGICOS */
     .card-top {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 16px;
+        margin-bottom: 24px;
     }
 
-    .vip-badge {
-        width: 50px; height: 50px;
-        background: rgba(255,255,255,0.03);
-        border-radius: 14px;
+    .tech-icon-box {
+        width: 56px; height: 56px;
+        background: #fff;
+        border-radius: 16px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 22px; color: var(--primary);
-        border: 1px solid var(--glass-border);
+        font-size: 24px; color: var(--primary);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
 
-    .vip-title-group h3 { margin: 0; font-size: 18px; color: #fff; font-weight: 700; }
-    .vip-tag { font-size: 9px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .active-plan .tech-icon-box {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+    }
 
-    .active-check { margin-left: auto; color: #2ecc71; font-size: 20px; }
+    .vip-title-group h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-main); }
+    .vip-tag { font-size: 10px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* INFO GRID */
+    .status-badge { 
+        margin-left: auto; 
+        background: var(--accent); 
+        color: #fff; 
+        font-size: 10px; 
+        padding: 6px 12px; 
+        border-radius: 20px; 
+        font-weight: 700;
+    }
+
+    /* GRID DE DADOS */
     .info-grid {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 10px;
-        background: rgba(0,0,0,0.2);
-        padding: 15px;
-        border-radius: 15px;
-        margin-bottom: 20px;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 18px;
+        background: #fff;
+        border: 1px solid var(--border);
+        margin-bottom: 24px;
     }
 
     .info-box { text-align: center; }
-    .info-label { display: block; font-size: 9px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 5px; }
-    .info-value { display: block; font-size: 13px; font-weight: 700; color: #fff; }
-    .profit-text { color: var(--accent); }
+    .info-label { display: block; font-size: 10px; color: var(--text-dim); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+    .info-value { display: block; font-size: 14px; font-weight: 800; color: var(--text-main); }
+    .profit-val { color: var(--accent); }
 
-    /* BOTÃO */
-    .btn-action {
+    /* CONVERSÃO */
+    .conversion-row {
+        font-size: 11px;
+        color: var(--text-dim);
+        font-weight: 600;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    /* BOTÕES */
+    .btn-main {
         width: 100%;
-        padding: 14px;
-        border-radius: 12px;
+        padding: 16px;
+        border-radius: 16px;
         border: none;
-        font-family: 'Poppins', sans-serif;
         font-weight: 700;
-        font-size: 13px;
+        font-size: 14px;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.2s;
         text-transform: uppercase;
-        letter-spacing: 1px;
     }
 
-    .btn-buy {
-        background: linear-gradient(90deg, var(--primary), #00a2ff);
-        color: #000;
+    .btn-activate {
+        background: var(--primary);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 98, 255, 0.2);
     }
 
-    .btn-buy:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3); }
+    .btn-activate:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 98, 255, 0.3); }
 
-    .btn-active {
-        background: rgba(255,255,255,0.05);
+    .btn-current {
+        background: var(--border);
         color: var(--text-dim);
         cursor: default;
-        border: 1px solid var(--glass-border);
-    }
-
-    /* CAMBIO TEXT */
-    .conversion-tag {
-        display: block;
-        font-size: 10px;
-        color: #2ecc71;
-        margin-top: 2px;
-        font-weight: 600;
     }
 </style>
 
-<div class="dashboard-bg">
+<div class="dashboard-container">
     <div class="brand-header">
         <div class="back-nav">
-            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
+            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
         </div>
-        <h1 class="header-title">100XMAGICO</h1>
+        <h1 class="header-title">PLANOS DE ACELERAÇÃO</h1>
     </div>
 
     <div class="vip-list">
         {% for level in levels %}
-        <div class="vip-card {% if level.id in user_levels %}level-active-princess{% endif %}">
+        <div class="vip-card {% if level.id in user_levels %}active-plan{% endif %}">
             
             <div class="card-top">
-                <div class="vip-badge">
-                    {% if forloop.counter == 1 %}<i class="fas fa-bolt"></i>
-                    {% elif forloop.counter == 2 %}<i class="fas fa-microchip"></i>
-                    {% elif forloop.counter == 3 %}<i class="fas fa-gem"></i>
-                    {% else %}<i class="fas fa-crown"></i>{% endif %}
+                <div class="tech-icon-box">
+                    {% if forloop.counter == 1 %}<i class="fas fa-satellite-dish"></i>
+                    {% elif forloop.counter == 2 %}<i class="fas fa-server"></i>
+                    {% elif forloop.counter == 3 %}<i class="fas fa-layer-group"></i>
+                    {% else %}<i class="fas fa-shield-halved"></i>{% endif %}
                 </div>
                 <div class="vip-title-group">
-                    <span class="vip-tag">Nível Profissional</span>
-                    <h3>VIP {{ forloop.counter }} - {{ level.name }}</h3>
+                    <span class="vip-tag">Infraestrutura Tech</span>
+                    <h3>VIP {{ forloop.counter }} · {{ level.name }}</h3>
                 </div>
                 {% if level.id in user_levels %}
-                    <span class="active-check"><i class="fas fa-check-circle"></i></span>
+                    <span class="status-badge">ATIVO</span>
                 {% endif %}
             </div>
 
             <div class="info-grid">
                 <div class="info-box">
-                    <span class="info-label">Custo</span>
-                    <span class="info-value">USDT {{ level.deposit_value }}</span>
-                    <span class="conversion-tag brl-convert" data-value="{{ level.deposit_value }}">R$ 0,00</span>
+                    <span class="info-label">Adesão</span>
+                    <span class="info-value">{{ level.deposit_value }} Kz</span>
+                    <div class="conversion-row">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span class="brl-convert" data-value="{{ level.deposit_value }}">R$ 0,00</span>
+                    </div>
                 </div>
                 <div class="info-box">
-                    <span class="info-label">Diário</span>
-                    <span class="info-value profit-text">+{{ level.daily_gain }}</span>
-                    <span class="conversion-tag brl-convert" data-value="{{ level.daily_gain }}" style="color: var(--accent);">R$ 0,00</span>
+                    <span class="info-label">Rendimento</span>
+                    <span class="info-value profit-val">+{{ level.daily_gain }} Kz</span>
+                    <div class="conversion-row">
+                        <span class="brl-convert" data-value="{{ level.daily_gain }}">R$ 0,00</span>
+                    </div>
                 </div>
                 <div class="info-box">
-                    <span class="info-label">Ciclo</span>
+                    <span class="info-label">Contrato</span>
                     <span class="info-value">{{ level.cycle|default:"365" }} Dias</span>
                 </div>
             </div>
 
             <div class="card-footer">
                 {% if level.id in user_levels %}
-                    <button class="btn-action btn-active">PLANO ATUAL</button>
+                    <button class="btn-main btn-current">NÍVEL ATUAL</button>
                 {% else %}
                     <form method="post" action="{% url 'nivel' %}">
                         {% csrf_token %}
                         <input type="hidden" name="level_id" value="{{ level.id }}">
-                        <button type="submit" class="btn-action btn-buy">ATIVAR AGORA</button>
+                        <button type="submit" class="btn-main btn-activate">ATIVAR INFRAESTRUTURA</button>
                     </form>
                 {% endif %}
             </div>
@@ -231,12 +249,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const taxaWise = 5.48;
+        // Taxa Wise conforme solicitado (mesma lógica de envio/menu)
+        const taxaWise = 0.0065; 
         const elements = document.querySelectorAll('.brl-convert');
         
         elements.forEach(el => {
-            const usdt = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
-            const brl = usdt * taxaWise;
+            const kz = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
+            const brl = kz * taxaWise;
             el.innerText = brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         });
     });

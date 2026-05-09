@@ -16,24 +16,24 @@
         <div class="wallet-info">
             <div class="usdt">
                 <i class="fas fa-wallet" style="color: #ffcc00;"></i> 
-                <span id="val-usdt">{{ user.available_balance }}</span> <small>USDT</small>
+                <span id="val-aoa">{{ user.available_balance }}</span> <small>Kz</small>
             </div>
             <div class="brl" id="val-brl">R$ 0,00</div>
         </div>
     </div>
 
-{# ÁREA DE CONTEÚDO COM SCROLL SUAVE #}
-<div class="scroll-content">
-    <div class="hero-banner">
-        <div class="banner-overlay">
-            <h2><i class="fas fa-magic"></i> TAREFAS MÁGICAS</h2>
-        </div>
-    </div>
-</div>
-
-        {# GRID DE FILMES - CARDS GRANDES E CHAMATIVOS #}
-        <div class="movie-grid" id="movie-grid">
+    {# ÁREA DE CONTEÚDO COM SCROLL SUAVE #}
+    <div class="scroll-content">
+        <div class="hero-banner">
+            <div class="banner-overlay">
+                <h2><i class="fas fa-magic"></i> TAREFAS MÁGICAS</h2>
             </div>
+        </div>
+
+        {# GRID DE FILMES #}
+        <div class="movie-grid" id="movie-grid">
+            {# Gerado via JS #}
+        </div>
     </div>
 
     {# RODAPÉ COM LETREIRO DE GANHOS #}
@@ -42,61 +42,76 @@
             <div class="ticker">
                 <span>💎 GANHOS REAIS: {{ user.phone_number|slice:":5" }}*** ACABA DE RECEBER COMISSÃO!</span>
                 <span>🔥 100xmagico: O REINO DA SORTE 🔥</span>
-                <span>🚀 SAQUES RÁPIDOS VIA PIX E WISE (CÂMBIO R$ 5,48) 🚀</span>
+                <span>🚀 SAQUES RÁPIDOS VIA PIX E WISE (CÂMBIO REAL TIME) 🚀</span>
             </div>
         </div>
     </div>
 
-    {# MODAL DE AVALIAÇÃO PREMIUM #}
-    <div id="modal-rating" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-img-container">
-                <img id="modal-img" src="" alt="Filme">
-                <div class="img-gradient"></div>
-            </div>
-            <h3 id="modal-title">Título do Filme</h3>
-            <p>Atribua uma nota de 1 a 5 estrelas:</p>
-            
-            <div class="stars-row">
-                <i class="fas fa-star" data-v="1"></i>
-                <i class="fas fa-star" data-v="2"></i>
-                <i class="fas fa-star" data-v="3"></i>
-                <i class="fas fa-star" data-v="4"></i>
-                <i class="fas fa-star" data-v="5"></i>
-            </div>
-
-            {% if not has_active_level %}
-                <button class="btn-main disabled" disabled>ATIVE UM VIP PARA GANHAR</button>
-            {% else %}
-                <button id="btn-confirm" class="btn-main">CONFIRMAR AVALIAÇÃO</button>
-            {% endif %}
-            <button onclick="closeModal()" class="btn-cancel">CANCELAR</button>
+{# MODAL DE AVALIAÇÃO PREMIUM #}
+<div id="modal-rating" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-img-container">
+            <img id="modal-img" src="" alt="Filme">
+            <div class="img-gradient"></div>
         </div>
+        <h3 id="modal-title" style="margin-top: 10px;">Título do Filme</h3>
+        
+        {# LÓGICA DE EXIBIÇÃO DO STATUS DE ESTAGIÁRIO #}
+        <div style="margin: 10px 0;">
+            {% if is_intern %}
+                <p style="color: #00ff00; font-weight: bold; font-size: 13px; margin: 0;">
+                    <i class="fas fa-user-graduate"></i> MODO ESTAGIÁRIO ATIVO
+                </p>
+                <p style="font-size: 11px; color: #aaa;">Tarefa {{ total_tasks_ever|add:1 }} de 2</p>
+            {% elif not has_active_level %}
+                <p style="color: #ff003c; font-weight: bold; font-size: 13px; margin: 0;">
+                    <i class="fas fa-exclamation-triangle"></i> ESTÁGIO FINALIZADO
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="stars-row">
+            <i class="fas fa-star" data-v="1"></i>
+            <i class="fas fa-star" data-v="2"></i>
+            <i class="fas fa-star" data-v="3"></i>
+            <i class="fas fa-star" data-v="4"></i>
+            <i class="fas fa-star" data-v="5"></i>
+        </div>
+
+        {# BOTÕES DINÂMICOS CONFORME AS PERMISSÕES #}
+        {% if can_do_task %}
+            <button id="btn-confirm" class="btn-main">CONFIRMAR AVALIAÇÃO</button>
+        {% else %}
+            {% if tasks_completed_today >= 1 %}
+                <button class="btn-main disabled" disabled>TAREFA DE HOJE CONCLUÍDA</button>
+            {% else %}
+                <button class="btn-main disabled" style="background: #800000; color: #fff;" disabled>LIMITE DE ESTÁGIO ATINGIDO</button>
+                <p style="font-size: 10px; color: #ffcc00; margin-top: 8px;">ATIVE UM NÍVEL VIP PARA CONTINUAR</p>
+            {% endif %}
+        {% endif %}
+        
+        <button onclick="closeModal()" class="btn-cancel">CANCELAR</button>
     </div>
 </div>
 
 <script>
-    const CAMBIO_FIXO = 5.48;
+    const TAXA_WISE = 0.0065; 
     let selectedRating = 0;
 
-    // 10 Filmes Chineses com Imagens Chamativas e Reais (Alta Resolução)
     const movies = [
         {t: "O Mestre Yin Yang", img: "https://images.unsplash.com/photo-1590212151175-e58edd96185b?q=80&w=600&auto=format&fit=crop"},
         {t: "A Lenda do Rei Macaco", img: "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?q=80&w=600&auto=format&fit=crop"},
         {t: "Guerreiros do Futuro", img: "https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=600&auto=format&fit=crop"},
         {t: "Nezha: O Renascer", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop"},
-        {t: "O Império das Sombras", img: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=600&auto=format&fit=crop"},
-        {t: "Jade Dynasty", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop"},
-        {t: "A Grande Muralha", img: "https://images.unsplash.com/photo-1529924559135-e84eba7c4099?q=80&w=600&auto=format&fit=crop"},
-        {t: "Detetive Dee", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=600&auto=format&fit=crop"},
-        {t: "Dragão Branco", img: "https://images.unsplash.com/photo-1438029071396-1e831a7fa6d8?q=80&w=600&auto=format&fit=crop"},
-        {t: "Portal da Magia", img: "https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=600&auto=format&fit=crop"}
+        {t: "O Império das Sombras", img: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=600&auto=format&fit=crop"}
     ];
 
     document.addEventListener("DOMContentLoaded", function() {
         // Cálculo de Saldo BRL
-        const usdt = parseFloat(document.getElementById('val-usdt').innerText) || 0;
-        document.getElementById('val-brl').innerText = `R$ ${(usdt * CAMBIO_FIXO).toFixed(2)} (Wise)`;
+        const saldoAoaStr = document.getElementById('val-aoa').innerText.replace(',', '.');
+        const saldoAoa = parseFloat(saldoAoaStr) || 0;
+        const calcBrl = saldoAoa * TAXA_WISE;
+        document.getElementById('val-brl').innerText = calcBrl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
         // Renderizar Filmes
         const grid = document.getElementById('movie-grid');
@@ -133,17 +148,26 @@
 
                 fetch("{% url 'process_task' %}", {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' }
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'X-CSRFToken': '{{ csrf_token }}' 
+                    }
                 })
                 .then(r => r.json())
                 .then(data => {
                     if(data.success) {
-                        alert("Avaliação concluída com sucesso!");
+                        alert(data.message);
                         window.location.reload();
                     } else {
                         alert(data.message);
                         closeModal();
+                        this.disabled = false;
+                        this.innerText = "CONFIRMAR AVALIAÇÃO";
                     }
+                })
+                .catch(err => {
+                    alert("Erro na conexão.");
+                    this.disabled = false;
                 });
             };
         }
@@ -171,31 +195,19 @@
     }
 
     body {
-        margin: 0;
-        padding: 0;
+        margin: 0; padding: 0;
         background: var(--dark-bg);
         font-family: 'Montserrat', sans-serif;
         color: white;
         overflow: hidden;
     }
 
-    .magico-container {
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
+    .magico-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; }
 
-    /* NAVBAR COMPACTA E MODERNA */
     .casino-navbar {
-        height: 70px;
-        background: rgba(0,0,0,0.95);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        border-bottom: 2px solid var(--gold);
-        z-index: 100;
+        height: 70px; background: rgba(0,0,0,0.95);
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 20px; border-bottom: 2px solid var(--gold); z-index: 100;
     }
 
     .brand { font-family: 'Goldman', sans-serif; font-size: 20px; font-weight: 900; color: #fff; }
@@ -206,83 +218,49 @@
     .usdt { font-weight: 900; font-size: 16px; color: #fff; }
     .brl { font-size: 11px; color: #00ff00; font-weight: 700; margin-top: 2px; }
 
-    /* ÁREA DE SCROLL */
     .scroll-content {
-        flex: 1;
-        overflow-y: auto;
-        padding-bottom: 100px;
+        flex: 1; overflow-y: auto; padding-bottom: 100px;
         background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0c 100%);
     }
 
     .hero-banner {
         height: 120px;
-        background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), linear-gradient(45deg, #ff003c, #800000);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: linear-gradient(45deg, #ff003c, #800000);
+        display: flex; align-items: center; justify-content: center;
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    .banner-overlay { text-align: center; }
     .hero-banner h2 { margin: 0; font-family: 'Goldman'; font-size: 18px; letter-spacing: 2px; }
-    .badge-vip { background: var(--gold); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 900; }
 
-    /* GRID E CARDS GRANDES */
     .movie-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Duas colunas padrão mobile */
-        gap: 15px;
-        padding: 20px;
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 15px; padding: 20px;
     }
 
     .movie-card {
-        position: relative;
-        border-radius: 15px;
-        overflow: hidden;
-        aspect-ratio: 2/3; /* Formato pôster de cinema */
-        border: 1px solid rgba(255,204,0,0.2);
-        background: var(--card-bg);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        position: relative; border-radius: 15px; overflow: hidden;
+        aspect-ratio: 2/3; border: 1px solid rgba(255,204,0,0.2);
+        background: var(--card-bg); box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
 
-    .m-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+    .m-img { width: 100%; height: 100%; object-fit: cover; }
 
     .m-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 15px 10px;
-        background: linear-gradient(transparent, rgba(0,0,0,0.95) 60%);
+        position: absolute; bottom: 0; left: 0; right: 0;
+        padding: 15px 10px; background: linear-gradient(transparent, rgba(0,0,0,0.95) 60%);
         text-align: center;
     }
 
     .m-overlay h4 { margin: 0 0 10px; font-size: 13px; font-weight: 700; height: 32px; overflow: hidden; }
     .m-overlay button {
-        background: var(--gold);
-        border: none;
-        color: #000;
-        padding: 8px 0;
-        width: 100%;
-        border-radius: 20px;
-        font-weight: 900;
-        font-size: 11px;
-        text-transform: uppercase;
-        cursor: pointer;
+        background: var(--gold); border: none; color: #000;
+        padding: 8px 0; width: 100%; border-radius: 20px;
+        font-weight: 900; font-size: 11px; text-transform: uppercase;
     }
 
-    /* FOOTER */
     .casino-bottom {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background: #000;
-        border-top: 2px solid var(--gold);
-        padding: 10px 0;
-        z-index: 101;
+        position: fixed; bottom: 0; width: 100%;
+        background: #000; border-top: 2px solid var(--gold);
+        padding: 10px 0; z-index: 101;
     }
 
     .ticker-wrap { overflow: hidden; white-space: nowrap; }
@@ -291,7 +269,6 @@
 
     @keyframes scrollTicker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* MODAL */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000;
@@ -300,19 +277,19 @@
         background: var(--card-bg); width: 85%; max-width: 350px; padding-bottom: 25px;
         border-radius: 25px; border: 2px solid var(--gold); text-align: center; overflow: hidden;
     }
-    .modal-img-container { position: relative; height: 220px; }
+    .modal-img-container { position: relative; height: 180px; }
     .modal-img-container img { width: 100%; height: 100%; object-fit: cover; }
     .img-gradient { position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(transparent, var(--card-bg)); }
 
-    .stars-row { font-size: 30px; margin: 20px 0; color: #333; }
+    .stars-row { font-size: 30px; margin: 15px 0; color: #333; }
     .stars-row i { margin: 0 5px; cursor: pointer; transition: 0.3s; }
     .stars-row i.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
 
     .btn-main {
         width: 80%; background: var(--gold); color: #000; border: none; padding: 15px;
-        border-radius: 40px; font-weight: 900; font-size: 16px; cursor: pointer;
+        border-radius: 40px; font-weight: 900; font-size: 14px; cursor: pointer;
     }
-    .btn-main.disabled { background: #555; color: #888; }
-    .btn-cancel { background: none; border: none; color: #888; margin-top: 15px; font-weight: 600; cursor: pointer; }
+    .btn-main.disabled { background: #555; color: #888; cursor: not-allowed; }
+    .btn-cancel { background: none; border: none; color: #888; margin-top: 10px; font-weight: 600; cursor: pointer; }
 </style>
 {% endblock %}

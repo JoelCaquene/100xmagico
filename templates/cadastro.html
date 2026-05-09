@@ -4,331 +4,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>100xmagico - A Sorte Oriental</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
+    <title>100xmagico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@400;600&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     <style>
-        :root {
-            --gold: #ffd700;
-            --dragon-red: #d90429;
-            --deep-red: #800000;
+        :root { --gold: #ffcf40; --red: #ff002b; --bg: #0d0d0d; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: radial-gradient(circle at 50% 0%, #500 0%, #000 100%); 
+            color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        html, body {
-            margin: 0; padding: 0; width: 100%; min-height: 100vh;
-            overflow-x: hidden;
-            font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at center, #ff0000 0%, #4a0000 100%);
-        }
-
-        #bg-animation {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none;
-            background: url('https://www.transparenttextures.com/patterns/chinese-lanterns.png');
-            opacity: 0.2; animation: moveBg 60s linear infinite;
-        }
-
-        @keyframes moveBg { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
-
-        /* TELA DE CARREGAMENTO */
-        #magic-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, #d90429, #4a0000);
-            z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; color: white;
-            display: none;
-        }
-
-        .loader-circle {
-            width: 100px; height: 100px; border: 5px solid rgba(255,215,0,0.2);
-            border-top: 5px solid var(--gold); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-
-        .counter-text { font-size: 3.5rem; font-weight: bold; color: var(--gold); }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* HEADER & LANG SELECTOR CORRIGIDO */
-        .top-nav {
-            width: 100%; display: flex; justify-content: space-between;
-            align-items: center; padding: 15px 20px; z-index: 10;
-        }
-
-        .logo-100xmagico {
-            font-family: 'Great Vibes', cursive; font-size: 32px; 
-            color: var(--gold); text-shadow: 0 0 10px #ff0000;
-        }
-
+        /* HEADER */
+        .top-nav { padding: 10px 15px; display: flex; flex-direction: column; align-items: center; }
+        
         .lang-container {
-            background: var(--gold); /* Fundo dourado para contraste */
-            border-radius: 20px; padding: 5px 12px; display: flex; align-items: center; gap: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            align-self: flex-end; background: rgba(0,0,0,0.5); border: 1px solid var(--gold);
+            border-radius: 20px; padding: 2px 10px; display: flex; align-items: center;
+        }
+        .lang-container select { 
+            background: transparent; border: none; color: var(--gold); font-size: 12px; 
+            font-weight: bold; outline: none; padding: 2px;
         }
 
-        .lang-container i { color: #000; font-size: 0.9rem; }
+        .logo-box { text-align: center; margin-top: -10px; }
+        .logo-main { 
+            font-family: 'Cinzel', serif; font-size: 32px; color: var(--gold); 
+            text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,207,64,0.5);
+        }
+        .logo-cn { font-family: 'Noto Sans SC', sans-serif; color: var(--red); font-size: 10px; letter-spacing: 5px; }
 
-        .lang-container select {
-            background: transparent; border: none; 
-            color: #000; /* TEXTO PRETO COMO PEDIDO */
-            font-size: 0.85rem; font-weight: 800; outline: none; cursor: pointer;
+        /* FORM CONTAINER */
+        .register-card {
+            flex: 1; width: 92%; max-width: 380px; margin: 10px auto;
+            background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,207,64,0.3);
+            border-radius: 25px; padding: 25px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column; gap: 15px;
         }
 
-        .lang-container select option {
-            color: #000; /* OPÇÕES PRETAS */
-            background: #fff; 
+        h2 { font-size: 18px; text-align: center; color: #fff; text-transform: uppercase; margin-bottom: 5px; }
+
+        .input-row {
+            display: flex; align-items: center; background: #1a1a1a; 
+            border: 1px solid #333; border-radius: 12px; height: 50px; overflow: hidden;
+        }
+        .input-row:focus-within { border-color: var(--gold); }
+
+        .input-row i { width: 45px; text-align: center; color: var(--gold); font-size: 18px; }
+        
+        /* CORREÇÃO DO FUNDO BRANCO (Autocompletar) */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #1a1a1a inset !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
 
-        /* CONTAINER FORM */
-        .register-container {
-            position: relative; z-index: 5; margin: 10px auto 100px;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
-            padding: 30px 20px; border-radius: 20px; width: 92%; max-width: 400px;
-            border: 1.5px solid var(--gold); box-shadow: 0 0 20px rgba(217, 4, 41, 0.5);
-            text-align: center; transition: opacity 0.5s;
+        input {
+            flex: 1; background: transparent; border: none; color: #fff;
+            padding: 10px; font-size: 15px; outline: none; width: 100%;
         }
 
-        h2 {
-            font-family: 'Noto Sans SC', sans-serif; color: var(--gold);
-            font-size: 1.8rem; margin-bottom: 20px; text-transform: uppercase;
+        .ddi-box { padding: 0 10px; border-right: 1px solid #333; color: #fff; font-weight: bold; }
+        .ddi-box select { background: transparent; border: none; color: #fff; font-weight: bold; outline: none; }
+
+        .eye-btn { padding: 0 15px; color: #555; cursor: pointer; }
+
+        /* FOOTER */
+        .footer-nav {
+            background: #000; padding: 15px; display: flex; gap: 10px;
+            border-top: 1px solid rgba(255,207,64,0.2);
         }
 
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label {
-            font-size: 0.7rem; font-weight: 700; color: var(--gold);
-            margin-left: 10px; display: block; margin-bottom: 4px;
+        .btn-in {
+            width: 70px; height: 55px; background: #1a1a1a; border: 1px solid #333;
+            border-radius: 15px; color: #fff; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-decoration: none; font-size: 10px;
+        }
+        .btn-reg {
+            flex: 1; background: linear-gradient(45deg, #d90429, #ff4d4d);
+            border: none; border-radius: 15px; color: #fff; font-weight: 900;
+            font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .legal { font-size: 9px; color: #666; text-align: center; margin-top: 5px; }
 
-        .auth-form input {
-            width: 100%; padding: 14px 15px 14px 45px;
-            border: 1px solid rgba(255,215,0,0.3); border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 0.95rem;
+        /* LOADING SCREEN */
+        #loader {
+            position: fixed; inset: 0; background: #000; z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-
-        .input-wrapper i.main-icon { position: absolute; left: 15px; color: var(--gold); }
-
-        .country-select {
-            position: absolute; left: 8px; display: flex; align-items: center;
-            border-right: 1px solid var(--gold); padding-right: 5px; height: 60%;
-        }
-
-        .country-select select { background: transparent; border: none; color: white; outline: none; font-weight: bold; }
-        .country-select select option { color: #000; background: #fff; }
-
-        .phone-input { padding-left: 85px !important; }
-        .toggle-password { position: absolute; right: 15px; cursor: pointer; color: var(--gold); }
-
-        /* NAV BAIXO */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
-            background: #111; display: flex; justify-content: space-around;
-            align-items: center; border-top: 2px solid var(--gold); z-index: 100;
-        }
-
-        .nav-item {
-            text-decoration: none; color: #888; display: flex;
-            flex-direction: column; align-items: center; font-size: 0.7rem;
-            flex: 1; border: none; background: none; cursor: pointer; font-weight: bold;
-        }
-
-        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
-        .nav-item.active { color: var(--gold); }
-
-        .policy-container {
-            display: flex; align-items: center; gap: 8px; color: #ccc;
-            font-size: 0.7rem; margin-top: 15px; text-align: left;
-        }
-
-        .casino-light {
-            position: fixed; width: 2px; height: 2px; background: white;
-            border-radius: 50%; box-shadow: 0 0 8px 1px gold;
-            animation: float 8s infinite; opacity: 0.6; z-index: 1;
-        }
-
-        @keyframes float { 0% { transform: translateY(100vh); opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div id="bg-animation"></div>
+<div id="loader">
+    <i class="fa-solid fa-dragon fa-spin-pulse" style="font-size: 50px; color: var(--gold);"></i>
+    <div id="perc" style="margin-top: 20px; font-weight: 900; color: var(--gold); font-size: 20px;">0%</div>
+</div>
 
-    <div id="magic-loader">
-        <div class="loader-circle"></div>
-        <div class="counter-text" id="count-up">0</div>
-        <div style="font-family: 'Great Vibes', cursive; color: var(--gold); font-size: 1.5rem; margin-top: 10px;">100xmagico</div>
+<nav class="top-nav">
+    <div class="lang-container">
+        <i class="fa-solid fa-globe"></i>
+        <select id="lang-select" onchange="updateLang()">
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+            <option value="zh">ZH</option>
+        </select>
     </div>
+    <div class="logo-box">
+        <div class="logo-main">100xMágico</div>
+        <div class="logo-cn">百倍魔法</div>
+    </div>
+</nav>
 
-    <nav class="top-nav">
-        <div class="logo-100xmagico">100xmagico</div>
-        <div class="lang-container">
-            <i class="fa-solid fa-language"></i>
-            <select id="lang-selector" onchange="changeLanguage()">
-                <option value="pt">PT</option>
-                <option value="en">EN</option>
-                <option value="es">ES</option>
-                <option value="zh">ZH</option>
-                <option value="ar">AR</option>
-                <option value="fr">FR</option>
-                <option value="ru">RU</option>
-                <option value="jp">JP</option>
-                <option value="de">DE</option>
-                <option value="it">IT</option>
-            </select>
+<div class="register-card">
+    <h2 id="t-title">Crie sua conta VIP</h2>
+    
+    <form method="post" id="regForm">
+        {% csrf_token %}
+        <div class="input-row">
+            <div class="ddi-box">
+                <select name="ddi">
+                    <option value="+55">BR</option>
+                    <option value="+351">PT</option>
+                    <option value="+244">AO</option>
+                </select>
+            </div>
+            <input type="tel" name="phone_number" id="p-phone" placeholder="Telemóvel" required>
         </div>
-    </nav>
 
-    <div class="register-container" id="form-box">
-        <h2 id="txt-title">Cadastro Real</h2>
-        
-        <form method="post" class="auth-form" id="main-form">
-            {% csrf_token %}
-            <div class="form-group">
-                <label id="lbl-phone">TELEFONE DA SORTE</label>
-                <div class="input-wrapper">
-                    <div class="country-select">
-                        <select name="ddi">
-                            <option value="+55">🇧🇷</option>
-                            <option value="+351">🇵🇹</option>
-                            <option value="+244">🇦🇴</option>
-                            <option value="+34">🇪🇸</option>
-                            <option value="+1">🇨🇦</option>
-                            <option value="+33">🇫🇷</option>
-                            <option value="+86">🇨🇳</option>
-                            <option value="+971">🇦🇪</option>
-                            <option value="+7">🇷🇺</option>
-                            <option value="+81">🇯🇵</option>
-                        </select>
-                    </div>
-                    <input type="text" name="phone_number" id="input-phone" class="phone-input" placeholder="Seu número" required>
-                </div>
-            </div>
+        <div class="input-row" style="margin-top:15px">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" name="password" id="pass" placeholder="Senha" required>
+            <i class="fa-solid fa-eye eye-btn" onclick="toggle('pass')"></i>
+        </div>
 
-            <div class="form-group">
-                <label id="lbl-pass">SENHA MÁGICA</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-lock main-icon"></i>
-                    <input type="password" name="password" id="pass" placeholder="******" required>
-                    <i class="fa-solid fa-eye toggle-password" onclick="togglePass('pass')"></i>
-                </div>
-            </div>
+        <div class="input-row" style="margin-top:15px">
+            <i class="fa-solid fa-shield-check"></i>
+            <input type="password" name="confirm_password" id="conf" placeholder="Confirmar" required>
+            <i class="fa-solid fa-eye eye-btn" onclick="toggle('conf')"></i>
+        </div>
 
-            <div class="form-group">
-                <label id="lbl-confirm">CONFIRMAR SORTE</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-circle-check main-icon"></i>
-                    <input type="password" name="confirm_password" id="conf" placeholder="******" required>
-                    <i class="fa-solid fa-eye toggle-password" onclick="togglePass('conf')"></i>
-                </div>
-            </div>
+        <div class="input-row" style="margin-top:15px">
+            <i class="fa-solid fa-gift"></i>
+            <input type="text" name="invited_by_code" id="p-inv" placeholder="Convite (Opcional)" value="{{ request.GET.invite|default:'' }}">
+        </div>
 
-            <div class="form-group">
-                <label id="lbl-invite">CÓDIGO VIP</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-crown main-icon"></i>
-                    <input type="text" id="invite_code" name="invited_by_code" placeholder="Opcional" value="{{ request.GET.invite|default:'' }}">
-                </div>
-            </div>
+        <p class="legal">Ao registrar, você aceita nossos termos e confirma ter +18 anos.</p>
+    </form>
+</div>
 
-            <label class="policy-container">
-                <input type="checkbox" id="policy-check" required>
-                <span id="txt-policy">Sou maior de 18 anos e aceito os termos.</span>
-            </label>
-        </form>
-    </div>
+<div class="footer-nav">
+    <a href="{% url 'login' %}" class="btn-in">
+        <i class="fa-solid fa-user"></i>
+        <span>ENTRAR</span>
+    </a>
+    <button type="button" class="btn-reg" onclick="submitForm()">
+        <span id="t-btn">REGISTRAR</span>
+        <i class="fa-solid fa-circle-arrow-right"></i>
+    </button>
+</div>
 
-    <div class="bottom-nav">
-        <a href="{% url 'login' %}" class="nav-item">
-            <i class="fa-solid fa-door-open"></i>
-            <span id="nav-login">ENTRAR</span>
-        </a>
+<script>
+    // Idiomas funcional
+    const texts = {
+        pt: { title: "Crie sua conta VIP", phone: "Telemóvel", pass: "Senha", conf: "Confirmar", inv: "Convite (Opcional)", btn: "REGISTRAR" },
+        en: { title: "Create VIP Account", phone: "Mobile", pass: "Password", conf: "Confirm", inv: "Invite Code", btn: "REGISTER" },
+        zh: { title: "创建VIP账户", phone: "手机号", pass: "密码", conf: "确认密码", inv: "邀请码", btn: "注册" }
+    };
 
-        <button type="button" onclick="startSubmitAnimation()" class="nav-item active">
-            <i class="fa-solid fa-dragon"></i>
-            <span id="nav-reg">REGISTRAR</span>
-        </button>
-    </div>
+    function updateLang() {
+        const l = document.getElementById('lang-select').value;
+        document.getElementById('t-title').innerText = texts[l].title;
+        document.getElementById('p-phone').placeholder = texts[l].phone;
+        document.getElementById('pass').placeholder = texts[l].pass;
+        document.getElementById('conf').placeholder = texts[l].conf;
+        document.getElementById('p-inv').placeholder = texts[l].inv;
+        document.getElementById('t-btn').innerText = texts[l].btn;
+    }
 
-    <script>
-        const translations = {
-            pt: { title: "Cadastro Real", phone: "TELEFONE DA SORTE", pass: "SENHA MÁGICA", confirm: "CONFIRMAR SORTE", invite: "CÓDIGO VIP", policy: "Sou maior de 18 anos e aceito os termos.", login: "ENTRAR", reg: "REGISTRAR", holder: "Seu número" },
-            en: { title: "Royal Register", phone: "LUCKY PHONE", pass: "MAGIC PASSWORD", confirm: "CONFIRM LUCK", invite: "VIP CODE", policy: "I am 18+ and accept the terms.", login: "LOGIN", reg: "REGISTER", holder: "Your number" },
-            es: { title: "Registro Real", phone: "TELÉFONO SUERTE", pass: "CLAVE MÁGICA", confirm: "CONFIRMAR SUERTE", invite: "CÓDIGO VIP", policy: "Soy mayor de 18 y acepto términos.", login: "ENTRAR", reg: "REGISTRAR", holder: "Tu número" },
-            zh: { title: "皇家注册", phone: "幸运电话", pass: "魔法密码", confirm: "确认幸运", invite: "VIP代码", policy: "我已年满18岁并接受条款", login: "登录", reg: "注册", holder: "你的号码" },
-            ar: { title: "سجل ملكي", phone: "هاتف الحظ", pass: "كلمة السر", confirm: "تأكيد الحظ", invite: "كود VIP", policy: "أنا 18+ وأقبل الشروط", login: "تسجيل الدخول", reg: "سجل", holder: "رقمك" },
-            fr: { title: "Inscription Royale", phone: "TÉLÉPHONE CHANCE", pass: "MOT DE PASSE", confirm: "CONFIRMER CHANCE", invite: "CODE VIP", policy: "J'ai 18 ans+ et j'accepte.", login: "ENTRER", reg: "S'INSCRIRE", holder: "Votre número" },
-            ru: { title: "Регистрация", phone: "ТЕЛЕФОН УДАЧИ", pass: "МАГИЧЕСКИЙ ПАРОЛЬ", confirm: "ПОДТВЕРДИТЬ", invite: "VIP КОД", policy: "Мне 18+ и я согласен.", login: "ВОЙТИ", reg: "СОЗДАТЬ", holder: "Ваш номер" },
-            jp: { title: "ロイヤル登録", phone: "ラッキー電話", pass: "魔法のパスワード", confirm: "幸運を確認", invite: "VIPコード", policy: "18歳以上で規約に同意します", login: "ログイン", reg: "登録", holder: "電話番号" },
-            de: { title: "Königliche Reg.", phone: "GLÜCKSTELEFON", pass: "PASSWORT", confirm: "BESTÄTIGEN", invite: "VIP CODE", policy: "Ich bin 18+ und stimme zu.", login: "LOGIN", reg: "REGISTRIEREN", holder: "Ihre Nummer" },
-            it: { title: "Registro Reale", phone: "TELEFONO FORTUNA", pass: "PASSWORD", confirm: "CONFERMA", invite: "CODICE VIP", policy: "Ho 18+ e accetto i termini.", login: "ACCEDI", reg: "REGISTRATI", holder: "Tuo numero" }
-        };
+    // Loader
+    window.onload = () => {
+        let c = 0;
+        let i = setInterval(() => {
+            c += Math.floor(Math.random() * 10) + 5;
+            if(c >= 100) {
+                clearInterval(i);
+                document.getElementById('perc').innerText = "100%";
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 200);
+            } else { document.getElementById('perc').innerText = c + "%"; }
+        }, 50);
+    };
 
-        function changeLanguage() {
-            const lang = document.getElementById('lang-selector').value;
-            const t = translations[lang];
-            document.getElementById('txt-title').innerText = t.title;
-            document.getElementById('lbl-phone').innerText = t.phone;
-            document.getElementById('lbl-pass').innerText = t.pass;
-            document.getElementById('lbl-confirm').innerText = t.confirm;
-            document.getElementById('lbl-invite').innerText = t.invite;
-            document.getElementById('txt-policy').innerText = t.policy;
-            document.getElementById('nav-login').innerText = t.login;
-            document.getElementById('nav-reg').innerText = t.reg;
-            document.getElementById('input-phone').placeholder = t.holder;
-            document.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    function toggle(id) {
+        const x = document.getElementById(id);
+        x.type = x.type === "password" ? "text" : "password";
+    }
+
+    function submitForm() {
+        if(document.getElementById('regForm').reportValidity()) {
+            document.getElementById('regForm').submit();
         }
+    }
+</script>
 
-        function runCounter(callback) {
-            const loader = document.getElementById('magic-loader');
-            const counter = document.getElementById('count-up');
-            loader.style.display = 'flex';
-            let count = 0;
-            const interval = setInterval(() => {
-                count += 2;
-                counter.innerText = count;
-                if (count >= 100) {
-                    clearInterval(interval);
-                    if(callback) callback();
-                }
-            }, 25);
-        }
-
-        window.onload = function() {
-            runCounter(() => { document.getElementById('magic-loader').style.display = 'none'; });
-            for (let i = 0; i < 15; i++) {
-                let spark = document.createElement('div');
-                spark.className = 'casino-light';
-                spark.style.left = Math.random() * 100 + 'vw';
-                spark.style.animationDuration = (Math.random() * 5 + 3) + 's';
-                document.body.appendChild(spark);
-            }
-        };
-
-        function startSubmitAnimation() {
-            const form = document.getElementById('main-form');
-            if (form.reportValidity()) {
-                document.getElementById('form-box').style.opacity = '0';
-                runCounter(() => {
-                    form.submit();
-                });
-            }
-        }
-
-        function togglePass(id) {
-            const input = document.getElementById(id);
-            const icon = input.nextElementSibling;
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        }
-    </script>
 </body>
 </html>

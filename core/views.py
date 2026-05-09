@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 import random
 from datetime import date, time, datetime
 from django.utils import timezone
+import pytz  # <--- ADICIONE ESTA LINHA AQUI
 from decimal import Decimal
 
 from .forms import RegisterForm, DepositForm, WithdrawalForm, BankDetailsForm
@@ -146,34 +147,44 @@ def approve_deposit(request, deposit_id):
         messages.success(request, 'Depósito aprovado.')
     return redirect('renda')
 
-# --- SAQUE AQUI ---
 @login_required
 def saque(request):
-    MIN_WITHDRAWAL_AMOUNT = Decimal('3')
+    # --- CONFIGURAÇÕES DE REGRAS DE NEGÓCIO ---
+    MIN_WITHDRAWAL_Kz = Decimal('2000')
     TAXA_SAQUE = Decimal('0.10')  
-    CAMBIO_BRL = Decimal('5.48')  
+    CAMBIO_BRL_WISE = Decimal('0.0065') # Câmbio aplicado sobre o valor em Kz
     
+    # Horário de Luanda (UTC+1)
     START_TIME = time(9, 0, 0)
-    END_TIME = time(20, 0, 0)
+    END_TIME = time(17, 0, 0)
     
+    # Define o fuso horário de Luanda para a validação
+    luanda_tz = pytz.timezone('Africa/Luanda')
+    now_luanda = timezone.now().astimezone(luanda_tz)
+    current_time = now_luanda.time()
+    current_weekday = now_luanda.weekday() # 0=Segunda, 5=Sábado, 6=Domingo
+    
+    # Verifica se é dia de saque (Segunda a Sábado: 0 a 5)
+    is_working_day = current_weekday <= 5
+    # Verifica se está no horário (09:00 às 17:00)
+    is_time_to_withdraw = START_TIME <= current_time <= END_TIME and is_working_day
+
+    # --- DADOS DA PLATAFORMA ---
     settings = PlatformSettings.objects.first()
     withdrawal_instruction = settings.withdrawal_instruction if settings else ''
-    
     withdrawal_records = Withdrawal.objects.filter(user=request.user).order_by('-created_at')
     
-    # AJUSTE NO HISTÓRICO: Calculamos o líquido apenas para mostrar na tela
+    # Cálculo para histórico na tela
     for record in withdrawal_records:
-        # Aqui record.amount é o BRUTO que salvamos
-        valor_liquido_usdt = record.amount * (Decimal('1') - TAXA_SAQUE)
-        record.amount_brl = valor_liquido_usdt * CAMBIO_BRL
-        # Criamos um atributo temporário para o template mostrar o valor líquido em USDT
-        record.liquido_display = valor_liquido_usdt
+        # record.amount é o BRUTO em Kz
+        valor_liquido_kz = record.amount * (Decimal('1') - TAXA_SAQUE)
+        record.amount_brl = valor_liquido_kz * CAMBIO_BRL_WISE
+        record.liquido_display = valor_liquido_kz
 
     has_bank_details = BankDetails.objects.filter(user=request.user).exists()
-    now = timezone.localtime(timezone.now()).time()
-    today = timezone.localdate(timezone.now())
-    is_time_to_withdraw = START_TIME <= now <= END_TIME
+    today = now_luanda.date()
     
+    # Limite de 1 saque por dia
     withdrawals_today_count = Withdrawal.objects.filter(
         user=request.user, 
         created_at__date=today, 
@@ -182,35 +193,37 @@ def saque(request):
     
     can_withdraw_today = withdrawals_today_count == 0
     
+    # --- PROCESSAMENTO DO POST ---
     if request.method == 'POST':
         form = WithdrawalForm(request.POST)
         if form.is_valid():
             amount_bruto = Decimal(str(form.cleaned_data['amount']))
             
-            if not can_withdraw_today:
-                messages.error(request, 'Apenas 1 saque por dia.')
+            if not is_working_day:
+                messages.error(request, 'Saques disponíveis apenas de Segunda a Sábado.')
             elif not is_time_to_withdraw:
-                messages.error(request, 'Fora do horário de saque (09:00 às 20:00).')
+                messages.error(request, 'Fora do horário de saque (Luanda: 09:00 às 17:00).')
+            elif not can_withdraw_today:
+                messages.error(request, 'Você já solicitou um saque hoje. Limite: 1 por dia.')
             elif not has_bank_details:
-                messages.error(request, 'Adicione coordenadas bancárias.')
-            elif amount_bruto < MIN_WITHDRAWAL_AMOUNT:
-                messages.error(request, 'Valor mínimo insuficiente.')
+                messages.error(request, 'Por favor, adicione suas coordenadas bancárias primeiro.')
+            elif amount_bruto < MIN_WITHDRAWAL_Kz:
+                messages.error(request, f'O valor mínimo para saque é de {MIN_WITHDRAWAL_Kz} Kz.')
             elif request.user.available_balance < amount_bruto:
-                messages.error(request, 'Saldo insuficiente.')
+                messages.error(request, 'Saldo insuficiente em sua conta.')
             else:
-                # MUDANÇA CHAVE AQUI:
-                # 1. Calculamos o líquido só para a mensagem
+                # Cálculo do valor líquido para registro/mensagem
                 valor_liquido = amount_bruto * (Decimal('1') - TAXA_SAQUE)
+                valor_em_reais = valor_liquido * CAMBIO_BRL_WISE
                 
-                # 2. SALVAMOS O BRUTO (ex: 3.00) no banco de dados
-                # Assim o Admin faz o cálculo correto sobre os 3.00
+                # Criar registro (Salvando o BRUTO para auditoria do admin)
                 Withdrawal.objects.create(user=request.user, amount=amount_bruto)
                 
-                # 3. Descontamos o BRUTO do saldo
+                # Atualizar saldo do usuário
                 request.user.available_balance -= amount_bruto
                 request.user.save()
                 
-                messages.success(request, f'Saque de {valor_liquido:.2f} USDT solicitado com sucesso!')
+                messages.success(request, f'Saque de {valor_liquido:.2f} Kz (aprox. R$ {valor_em_reais:.2f}) solicitado! Processamento em até 5h.')
                 return redirect('saque')
     else:
         form = WithdrawalForm()
@@ -221,31 +234,71 @@ def saque(request):
         'form': form,
         'has_bank_details': has_bank_details,
         'is_time_to_withdraw': is_time_to_withdraw,
-        'MIN_WITHDRAWAL_AMOUNT': MIN_WITHDRAWAL_AMOUNT,
+        'MIN_WITHDRAWAL_AMOUNT': MIN_WITHDRAWAL_Kz,
         'can_withdraw_today': can_withdraw_today,
-        'CAMBIO_BRL': CAMBIO_BRL,
+        'CAMBIO_BRL': CAMBIO_BRL_WISE,
     }
     return render(request, 'saque.html', context)
 
-# --- TAREFA ---
+# --- FUNÇÃO AUXILIAR DE COMISSÃO ---
+def distribuir_comissao_tarefa(user, ganho_tarefa):
+    """
+    Distribui comissão para os convidados (Upline)
+    Nível A: 5% | Nível B: 2% | Nível C: 1%
+    """
+    percentuais = [
+        (Decimal('0.05')), # Nível A
+        (Decimal('0.02')), # Nível B
+        (Decimal('0.01')), # Nível C
+    ]
+    
+    # AJUSTADO: Usando 'invited_by' conforme seu código de cadastro
+    current_upline = getattr(user, 'invited_by', None)
+    
+    for pct in percentuais:
+        if current_upline:
+            # Apenas paga comissão se o UPLINE tiver pelo menos um VIP ativo
+            upline_tem_vip = UserLevel.objects.filter(user=current_upline, is_active=True).exists()
+            
+            if upline_tem_vip:
+                comissao = ganho_tarefa * pct
+                current_upline.available_balance += comissao
+                # Opcional: registrar no subsidy_balance para aparecer na tela de Equipa
+                current_upline.subsidy_balance += comissao 
+                current_upline.save()
+            
+            # Passa para o próximo nível
+            current_upline = getattr(current_upline, 'invited_by', None)
+        else:
+            break
+
 @login_required
 def tarefa(request):
     user = request.user
-    # Busca todos os níveis ativos do usuário
+    today = timezone.localdate()
+    
+    # 1. Status VIP
     active_user_levels = UserLevel.objects.filter(user=user, is_active=True).select_related('level')
     has_active_level = active_user_levels.exists()
     
-    today = timezone.localdate()
+    # 2. Histórico e Contagem
+    total_tasks_ever = Task.objects.filter(user=user).count()
     tasks_completed_today = Task.objects.filter(user=user, completed_at__date=today).count()
     
-    # O limite de tarefas agora é o número de níveis VIP que ele possui
-    max_tasks = active_user_levels.count() if has_active_level else 1
+    # 3. Lógica de Estagiário Protegida
+    # Só é estagiário se: Não é VIP E não expirou o estágio E tem menos de 2 tarefas
+    is_intern = not has_active_level and not user.is_intern_expired and total_tasks_ever < 2
+
+    # 4. Variável mestre para o Botão do HTML
+    can_do_task = (has_active_level or is_intern) and tasks_completed_today < 1
 
     context = {
         'has_active_level': has_active_level,
-        'active_user_levels': active_user_levels, # Passa todos os níveis
+        'is_intern': is_intern,
+        'can_do_task': can_do_task,
         'tasks_completed_today': tasks_completed_today,
-        'max_tasks': max_tasks,
+        'total_tasks_ever': total_tasks_ever,
+        'is_intern_expired': user.is_intern_expired,
     }
     return render(request, 'tarefa.html', context)
 
@@ -253,44 +306,56 @@ def tarefa(request):
 @require_POST
 def process_task(request):
     user = request.user
+    today = timezone.localdate()
     
     try:
-        # 1. Busca TODOS os níveis VIP ativos do usuário
-        active_user_levels = UserLevel.objects.filter(user=user, is_active=True).select_related('level')
-
-        if not active_user_levels.exists():
-            return JsonResponse({'success': False, 'message': 'Você não possui nenhum nível VIP ativo.'})
-
-        # 2. Verifica se já realizou a tarefa global hoje
-        today = timezone.localdate()
+        # Bloqueio 1: Já fez a tarefa de hoje?
         if Task.objects.filter(user=user, completed_at__date=today).exists():
-            return JsonResponse({'success': False, 'message': 'Você já realizou suas tarefas de hoje.'})
+            return JsonResponse({'success': False, 'message': 'Você já realizou a tarefa de hoje.'})
 
-        # 3. Calcula o ganho total somando o daily_gain de cada VIP que ele possui
-        total_task_earnings = Decimal('0.00')
-        for user_level in active_user_levels:
-            total_task_earnings += Decimal(str(user_level.level.daily_gain))
-
-        # 4. Registra uma única tarefa diária com o valor total acumulado
-        Task.objects.create(
-            user=user, 
-            earnings=total_task_earnings
-        ) 
+        active_user_levels = UserLevel.objects.filter(user=user, is_active=True).select_related('level')
+        total_tasks_ever = Task.objects.filter(user=user).count()
         
-        # 5. Adiciona o ganho total ao saldo do usuário ok
-        user.available_balance += total_task_earnings
-        user.save()
+        total_task_earnings = Decimal('0.00')
+        is_vip_task = False
 
-        # 6. Distribuição de Subsídios para a Rede (ANULADO conforme solicitado)
-        # A comissão de tarefa dos subordinados foi removida.
+        # LÓGICA DE VERIFICAÇÃO
+        if active_user_levels.exists():
+            is_vip_task = True
+            for user_level in active_user_levels:
+                total_task_earnings += Decimal(str(user_level.level.daily_gain))
+        
+        # Se não é VIP, verificamos se o estágio ainda é válido
+        elif not user.is_intern_expired and total_tasks_ever < 2:
+            total_task_earnings = Decimal('350.00')
+            
+            # SE ESTA FOR A SEGUNDA TAREFA, MARCAMOS COMO EXPIRADO PARA SEMPRE
+            if total_tasks_ever + 1 >= 2:
+                user.is_intern_expired = True
+                # O user.save() será chamado logo abaixo
+        else:
+            # Caso o usuário tente burlar o front-end
+            return JsonResponse({
+                'success': False, 
+                'message': 'Estágio expirado. Ative um VIP para continuar a lucrar.'
+            })
+
+        # Salva a tarefa e paga o usuário
+        Task.objects.create(user=user, earnings=total_task_earnings)
+        user.available_balance += total_task_earnings
+        user.save() # Salva o saldo e o status is_intern_expired
+
+        # Distribui comissão apenas se for VIP
+        if is_vip_task:
+            distribuir_comissao_tarefa(user, total_task_earnings)
         
         return JsonResponse({
             'success': True, 
-            'message': f'Sucesso! Você recebeu {total_task_earnings} KZ referentes aos seus níveis VIP ativos.'
+            'message': f'Sucesso! Você recebeu {total_task_earnings} KZ.'
         })
 
     except Exception as e:
-        return JsonResponse({'success': False, 'message': f'Erro ao processar: {str(e)}'})
+        return JsonResponse({'success': False, 'message': f'Erro: {str(e)}'})
 
 @login_required
 def nivel(request):
@@ -345,7 +410,6 @@ def nivel(request):
     }
     return render(request, 'nivel.html', context)
 
-# --- EQUIPA ---
 @login_required
 def equipa(request):
     user = request.user
@@ -354,18 +418,14 @@ def equipa(request):
     level_c = CustomUser.objects.filter(invited_by__in=level_b)
 
     context = {
+        'level_a_members': level_a.order_by('-date_joined'), # <--- ADICIONE ESTA LINHA
         'team_count': level_a.count() + level_b.count() + level_c.count(),
-        'total_investors': (level_a.filter(userlevel__is_active=True).distinct().count() + 
-                           level_b.filter(userlevel__is_active=True).distinct().count() + 
-                           level_c.filter(userlevel__is_active=True).distinct().count()),
         'invite_link': request.build_absolute_uri(reverse('cadastro')) + f'?invite={user.invite_code}',
         'subsidy_balance': user.subsidy_balance,
         'level_a_count': level_a.count(),
         'level_a_investors': level_a.filter(userlevel__is_active=True).distinct().count(),
         'level_b_count': level_b.count(),
-        'level_b_investors': level_b.filter(userlevel__is_active=True).distinct().count(),
         'level_c_count': level_c.count(),
-        'level_c_investors': level_c.filter(userlevel__is_active=True).distinct().count(),
     }
     return render(request, 'equipa.html', context)
 

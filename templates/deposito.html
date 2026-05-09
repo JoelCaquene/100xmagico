@@ -1,121 +1,117 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Depósito Internacional - 100xmagico{% endblock %}
+{% block title %}Depósito - 100xmagico{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
     :root { 
-        --bg: #07050f; 
-        --card: #120d26; 
-        --accent: #00f2ff; 
-        --primary: #ff2d75; 
-        --gold: #ffb800;
-        --glass: rgba(255, 255, 255, 0.05);
-        --text-dim: #9ca3af;
+        --bg: #FFFFFF; 
+        --card: #F2F2F7; 
+        --tech-blue: #007AFF; 
+        --primary: #007AFF; 
+        --gold: #FF9500;
+        --text-dark: #1C1C1E;
+        --text-dim: #8E8E93;
+        --border: #E5E5EA;
     }
 
-    body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; width: 100%; }
+    body { background: var(--bg); color: var(--text-dark); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; width: 100%; }
     .main-container { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 40px; }
 
     /* HEADER */
-    .brand-header { padding: 40px 20px; text-align: center; background: radial-gradient(circle at top, #1e1345 0%, var(--bg) 70%); border-bottom: 1px solid var(--glass); }
-    .brand-logo { font-family: 'Playfair Display', serif; font-size: 32px; font-style: italic; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
+    .brand-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid var(--border); background: #fff; }
+    .brand-logo { font-weight: 900; font-size: 28px; color: #000; margin: 0; }
 
     /* STEPPER */
-    .stepper-bar { display: flex; padding: 20px; justify-content: space-between; }
-    .step-item { font-size: 10px; text-align: center; color: var(--text-dim); font-weight: 800; flex: 1; transition: 0.3s; }
+    .stepper-bar { display: flex; padding: 20px; justify-content: space-between; background: #fff; }
+    .step-item { font-size: 10px; text-align: center; color: var(--text-dim); font-weight: 800; flex: 1; }
     .step-item i { font-size: 16px; display: block; margin-bottom: 5px; }
-    .step-item.active { color: var(--accent); }
-    .step-item.active i { color: var(--primary); }
+    .step-item.active { color: var(--tech-blue); }
 
     /* CARDS */
-    .card-ui { background: var(--card); border: 1px solid var(--glass); border-radius: 20px; padding: 20px; margin: 0 15px 20px; }
-    .balance-label { font-size: 12px; color: var(--text-dim); }
-    .balance-value { font-size: 22px; font-weight: 800; color: var(--accent); }
+    .card-ui { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin: 0 15px 20px; }
+    .balance-label { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+    .balance-value { font-size: 24px; font-weight: 800; color: var(--tech-blue); }
 
     /* INPUTS */
-    .input-label { font-size: 13px; font-weight: 600; margin-bottom: 12px; display: block; color: var(--text-dim); }
-    .amount-input-wrapper { background: rgba(0,0,0,0.3); border: 2px solid var(--glass); border-radius: 15px; padding: 15px; display: flex; align-items: center; }
-    .amount-input-wrapper input { background: transparent; border: none; outline: none; color: white; font-size: 24px; font-weight: 800; width: 100%; }
-    .usdt-tag { color: var(--gold); font-weight: 800; margin-left: 10px; }
+    .input-label { font-size: 13px; font-weight: 700; margin-bottom: 12px; display: block; color: var(--text-dark); }
+    .amount-input-wrapper { background: #fff; border: 2px solid var(--border); border-radius: 15px; padding: 12px 15px; display: flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .amount-input-wrapper input { background: transparent; border: none; outline: none; color: #000; font-size: 22px; font-weight: 800; width: 100%; }
+    .kz-tag { color: var(--tech-blue); font-weight: 800; margin-left: 10px; font-size: 14px; }
 
     /* CÂMBIO */
-    .conversion-box { background: rgba(0, 242, 255, 0.05); border-radius: 12px; padding: 12px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--accent); }
-    .brl-val { color: #fff; font-weight: 700; }
+    .conversion-box { background: rgba(0, 122, 255, 0.05); border-radius: 12px; padding: 12px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--tech-blue); }
+    .brl-val { color: #008134; font-weight: 800; }
 
     /* GRID VALORES */
     .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-    .val-btn { background: var(--glass); border: 1px solid transparent; padding: 12px; border-radius: 12px; color: white; font-weight: 700; cursor: pointer;}
-    .val-btn.active { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
+    .val-btn { background: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: #000; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .val-btn.active { background: var(--tech-blue); color: #fff; border-color: var(--tech-blue); }
 
     /* METODOS */
-    .method-card { background: var(--card); border: 1px solid var(--glass); border-radius: 15px; padding: 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
-    .method-card.active { border-color: var(--accent); background: rgba(0,242,255,0.05); }
-    .method-card i { font-size: 24px; color: var(--accent); }
+    .method-card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
+    .method-card.active { border-color: var(--tech-blue); background: rgba(0,122,255,0.05); border-width: 2px; }
+    .method-card i { font-size: 24px; color: var(--tech-blue); }
 
     /* DETALHES PAGAMENTO */
     .payment-details { display: none; margin-top: 20px; }
-    .copy-panel { background: #000; padding: 15px; border-radius: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .copy-text { font-size: 11px; color: var(--accent); word-break: break-all; margin-right: 10px; font-family: monospace; }
+    .copy-panel { background: #F2F2F7; padding: 15px; border-radius: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+    .copy-text { font-size: 12px; color: #000; word-break: break-all; margin-right: 10px; font-family: monospace; font-weight: 600; }
 
-    .qr-container { text-align: center; margin: 20px 0; }
-    .qr-container img { width: 180px; height: 180px; border-radius: 10px; border: 5px solid white; background: white;}
+    .btn-glow { width: calc(100% - 30px); margin: 20px 15px; padding: 18px; border-radius: 15px; border: none; background: var(--tech-blue); color: white; font-weight: 800; text-transform: uppercase; cursor: pointer; box-shadow: 0 8px 15px rgba(0,122,255,0.2); }
+    .btn-glow:disabled { background: #E5E5EA; color: #8E8E93; box-shadow: none; cursor: not-allowed; }
 
-    .btn-glow { width: calc(100% - 30px); margin: 20px 15px; padding: 18px; border-radius: 50px; border: none; background: linear-gradient(90deg, var(--primary), #ff5a94); color: white; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(255, 45, 117, 0.3); cursor: pointer; }
-    .btn-glow:disabled { opacity: 0.2; cursor: not-allowed; }
-
-    .upload-box { border: 2px dashed var(--glass); padding: 30px; text-align: center; border-radius: 20px; margin-top: 15px; cursor: pointer; }
-    .upload-box i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
+    .upload-box { border: 2px dashed var(--border); padding: 30px; text-align: center; border-radius: 20px; margin-top: 15px; background: #fafafa; }
+    .upload-box i { font-size: 30px; color: var(--tech-blue); margin-bottom: 10px; }
 
     .prosperity-msg { text-align: center; padding: 40px 20px; }
-    .prosperity-msg h2 { font-family: 'Playfair Display'; color: var(--gold); font-size: 28px; }
-    .success-icon { font-size: 60px; color: #00ff88; margin-bottom: 20px; }
+    .success-icon { font-size: 60px; color: #34C759; margin-bottom: 20px; }
 </style>
 
 <div class="main-container">
     <header class="brand-header">
         <h1 class="brand-logo">100xmagico</h1>
-        <p style="font-size: 10px; letter-spacing: 4px; color: var(--text-dim);">SISTEMA DE DEPÓSITO GLOBAL</p>
+        <p style="font-size: 9px; letter-spacing: 2px; color: var(--tech-blue); font-weight: 800;">FINANCE TECH GLOBAL</p>
     </header>
 
     {% if deposit_success %}
         <div class="prosperity-msg">
             <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-            <h2>Fluxo de Prosperidade!</h2>
-            <p style="color: var(--text-dim);">Seu comprovante foi enviado. Em <strong>5 minutos</strong> o saldo será liberado.</p>
-            <a href="{% url 'menu' %}" class="btn-glow" style="display:block; text-decoration:none; text-align:center;">Entrar no Reino</a>
+            <h2 style="font-weight: 900;">Solicitação Enviada!</h2>
+            <p style="color: var(--text-dim);">Aguarde a validação. Em instantes o valor cairá na sua conta.</p>
+            <a href="{% url 'menu' %}" class="btn-glow" style="display:block; text-decoration:none; text-align:center;">Voltar ao Início</a>
         </div>
     {% else %}
         <div class="stepper-bar">
-            <div class="step-item active" id="step-i-1"><i class="fas fa-coins"></i> VALOR</div>
-            <div class="step-item" id="step-i-2"><i class="fas fa-wallet"></i> MÉTODO</div>
-            <div class="step-item" id="step-i-3"><i class="fas fa-file-invoice-dollar"></i> FINALIZAR</div>
+            <div class="step-item active" id="step-i-1"><i class="fas fa-wallet"></i> VALOR</div>
+            <div class="step-item" id="step-i-2"><i class="fas fa-university"></i> BANCO</div>
+            <div class="step-item" id="step-i-3"><i class="fas fa-cloud-upload"></i> PROVA</div>
         </div>
 
         <form id="deposit-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="hidden" name="amount" id="final_amount_usdt">
+            <input type="hidden" name="amount" id="final_amount_kz">
             <input type="hidden" name="payment_method" id="id_payment_method">
 
             <div id="step-1">
                 <div class="card-ui">
-                    <span class="balance-label">Saldo Atual</span>
-                    <div class="balance-value">USDT {{ user.usdt_balance|default:"0.00" }}</div>
+                    <span class="balance-label">Saldo em Carteira</span>
+                    <div class="balance-value">Kz {{ user.available_balance|default:"0.00" }}</div>
                 </div>
 
                 <div style="padding: 0 15px;">
-                    <label class="input-label">Quanto deseja depositar? (USDT)</label>
+                    <label class="input-label">Quanto deseja carregar? (Kz)</label>
                     <div class="amount-input-wrapper">
-                        <input type="number" id="usdt-input" placeholder="0.00" step="0.01">
-                        <span class="usdt-tag">USDT</span>
+                        <input type="number" id="kz-input" placeholder="0.00" step="1">
+                        <span class="kz-tag">AOA (KZ)</span>
                     </div>
 
                     <div class="conversion-box">
-                        <span style="font-size: 11px; color: var(--text-dim);"><i class="fas fa-exchange-alt"></i> Câmbio Brasil (Wise)</span>
+                        <span style="font-size: 11px; color: var(--text-dim); font-weight: 600;">Câmbio Wise Brasil</span>
                         <span class="brl-val" id="brl-conversion">R$ 0,00</span>
                     </div>
 
@@ -125,120 +121,115 @@
                         {% endfor %}
                     </div>
                 </div>
-                <button type="button" class="btn-glow" id="go-to-2" disabled>Próximo Passo</button>
+                <button type="button" class="btn-glow" id="go-to-2" disabled>Avançar</button>
             </div>
 
             <div id="step-2" style="display: none;">
                 <div style="padding: 0 15px;">
-                    <label class="input-label">Forma de Pagamento</label>
+                    <label class="input-label">Selecione o Canal de Depósito</label>
                     
                     {% if pix_accounts %}
                     <div class="method-card" data-method="pix">
-                        <i class="fab fa-pix"></i>
+                        <i class="fa-brands fa-pix"></i>
                         <div>
-                            <div style="font-weight: 800;">PIX (Brasil)</div>
-                            <div style="font-size: 10px; color: var(--text-dim);">Rápido e Seguro em Reais</div>
+                            <div style="font-weight: 800;">PIX (Reais R$)</div>
+                            <div style="font-size: 10px; color: var(--text-dim);">Transferência instantânea via Wise</div>
                         </div>
                     </div>
                     {% endif %}
 
                     {% if usdt_wallets %}
                     <div class="method-card" data-method="usdt">
-                        <i class="fas fa-network-wired"></i>
+                        <i class="fa-solid fa-building-columns"></i>
                         <div>
-                            <div style="font-weight: 800;">USDT (Internacional)</div>
-                            <div style="font-size: 10px; color: var(--text-dim);">Cripto TRC20 / ERC20</div>
+                            <div style="font-weight: 800;">BANCO (Kz)</div>
+                            <div style="font-size: 10px; color: var(--text-dim);">Depósito em conta Angolana</div>
                         </div>
                     </div>
                     {% endif %}
 
                     <div id="pix-details" class="payment-details">
                         {% for bank in pix_accounts %}
-                        <div class="card-ui" style="margin: 0 0 10px 0; background: rgba(255,255,255,0.02);">
-                            <div style="font-size: 12px; color: var(--accent);">{{ bank.bank_name }}</div>
+                        <div class="card-ui" style="margin: 0 0 10px 0; background: #fff;">
+                            <div style="font-size: 12px; color: var(--tech-blue); font-weight: 800;">{{ bank.bank_name }}</div>
                             <div style="font-size: 14px; margin: 5px 0;">Titular: <strong>{{ bank.account_holder_name }}</strong></div>
                             <div style="font-size: 11px; color: var(--text-dim);">Chave PIX:</div>
                             <div class="copy-panel">
                                 <span class="copy-text" id="pix-key-{{ forloop.counter }}">{{ bank.IBAN }}</span>
-                                <button type="button" onclick="copyData('pix-key-{{ forloop.counter }}')" style="background:var(--accent); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer; color:#000;">COPIAR</button>
+                                <button type="button" onclick="copyData('pix-key-{{ forloop.counter }}')" style="background:var(--tech-blue); border:none; padding:8px 12px; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer; color:#fff;">COPIAR</button>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
 
                     <div id="usdt-details" class="payment-details">
-                        <select id="usdt-wallet-select" class="val-btn" style="width: 100%; margin-bottom: 15px; text-align: left; background: var(--card); border: 1px solid var(--glass);">
-                            <option value="">Selecione a Rede de Envio</option>
-                            {% for wallet in usdt_wallets %}
-                                <option value="{{ wallet.IBAN }}">{{ wallet.bank_name }} - {{ wallet.account_holder_name }}</option>
-                            {% endfor %}
-                        </select>
-
-                        <div id="wallet-address-area" style="display: none;">
-                            <div class="qr-container">
-                                <img id="qr-code-img" src="" alt="QR Code">
-                                <p style="font-size: 10px; color: var(--gold); margin-top:10px;">Escaneie ou copie o endereço abaixo</p>
-                            </div>
+                        <label class="input-label">Dados da Conta Bancária</label>
+                        {% for wallet in usdt_wallets %}
+                        <div class="card-ui" style="margin: 0 0 10px 0; background: #fff;">
+                            <div style="font-size: 12px; color: var(--tech-blue); font-weight: 800;">BANCO: {{ wallet.bank_name }}</div>
+                            <div style="font-size: 14px; margin: 5px 0;">TITULAR: <strong>{{ wallet.account_holder_name }}</strong></div>
+                            <div style="font-size: 11px; color: var(--text-dim);">IBAN:</div>
                             <div class="copy-panel">
-                                <span class="copy-text" id="wallet-addr"></span>
-                                <button type="button" onclick="copyData('wallet-addr')" style="background:var(--accent); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer; color:#000;">COPIAR</button>
+                                <span class="copy-text" id="iban-kz-{{ forloop.counter }}">{{ wallet.IBAN }}</span>
+                                <button type="button" onclick="copyData('iban-kz-{{ forloop.counter }}')" style="background:var(--tech-blue); border:none; padding:8px 12px; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer; color:#fff;">COPIAR</button>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
-                <button type="button" class="btn-glow" id="go-to-3" disabled>Ver dados e Continuar</button>
+                <button type="button" class="btn-glow" id="go-to-3" disabled>Já fiz o pagamento</button>
             </div>
 
             <div id="step-3" style="display: none;">
                 <div style="padding: 0 15px;">
-                    <div class="card-ui" style="margin: 0 0 20px 0; border: 1px solid var(--gold);">
+                    <div class="card-ui" style="margin: 0 0 20px 0; border: 2px solid var(--tech-blue); background: rgba(0,122,255,0.02);">
                         <div style="display:flex; justify-content:space-between;">
-                            <span class="balance-label">Total em USDT:</span>
-                            <span style="color: var(--gold); font-weight: 800;" id="conf-usdt">0.00</span>
+                            <span class="balance-label">Total a Pagar:</span>
+                            <span style="color: #000; font-weight: 900;" id="conf-kz">0.00 Kz</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; margin-top:5px;">
-                            <span class="balance-label">Total em BRL:</span>
-                            <span style="color: white; font-weight: 800;" id="conf-brl">R$ 0,00</span>
+                        <div style="display:flex; justify-content:space-between; margin-top:5px; border-top:1px solid var(--border); padding-top:5px;">
+                            <span class="balance-label">Valor em R$:</span>
+                            <span style="color: #008134; font-weight: 800;" id="conf-brl">R$ 0,00</span>
                         </div>
                     </div>
 
-                    <label class="input-label">Anexar Comprovativo</label>
-                    <div class="upload-box" onclick="document.getElementById('proof-file').click()">
-                        <i class="fas fa-camera"></i>
-                        <div id="file-name" style="font-size: 12px; color: var(--text-dim);">Toque para carregar a imagem</div>
+                    <label class="input-label">Enviar Comprovativo</label>
+                    <div class="upload-box" onclick="document.getElementById('proof-file').click()" style="cursor:pointer;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <div id="file-name" style="font-size: 12px; color: var(--text-dim); font-weight: 600;">Clique aqui para subir a foto</div>
                         <input type="file" name="proof_of_payment" id="proof-file" hidden accept="image/*" required>
                     </div>
 
-                    <label class="input-label" style="margin-top: 20px;">Nome Completo do Pagador</label>
+                    <label class="input-label" style="margin-top: 20px;">Seu Nome Completo</label>
                     <div class="amount-input-wrapper">
-                        <input type="text" name="payer_name" placeholder="Digite seu nome..." required style="font-size: 16px;">
+                        <input type="text" name="payer_name" placeholder="Nome do depositante" required style="font-size: 16px;">
                     </div>
                 </div>
-                <button type="submit" class="btn-glow" style="background: linear-gradient(90deg, #00ff88, #00bd69);">Finalizar Depósito</button>
+                <button type="submit" class="btn-glow" style="background: #34C759; box-shadow: 0 8px 15px rgba(52,199,89,0.2);">Confirmar Agora</button>
             </div>
         </form>
     {% endif %}
 </div>
 
 <script>
-    const BRL_RATE = 5.48; 
+    const BRL_RATE = 0.0065; // Ajuste para o mesmo câmbio do menu (KZ -> R$)
 
     document.addEventListener('DOMContentLoaded', () => {
-        const usdtInput = document.getElementById('usdt-input');
+        const kzInput = document.getElementById('kz-input');
         const brlText = document.getElementById('brl-conversion');
         const next1 = document.getElementById('go-to-2');
 
-        usdtInput.addEventListener('input', () => {
-            const val = parseFloat(usdtInput.value) || 0;
+        kzInput.addEventListener('input', () => {
+            const val = parseFloat(kzInput.value) || 0;
             brlText.innerText = (val * BRL_RATE).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('final_amount_usdt').value = val;
+            document.getElementById('final_amount_kz').value = val;
             next1.disabled = val <= 0;
         });
 
         document.querySelectorAll('.val-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                usdtInput.value = btn.dataset.val;
-                usdtInput.dispatchEvent(new Event('input'));
+                kzInput.value = btn.dataset.val;
+                kzInput.dispatchEvent(new Event('input'));
                 document.querySelectorAll('.val-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             });
@@ -251,7 +242,6 @@
                 const method = card.dataset.method;
                 document.getElementById('id_payment_method').value = method;
                 
-                // Esconde todas as abas e mostra a selecionada
                 document.querySelectorAll('.payment-details').forEach(d => d.style.display = 'none');
                 const targetDetail = document.getElementById(`${method}-details`);
                 if (targetDetail) targetDetail.style.display = 'block';
@@ -260,21 +250,9 @@
             });
         });
 
-        document.getElementById('usdt-wallet-select').addEventListener('change', function() {
-            const addr = this.value;
-            const area = document.getElementById('wallet-address-area');
-            if(addr) {
-                area.style.display = 'block';
-                document.getElementById('wallet-addr').innerText = addr;
-                document.getElementById('qr-code-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${addr}`;
-            } else {
-                area.style.display = 'none';
-            }
-        });
-
         document.getElementById('go-to-2').onclick = () => switchStep(2);
         document.getElementById('go-to-3').onclick = () => {
-            document.getElementById('conf-usdt').innerText = usdtInput.value + " USDT";
+            document.getElementById('conf-kz').innerText = kzInput.value + " Kz";
             document.getElementById('conf-brl').innerText = brlText.innerText;
             switchStep(3);
         };
@@ -289,7 +267,7 @@
         }
 
         document.getElementById('proof-file').onchange = function() {
-            if(this.files[0]) document.getElementById('file-name').innerText = "Arquivo: " + this.files[0].name;
+            if(this.files[0]) document.getElementById('file-name').innerText = "✅ " + this.files[0].name;
         };
     });
 
@@ -298,8 +276,6 @@
         const text = textElement.innerText || textElement.textContent;
         navigator.clipboard.writeText(text).then(() => {
             alert("Copiado com sucesso!");
-        }).catch(err => {
-            console.error('Erro ao copiar: ', err);
         });
     }
 </script>

@@ -9,70 +9,95 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
     
     :root { 
-        --bg-body: #050505; --panel: #110d1f; --gold: #ffb800; 
-        --accent: #00f2ff; --success: #00ff88; --danger: #ff3333;
-        --glass: rgba(255, 255, 255, 0.03);
+        --gold: #ffb800; 
+        --accent: #00d2ff; 
+        --success: #28a745; 
+        --danger: #dc3545;
+        --text-dark: #333;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg-body); color: white; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; width: 100%; }
+    
+    /* FUNDO BRANCO EM TODO O ARQUIVO */
+    body { 
+        background: #ffffff !important; 
+        color: var(--text-dark); 
+        font-family: 'Poppins', sans-serif; 
+        margin: 0; 
+        overflow-x: hidden; 
+        width: 100%; 
+    }
 
     .main-container {
-        background: radial-gradient(circle at top, #1c143d 0%, #050505 60%);
-        min-height: 100vh; width: 100%; padding-bottom: 30px;
+        background: #ffffff;
+        min-height: 100vh; 
+        width: 100%; 
+        padding-bottom: 30px;
     }
 
     .header-casino {
         padding: 25px 20px; text-align: center;
-        border-bottom: 1px solid rgba(255, 184, 0, 0.2);
-        background: linear-gradient(180deg, rgba(255,184,0,0.05) 0%, transparent 100%);
+        border-bottom: 1px solid #eee;
     }
     .header-casino h1 {
         font-family: 'Cinzel', serif; font-size: 26px; margin: 0;
-        background: linear-gradient(to bottom, #fff 30%, var(--gold) 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        color: #000;
         letter-spacing: 2px;
     }
 
-    .lang-bar { display: flex; justify-content: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.3); }
-    .lang-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 10px; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-    .lang-btn.active { border-color: var(--gold); color: var(--gold); }
+    .lang-bar { display: flex; justify-content: center; gap: 8px; padding: 10px; background: #f8f9fa; border-bottom: 1px solid #eee; }
+    .lang-btn { background: #fff; border: 1px solid #ddd; color: #666; font-size: 10px; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    .lang-btn.active { border-color: var(--gold); color: var(--gold); font-weight: bold; }
 
     .menu-list { padding: 20px 15px; display: grid; gap: 12px; }
-    .menu-item { background: var(--panel); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 18px; display: flex; align-items: center; text-decoration: none; color: white; }
-    .icon-box { width: 45px; height: 45px; background: rgba(0, 242, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--accent); margin-right: 15px; border: 1px solid rgba(0, 242, 255, 0.2); }
+    .menu-item { 
+        background: #fff; 
+        border: 1px solid #eee; 
+        padding: 18px; 
+        border-radius: 18px; 
+        display: flex; 
+        align-items: center; 
+        text-decoration: none; 
+        color: var(--text-dark);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+    .icon-box { width: 45px; height: 45px; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #000; margin-right: 15px; }
     .item-info b { display: block; font-size: 14px; }
-    .item-info span { font-size: 10px; color: #777; }
+    .item-info span { font-size: 10px; color: #999; }
 
-    .modal-full { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 3000; display: none; flex-direction: column; }
-    .modal-nav { padding: 20px; display: flex; align-items: center; gap: 20px; background: #000; border-bottom: 1px solid var(--gold); }
+    .modal-full { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 3000; display: none; flex-direction: column; }
+    .modal-nav { padding: 20px; display: flex; align-items: center; gap: 20px; background: #fff; border-bottom: 1px solid #eee; }
     .modal-content { padding: 20px; flex: 1; overflow-y: auto; }
 
     .input-group { margin-bottom: 15px; }
-    .input-group label { display: block; font-size: 11px; color: var(--gold); margin-bottom: 6px; font-weight: 700; }
-    .input-group input { width: 100% !important; background: #ffffff !important; color: #000000 !important; border: none !important; padding: 14px !important; border-radius: 12px !important; font-weight: 700; }
+    .input-group label { display: block; font-size: 11px; color: #666; margin-bottom: 6px; font-weight: 700; }
+    .input-group input { 
+        width: 100% !important; 
+        background: #fff !important; 
+        color: #000 !important; 
+        border: 1px solid #ddd !important; 
+        padding: 14px !important; 
+        border-radius: 12px !important; 
+        font-weight: 600; 
+    }
 
-    .btn-gold { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(90deg, #ffb800, #ff8a00); color: #000; font-weight: 800; text-transform: uppercase; }
+    .btn-gold { width: 100%; padding: 16px; border-radius: 12px; border: none; background: #000; color: #fff; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 
-    .hist-card { background: var(--panel); padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid var(--glass); display: flex; justify-content: space-between; align-items: center; }
-    .status-box { padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; border: 1px solid; }
-    .status-aprovado { background: rgba(0, 255, 136, 0.1); color: var(--success); border-color: var(--success); }
-    .status-pendente { background: rgba(255, 51, 51, 0.1); color: var(--danger); border-color: var(--danger); }
+    .hist-card { background: #fdfdfd; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+    .status-box { padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; }
+    .status-aprovado { background: #e6fffa; color: #28a745; }
+    .status-pendente { background: #fff5f5; color: #dc3545; }
 </style>
 
 <div class="main-container">
-    <div class="lang-bar" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,184,0,0.1);">
-        
-        <a href="/" style="color: var(--gold); font-size: 22px; text-decoration: none; padding: 5px 15px; display: flex; align-items: center;">
-            <i class="fas fa-chevron-left"></i>
+    <div class="lang-bar">
+        <a href="/" style="color: #000; font-size: 20px; text-decoration: none; margin-right: auto; padding-left: 10px;">
+            <i class="fas fa-arrow-left"></i>
         </a>
-
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 5px;">
             <div class="lang-btn" onclick="changeLang('pt')" id="btn-pt">PT</div>
             <div class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</div>
             <div class="lang-btn" onclick="changeLang('es')" id="btn-es">ES</div>
-            <div class="lang-btn" onclick="changeLang('fr')" id="btn-fr">FR</div>
-            <div class="lang-btn" onclick="changeLang('zh')" id="btn-zh">中文</div>
         </div>
     </div>
 
@@ -82,166 +107,137 @@
 
     <div class="menu-list">
         <a href="javascript:void(0)" class="menu-item" onclick="openModal('modalBank')">
-            <div class="icon-box"><i class="fas fa-wallet"></i></div>
-            <div class="item-info"><b id="txt-menu-wallet">Gerenciar Carteiras</b><span id="txt-sub-wallet">PIX ou Cripto</span></div>
+            <div class="icon-box"><i class="fas fa-university"></i></div>
+            <div class="item-info"><b>Configurar Carteira</b><span>Editar dados bancários</span></div>
         </a>
 
         <a href="javascript:void(0)" class="menu-item" onclick="openModal('modalHist')">
             <div class="icon-box"><i class="fas fa-history"></i></div>
-            <div class="item-info"><b id="txt-menu-hist">Histórico de Saques</b><span id="txt-sub-hist">Status dos pagamentos</span></div>
+            <div class="item-info"><b>Histórico de Saques</b><span>Status dos pagamentos</span></div>
         </a>
 
-        <a href="{% url 'saque' %}" class="menu-item">
-            <div class="icon-box" style="color:var(--gold)"><i class="fas fa-hand-holding-usd"></i></div>
-            <div class="item-info"><b id="txt-menu-saque">Solicitar Saque</b><span id="txt-sub-saque">Retirar lucros</span></div>
+        <a href="{% url 'saque' %}" class="menu-item" style="border: 1px solid var(--gold);">
+            <div class="icon-box" style="color:var(--gold)"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="item-info"><b>Solicitar Saque</b><span>Retirar saldo</span></div>
         </a>
 
         <a href="{% static 'app/100xmagico.apk' %}" target="_blank" download class="menu-item">
-            <div class="icon-box"><i class="fas fa-download"></i></div>
-            <div class="item-info"><b id="txt-menu-app">Baixar Aplicativo</b><span id="txt-sub-app">APK Oficial</span></div>
+            <div class="icon-box" style="color: #00d2ff;"><i class="fas fa-download"></i></div>
+            <div class="item-info"><b>Baixar Aplicativo</b><span>APK Oficial Android</span></div>
         </a>
 
         <a href="javascript:void(0)" class="menu-item" onclick="openModal('modalPass')">
-            <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
-            <div class="item-info"><b id="txt-menu-pass">Segurança</b><span id="txt-sub-pass">Alterar senha</span></div>
+            <div class="icon-box"><i class="fas fa-lock"></i></div>
+            <div class="item-info"><b>Segurança</b><span>Alterar senha</span></div>
         </a>
 
-        <a href="{% url 'logout' %}" class="menu-item" style="border-color: rgba(255,51,51,0.2);">
+        <a href="{% url 'logout' %}" class="menu-item">
             <div class="icon-box" style="color:var(--danger)"><i class="fas fa-power-off"></i></div>
-            <div class="item-info"><b id="txt-menu-exit" style="color:var(--danger)">Sair da Conta</b></div>
+            <div class="item-info"><b style="color:var(--danger)">Sair da Conta</b></div>
         </a>
     </div>
 </div>
 
 <div id="modalBank" class="modal-full">
-    <div class="modal-nav"><i class="fas fa-chevron-left" onclick="closeModal('modalBank')" style="color:var(--gold)"></i><b id="txt-title-bank">CONFIGURAR SAQUE</b></div>
+    <div class="modal-nav"><i class="fas fa-arrow-left" onclick="closeModal('modalBank')"></i><b>CONFIGURAR CONTA</b></div>
     <div class="modal-content">
-        <div id="step_selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
-            <div onclick="toggleForm('pix')" style="background:var(--panel); padding:20px; border-radius:15px; text-align:center;"><i class="fas fa-bolt" style="color:var(--accent); font-size:30px;"></i><br><b>PIX</b></div>
-            <div onclick="toggleForm('crypto')" style="background:var(--panel); padding:20px; border-radius:15px; text-align:center;"><i class="fab fa-bitcoin" style="color:var(--gold); font-size:30px;"></i><br><b>USDT</b></div>
-        </div>
-        
-        <form method="post" id="form_real" style="display:none;">
+        <form method="post">
             {% csrf_token %}
             <div class="input-group">
-                <label id="lbl-titular">NOME DO TITULAR</label>
+                <label>TITULAR DA CONTA</label>
                 {{ form.account_holder_name }}
             </div>
-            <div class="input-group" id="group-inst">
-                <label id="lbl-inst">INSTITUIÇÃO / REDE</label>
+            <div class="input-group">
+                <label>BANCO/PIX</label>
                 {{ form.bank_name }}
             </div>
             <div class="input-group">
-                <label id="lbl-key">CHAVE OU ENDEREÇO</label>
+                <label>IBAN/CHAVE</label>
                 {{ form.IBAN }}
             </div>
-            <button type="submit" name="update_bank" class="btn-gold" id="btn-save-bank">SALVAR</button>
-            <p onclick="location.reload()" style="text-align:center; color:#555; font-size:12px; margin-top:15px;">Voltar</p>
+            <button type="submit" name="update_bank" class="btn-gold">SALVAR ALTERAÇÕES</button>
         </form>
     </div>
 </div>
 
 <div id="modalHist" class="modal-full">
-    <div class="modal-nav"><i class="fas fa-chevron-left" onclick="closeModal('modalHist')" style="color:var(--gold)"></i><b id="txt-title-hist">HISTÓRICO</b></div>
+    <div class="modal-nav"><i class="fas fa-arrow-left" onclick="closeModal('modalHist')"></i><b>HISTÓRICO</b></div>
     <div class="modal-content">
         {% for record in withdrawal_records %}
-        <div class="hist-card">
-            <div>
-                <div style="font-weight:700" class="usdt-liquid" data-value="{{ record.amount }}"></div>
-                <div class="wise-calc" data-value="{{ record.amount }}" style="color:var(--success); font-size:11px;"></div>
+        <div class="hist-card" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight:700; color: #000;" class="kz-val" data-value="{{ record.amount }}"></div>
+                    <div class="wise-brl" data-value="{{ record.amount }}" style="color:var(--success); font-size:11px; font-weight: 700;"></div>
+                </div>
+                <div class="status-box {% if record.status == 'Aprovado' %}status-aprovado{% else %}status-pendente{% endif %}">
+                    {{ record.status }}
+                </div>
             </div>
-            <div class="status-box {% if record.status == 'Aprovado' %}status-aprovado{% else %}status-pendente{% endif %}">
-                {{ record.status }}
+
+            <div style="width: 100%; border-top: 1px dashed #eee; pt: 5px; margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 10px; color: #999; text-transform: uppercase; font-weight: 600;">
+                    <i class="far fa-calendar-alt"></i> Solicitado: {{ record.created_at|date:"d/m/Y H:i" }}
+                </span>
+                
+                {% if record.status == 'Aprovado' %}
+                <span style="font-size: 10px; color: var(--success); font-weight: 700;">
+                    <i class="fas fa-check-circle"></i> Pago: {{ record.updated_at|date:"d/m/Y H:i" }}
+                </span>
+                {% endif %}
             </div>
         </div>
+        {% empty %}
+        <p style="text-align: center; color: #999; padding-top: 20px;">Nenhum registro encontrado.</p>
         {% endfor %}
     </div>
 </div>
 
 <div id="modalPass" class="modal-full">
-    <div class="modal-nav"><i class="fas fa-chevron-left" onclick="closeModal('modalPass')" style="color:var(--gold)"></i><b id="txt-title-pass">SENHA</b></div>
+    <div class="modal-nav"><i class="fas fa-arrow-left" onclick="closeModal('modalPass')"></i><b>ALTERAR SENHA</b></div>
     <div class="modal-content">
         <form method="post">
             {% csrf_token %}
             <div class="input-group"><label>SENHA ATUAL</label>{{ password_form.old_password }}</div>
             <div class="input-group"><label>NOVA SENHA</label>{{ password_form.new_password1 }}</div>
-            <div class="input-group"><label>CONFIRMAR</label>{{ password_form.new_password2 }}</div>
-            <button type="submit" name="change_password" class="btn-gold">ATUALIZAR</button>
+            <div class="input-group"><label>CONFIRMAR SENHA</label>{{ password_form.new_password2 }}</div>
+            <button type="submit" name="change_password" class="btn-gold">ATUALIZAR AGORA</button>
         </form>
     </div>
 </div>
 
 <script>
-    const translations = {
-        pt: { logo: "100XMAGICO", wallet: "Gerenciar Carteiras", swallet: "PIX ou Cripto", hist: "Histórico de Saques", shist: "Status dos pagamentos", app: "Baixar Aplicativo", pass: "Segurança", exit: "Sair da Conta", tbank: "CONFIGURAR SAQUE", save: "SALVAR" },
-        en: { logo: "100XMAGICO", wallet: "Manage Wallets", swallet: "PIX or Crypto", hist: "Withdraw History", shist: "Payment status", app: "Download App", pass: "Security", exit: "Logout", tbank: "WITHDRAWAL SETUP", save: "SAVE" },
-        es: { logo: "100XMAGICO", wallet: "Gestionar Carteras", swallet: "PIX o Cripto", hist: "Historial", shist: "Estado de pagos", app: "Descargar App", pass: "Seguridad", exit: "Salir", tbank: "CONFIGURAR RETIRO", save: "GUARDAR" },
-        fr: { logo: "100XMAGICO", wallet: "Portefeuilles", swallet: "PIX ou Crypto", hist: "Historique", shist: "Statut", app: "Télécharger App", pass: "Sécurité", exit: "Déconnexion", tbank: "CONFIGURER", save: "ENREGISTRER" },
-        zh: { logo: "100XMAGICO", wallet: "管理钱包", swallet: "PIX 或加密", hist: "提现记录", shist: "支付状态", app: "下载应用", pass: "安全", exit: "退出登录", tbank: "设置提现", save: "保存" }
-    };
+    function openModal(id) { 
+        document.getElementById(id).style.display = 'flex'; 
+        if(id === 'modalHist') runConversion(); 
+    }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    function applyLang(lang) {
-        const t = translations[lang];
-        if (!t) return;
-        const elements = {
-            'txt-logo': t.logo, 'txt-menu-wallet': t.wallet, 'txt-sub-wallet': t.swallet,
-            'txt-menu-hist': t.hist, 'txt-sub-hist': t.shist, 'txt-menu-app': t.app,
-            'txt-menu-pass': t.pass, 'txt-menu-exit': t.exit, 'txt-title-bank': t.tbank, 'btn-save-bank': t.save
-        };
-        for (let id in elements) {
-            let el = document.getElementById(id);
-            if (el) el.innerText = elements[id];
-        }
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        const activeBtn = document.getElementById('btn-' + lang);
-        if (activeBtn) activeBtn.classList.add('active');
+    function runConversion() {
+        const TAXA_SISTEMA = 0.90; 
+        const CAMBIO_WISE = 0.0065; 
+
+        document.querySelectorAll('.kz-val').forEach(el => {
+            const rawVal = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
+            const liquidKz = rawVal * TAXA_SISTEMA;
+            el.innerText = liquidKz.toLocaleString('pt-AO') + ' Kz';
+        });
+
+        document.querySelectorAll('.wise-brl').forEach(el => {
+            const rawVal = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
+            const brl = (rawVal * TAXA_SISTEMA) * CAMBIO_WISE;
+            el.innerText = '≈ R$ ' + brl.toFixed(2) + ' (Wise)';
+        });
     }
 
     function changeLang(lang) {
         localStorage.setItem('userLang', lang);
-        applyLang(lang);
-    }
-
-    function toggleForm(type) {
-        const form = document.getElementById('form_real');
-        const selector = document.getElementById('step_selector');
-        const lblInst = document.getElementById('lbl-inst');
-        const lblKey = document.getElementById('lbl-key');
-        const inputInst = document.querySelector('[name="bank_name"]');
-        selector.style.display = 'none';
-        form.style.display = 'block';
-        if(type === 'pix') {
-            lblInst.innerText = "INSTITUIÇÃO"; inputInst.value = "PIX"; lblKey.innerText = "CHAVE PIX";
-        } else {
-            lblInst.innerText = "CARTEIRA / REDE (Ex: TRC20)"; inputInst.value = ""; lblKey.innerText = "ENDEREÇO DA CARTEIRA";
-        }
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; if(id === 'modalHist') runConversion(); }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    
-    function runConversion() {
-        const TAXA_LIQUIDA = 0.90; // Desconto de 10%
-        const CAMBIO = 5.48;
-
-        // Atualiza USDT com desconto
-        document.querySelectorAll('.usdt-liquid').forEach(el => {
-            const rawVal = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
-            const liquid = rawVal * TAXA_LIQUIDA;
-            el.innerText = liquid.toFixed(2) + ' USDT (Líquido)';
-        });
-
-        // Atualiza R$ com desconto e câmbio
-        document.querySelectorAll('.wise-calc').forEach(el => {
-            const rawVal = parseFloat(el.getAttribute('data-value').replace(',', '.')) || 0;
-            const finalBRL = (rawVal * TAXA_LIQUIDA) * CAMBIO;
-            el.innerText = finalBRL.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' (PIX)';
-        });
+        location.reload();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const savedLang = localStorage.getItem('userLang') || 'pt';
-        applyLang(savedLang);
+        document.getElementById('btn-' + savedLang)?.classList.add('active');
     });
 </script>
 {% endblock %}

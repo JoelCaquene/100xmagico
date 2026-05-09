@@ -17,9 +17,36 @@ from .models import (
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'available_balance', 'subsidy_balance', 'is_staff', 'is_active', 'date_joined', 'roulette_spins')
+    # 1. MODIFICADO: Mostra afiliados, investidores e tarefas de estagiários
+    list_display = (
+        'phone_number', 
+        'available_balance', 
+        'get_afiliados_count', 
+        'get_investidores_count',
+        'get_tarefas_estagiario',
+        'is_staff', 
+        'is_active', 
+        'date_joined'
+    )
     search_fields = ('phone_number', 'invite_code')
-    list_filter = ('is_staff', 'is_active', 'level_active')
+    list_filter = ('is_staff', 'is_active', 'level_active', 'is_intern_expired')
+
+    def get_afiliados_count(self, obj):
+        return CustomUser.objects.filter(invited_by=obj).count()
+    get_afiliados_count.short_description = 'Convidados'
+
+    def get_investidores_count(self, obj):
+        # Conta quantos convidados têm um nível VIP ativo
+        return CustomUser.objects.filter(invited_by=obj, userlevel__is_active=True).distinct().count()
+    get_investidores_count.short_description = 'Investidores'
+
+    def get_tarefas_estagiario(self, obj):
+        # 2. MODIFICADO: Mostra progresso das tarefas (mínimo 2)
+        count = Task.objects.filter(user=obj).count()
+        if obj.level_active:
+            return mark_safe(f'<span style="color: #28a745; font-weight: bold;">VIP ({count})</span>')
+        return f"{count} / 2"
+    get_tarefas_estagiario.short_description = 'Tarefas (Estag.)'
 
 @admin.register(PlatformSettings)
 class PlatformSettingsAdmin(admin.ModelAdmin):
@@ -33,7 +60,7 @@ class LevelAdmin(admin.ModelAdmin):
 
 @admin.register(BankDetails)
 class BankDetailsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'bank_name', 'account_holder_name')
+    list_display = ('user', 'bank_name', 'account_holder_name', 'IBAN')
     search_fields = ('user__phone_number', 'bank_name', 'account_holder_name')
 
 @admin.register(PlatformBankDetails)
@@ -56,14 +83,12 @@ class PlatformBankDetailsAdmin(admin.ModelAdmin):
         if obj.type == 'PIX':
             return mark_safe('<span style="color: #32BCAD; font-weight: bold;">💎 PIX</span>')
         return mark_safe('<span style="color: #F3BA2F; font-weight: bold;">🪙 USDT</span>')
-    
     get_type_icon.short_description = 'Tipo'
 
     def IBAN_preview(self, obj):
         if obj.IBAN:
             return obj.IBAN[:20] + "..." if len(obj.IBAN) > 20 else obj.IBAN
         return "-"
-    
     IBAN_preview.short_description = 'Chave / Endereço'
 
     class Media:
@@ -78,7 +103,7 @@ class DepositAdmin(admin.ModelAdmin):
     list_filter = ('is_approved',)
     readonly_fields = ('current_proof_display',)
 
-    # LOGICA SOLICITADA: SOMA SALDO AUTOMATICAMENTE AO APROVAR
+    # 3. MODIFICADO: Soma saldo imediatamente ao marcar como aprovado
     def save_model(self, request, obj, form, change):
         if change:
             old_deposit = Deposit.objects.get(pk=obj.pk)
@@ -93,7 +118,6 @@ class DepositAdmin(admin.ModelAdmin):
         if obj.proof_of_payment:
             return mark_safe(f'<a href="{obj.proof_of_payment.url}" target="_blank">Ver Comprovativo</a>')
         return "Nenhum"
-        
     proof_link.short_description = 'Comprovativo'
 
     def current_proof_display(self, obj):
@@ -103,98 +127,121 @@ class DepositAdmin(admin.ModelAdmin):
                 <img src="{obj.proof_of_payment.url}" style="max-width:300px; height:auto; margin-top: 10px;" />
             ''')
         return "Nenhum Comprovativo Carregado"
-    
     current_proof_display.short_description = 'Comprovativo Atual'
 
 @admin.register(Withdrawal)
 class WithdrawalAdmin(admin.ModelAdmin):
-    # LOGICA SOLICITADA: DADOS BANCARIOS E BOTAO RÁPIDO NA LISTA
+    # 4. MODIFICADO: IBAN aparece na lista e botão de aprovação rápida
     list_display = (
         'user', 
-        'get_dados_bancarios', 
+        'get_valor_bruto_kz', 
+        'get_valor_liquido_kz',
         'get_pagamento_real_brl', 
+        'get_iban_direto', # Solicitação: IBAN aparece imediatamente
         'status', 
-        'created_at',
-        'botao_aprovar_rapido'
+        'botao_aprovar_rapido' # Solicitação: Apenas clique para aprovar
     )
+    
+    list_filter = ('status', 'created_at')
+    search_fields = ('user__phone_number', 'user__full_name')
 
     readonly_fields = (
-        'get_valor_solicitado_bruto', 
-        'get_taxa_descontada', 
-        'get_valor_liquido_usdt', 
+        'get_valor_bruto_kz', 
+        'get_taxa_descontada_kz', 
+        'get_valor_liquido_kz', 
         'get_pagamento_real_brl',
         'get_dados_bancarios',
         'created_at'
     )
 
     fieldsets = (
-        ('Informações do Usuário', {
-            'fields': ('user', 'status')
+        ('Informações do Cliente', {
+            'fields': ('user', 'status', 'created_at')
         }),
-        ('Cálculos do Saque (Automático)', {
+        ('Cálculos Financeiros (Câmbio Wise)', {
             'fields': (
-                'get_valor_solicitado_bruto', 
-                'get_taxa_descontada', 
-                'get_valor_liquido_usdt', 
+                'get_valor_bruto_kz', 
+                'get_taxa_descontada_kz', 
+                'get_valor_liquido_kz', 
                 'get_pagamento_real_brl'
             )
         }),
-        ('Coordenadas de Pagamento', {
+        ('Logística de Pagamento', {
             'fields': ('get_dados_bancarios',)
         }),
-        ('Dados Brutos do Sistema', {
-            'fields': ('amount', 'created_at'),
+        ('Dados Técnicos', {
+            'fields': ('amount',),
             'classes': ('collapse',),
         }),
     )
     
-    CAMBIO_FIXO = Decimal('5.48')
-    TAXA = Decimal('0.10') # 10%
+    CAMBIO_WISE = Decimal('0.0065')
+    TAXA_PERCENTUAL = Decimal('0.10')
 
-    def get_valor_solicitado_bruto(self, obj):
-        return f"{obj.amount:.2f} USDT"
-    get_valor_solicitado_bruto.short_description = 'Solicitado (Bruto)'
+    def get_valor_bruto_kz(self, obj):
+        return f"{obj.amount:,.2f} Kz".replace(",", "X").replace(".", ",").replace("X", ".")
+    get_valor_bruto_kz.short_description = 'Bruto'
 
-    def get_taxa_descontada(self, obj):
-        taxa = obj.amount * self.TAXA
-        return f"- {taxa:.2f} USDT"
-    get_taxa_descontada.short_description = 'Taxa (10%)'
+    def get_taxa_descontada_kz(self, obj):
+        taxa = obj.amount * self.TAXA_PERCENTUAL
+        return mark_safe(f'<span style="color: #d9534f;">- {taxa:,.2f} Kz</span>')
+    get_taxa_descontada_kz.short_description = 'Taxa (10%)'
 
-    def get_valor_liquido_usdt(self, obj):
-        liquido = obj.amount * (Decimal('1') - self.TAXA)
-        return f"{liquido:.2f} USDT"
-    get_valor_liquido_usdt.short_description = 'Líquido (USDT)'
+    def get_valor_liquido_kz(self, obj):
+        liquido = obj.amount * (Decimal('1') - self.TAXA_PERCENTUAL)
+        return mark_safe(f'<b>{liquido:,.2f} Kz</b>')
+    get_valor_liquido_kz.short_description = 'Líquido'
 
     def get_pagamento_real_brl(self, obj):
-        liquido = obj.amount * (Decimal('1') - self.TAXA)
-        valor_brl = liquido * self.CAMBIO_FIXO
-        return mark_safe(f'<b style="color: #28a745; font-size: 1.2em;">R$ {valor_brl:.2f}</b>')
-    get_pagamento_real_brl.short_description = 'VALOR PARA PAGAR (PIX)'
+        liquido_kz = obj.amount * (Decimal('1') - self.TAXA_PERCENTUAL)
+        valor_brl = liquido_kz * self.CAMBIO_WISE
+        return mark_safe(
+            f'<div style="background: #e6fffa; padding: 5px 10px; border-radius: 4px; border: 1px solid #38b2ac; display: inline-block;">'
+            f'<b style="color: #2c7a7b;">R$ {valor_brl:,.2f}</b>'
+            f'</div>'
+        )
+    get_pagamento_real_brl.short_description = 'PAGAR (BRL)'
+
+    def get_iban_direto(self, obj):
+        try:
+            dados = BankDetails.objects.get(user=obj.user)
+            return mark_safe(f'<code style="color:#e83e8c; font-weight:bold;">{dados.IBAN}</code>')
+        except BankDetails.DoesNotExist:
+            return mark_safe("<span style='color:red;'>Sem Dados</span>")
+    get_iban_direto.short_description = 'IBAN/PIX'
 
     def get_dados_bancarios(self, obj):
         try:
             dados = BankDetails.objects.get(user=obj.user)
             return mark_safe(
-                f"<div style='background:#f0f0f0; padding:8px; border-radius:5px; border-left:5px solid #ffb800;'>"
+                f"<div style='background:#f9f9f9; padding:10px; border-radius:8px; border:1px solid #ddd;'>"
                 f"<b>Titular:</b> {dados.account_holder_name}<br>"
-                f"<b>Banco/Rede:</b> {dados.bank_name}<br>"
-                f"<b>Chave/Endereço:</b> <code style='background:#fff; padding:2px; border:1px solid #ccc;'>{dados.IBAN}</code>"
+                f"<b>Banco:</b> {dados.bank_name}<br>"
+                f"<b>IBAN:</b> {dados.IBAN}"
                 f"</div>"
             )
         except BankDetails.DoesNotExist:
-            return mark_safe("<span style='color:red;'>⚠️ Dados não cadastrados</span>")
-    get_dados_bancarios.short_description = 'Coordenadas para Pagamento'
+            return "Sem dados cadastrados."
+    get_dados_bancarios.short_description = 'Dados para Depósito'
 
     def botao_aprovar_rapido(self, obj):
-        if obj.status != 'Aprovado':
-            return mark_safe(f'<a class="button" href="?set_status=Aprovado&idx={obj.id}" style="background:#28a745; color:white;">✔ Aprovar</a>')
-        return mark_safe("<span style='color:green; font-weight:bold;'>Pago</span>")
-    botao_aprovar_rapido.short_description = 'Ação Rápida'
+        if obj.status == 'Pendente' or obj.status == 'Pending':
+            return mark_safe(
+                f'<a class="button" href="?set_status=Aprovado&idx={obj.id}" '
+                f'style="background-color: #28a745; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;">'
+                f'Aprovar Agora</a>'
+            )
+        elif obj.status == 'Aprovado':
+            return mark_safe("<span style='color:#28a745; font-weight:bold;'>✓ Pago</span>")
+        return obj.status
+    botao_aprovar_rapido.short_description = 'Aprovação'
 
     def changelist_view(self, request, extra_context=None):
         if 'set_status' in request.GET and 'idx' in request.GET:
-            Withdrawal.objects.filter(id=request.GET.get('idx')).update(status='Aprovado')
-            self.message_user(request, "Saque atualizado com sucesso!")
+            status_novo = request.GET.get('set_status')
+            idx = request.GET.get('idx')
+            Withdrawal.objects.filter(id=idx).update(status=status_novo)
+            self.message_user(request, f"Saque #{idx} aprovado!")
         return super().changelist_view(request, extra_context)
 
 @admin.register(Task)

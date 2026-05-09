@@ -2,71 +2,72 @@
 {% load static %}
 
 {% block content %}
-<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Monoton&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<div class="casino-body">
+<div class="casino-container">
+    <div class="bg-glow"></div>
+    
     <a href="{% url 'menu' %}" class="btn-back-minimal"><i class="fas fa-arrow-left"></i></a>
 
-    {# MODAL DE VITÓRIA EXPLOSIVO #}
+    {# MODAL DE VITÓRIA #}
     <div id="win-modal" class="win-overlay" style="display: none;">
-        <div class="win-content-premium">
-            <div class="firework-anchor"></div>
-            <div class="jackpot-header">GRAND WIN</div>
-            <div class="stars-row-win">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        <div class="jackpot-card">
+            <h2 class="jackpot-title">VITÓRIA!</h2>
+            <div class="prize-reveal-box">
+                <div class="amount-main" id="modal-prize-kz">0.00 Kz</div>
+                <div class="amount-sub" id="modal-prize-brl">R$ 0,00</div>
             </div>
-            <p>TESOURO REVELADO</p>
-            <div class="win-amount-box">
-                <div class="val-usdt" id="modal-prize-usdt">0.00 USDT</div>
-                <div class="val-brl" id="modal-prize-brl">R$ 0,00</div>
-            </div>
-            <button onclick="closeWinModal()" class="btn-collect">RESGATAR COMISSÃO</button>
+            <button onclick="location.reload()" class="btn-collect-gold">RECEBER AGORA</button>
         </div>
     </div>
 
-    <div class="casino-wrapper">
-        <div class="header-section">
-            <h1 class="casino-title">100X<span>MAGICO</span></h1>
-            <div class="lucky-tag">LUCKY BOXES</div>
+    <div class="casino-layout">
+        <header class="casino-header">
+            <h1 class="main-title">GOLDEN<span>WHEEL</span></h1>
+            <div class="casino-badge">CASSINO IMPERIAL</div>
+        </header>
+
+        {# ROLETA OTIMIZADA #}
+        <div class="roulette-wrapper">
+            <div class="roulette-outer-glow">
+                <div class="pointer-diamond"></div>
+                <canvas id="wheelCanvas" width="400" height="400"></canvas>
+                <div class="wheel-center-cap">
+                    <div class="cap-inner">★</div>
+                </div>
+            </div>
             
-            <div class="key-status-card">
-                <div class="key-info">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1164/1164620.png" class="key-icon-img">
-                    <div class="key-text">
-                        <span>CHAVES DISPONÍVEIS</span>
-                        <strong id="roulette-spins">{{ roulette_spins }}</strong>
-                    </div>
-                </div>
+            <button id="spin-button" class="spin-main-btn" onclick="startSpinProcess()">
+                <span>GIRAR AGORA</span>
+            </button>
+        </div>
+
+        {# CHAVES #}
+        <div class="stat-box">
+            <i class="fas fa-key icon-gold"></i>
+            <div class="stat-texts">
+                <small>CHAVES DISPONÍVEIS</small>
+                <strong id="roulette-spins">{{ roulette_spins }}</strong>
             </div>
         </div>
 
-        {# GRID DE CAIXAS COM CORES VARIADAS #}
-        <div class="boxes-container" id="boxes-container">
-            {% for i in "123456" %}
-            <div class="box-wrapper color-{{ i }}" onclick="openBox(this)">
-                <div class="box-3d">
-                    <div class="box-lid"></div>
-                    <div class="box-body">
-                        <i class="fas fa-crown"></i>
-                        <div class="glow-effect"></div>
-                    </div>
-                </div>
-                <div class="box-platform"></div>
-            </div>
-            {% endfor %}
-        </div>
-
-        {# PAINEL DE GANHOS ESTILO ROLETA #}
-        <div class="winners-marquee">
-            <div class="marquee-title"><i class="fas fa-bolt"></i> VENCEDORES AO VIVO</div>
-            <div class="marquee-content">
-                <div class="marquee-track">
+        {# FEED VENCEDORES VERTICAL #}
+        <div class="live-winners-vertical">
+            <div class="winners-head"><i class="fas fa-circle blink"></i> LIVE WINNERS</div>
+            <div class="marquee-vertical">
+                <div class="marquee-inner">
                     {% for winner in recent_winners %}
-                    <div class="winner-pill">
-                        <span class="w-id">ID {{ winner.user.id|slice:":4" }}</span>
-                        <span class="w-val">+{{ winner.prize }} USDT</span>
+                    <div class="winner-row">
+                        <span class="w-id">ID ***{{ winner.user.id|slice:"-4:" }}</span>
+                        <span class="w-prize">+{{ winner.prize }} Kz</span>
+                    </div>
+                    {% endfor %}
+                    {% for winner in recent_winners %}
+                    <div class="winner-row">
+                        <span class="w-id">ID ***{{ winner.user.id|slice:"-4:" }}</span>
+                        <span class="w-prize">+{{ winner.prize }} Kz</span>
                     </div>
                     {% endfor %}
                 </div>
@@ -75,138 +76,138 @@
     </div>
 </div>
 
-<audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-<audio id="snd-jackpot" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+<audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3"></audio>
+<audio id="snd-spin" loop src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
 <style>
     :root {
-        --gold: #ffcc00;
-        --neon-pink: #ff0055;
-        --neon-blue: #00f2ff;
-        --dark-bg: #05030a;
-        --wise-green: #00ff00;
+        --gold-primary: #ffcc00;
+        --gold-grad: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #aa771c);
     }
 
-    /* FUNDO ARCO-ÍRIS CASSINO CHINÊS */
-    .casino-body {
-        background: var(--dark-bg);
-        background-image: 
-            radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.15) 0%, transparent 40%),
-            radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.15) 0%, transparent 40%),
-            url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-        min-height: 100vh;
-        font-family: 'Poppins', sans-serif;
-        color: white;
-        overflow-x: hidden;
+    html, body { overflow-x: hidden; width: 100%; margin: 0; padding: 0; }
+
+    .casino-container {
+        min-height: 100vh; width: 100%;
+        background: radial-gradient(circle, #ffeb3b 0%, #fbc02d 100%);
+        font-family: 'Montserrat', sans-serif;
+        display: flex; justify-content: center; position: relative; overflow: hidden;
     }
 
-    .btn-back-minimal {
-        position: absolute; top: 20px; left: 20px; color: white; font-size: 24px; z-index: 1000;
+    .bg-glow {
+        position: absolute; width: 150%; height: 150%;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        top: -25%; left: -25%; animation: pulseGlow 4s infinite alternate; pointer-events: none;
     }
 
-    .casino-wrapper { padding: 30px 15px; display: flex; flex-direction: column; align-items: center; }
+    @keyframes pulseGlow { from { opacity: 0.3; } to { opacity: 0.6; } }
 
-    /* HEADER */
-    .casino-title { font-family: 'Goldman', sans-serif; font-weight: 900; font-size: 32px; margin-bottom: 0; }
-    .casino-title span { color: var(--gold); text-shadow: 0 0 15px var(--gold); }
-    .lucky-tag { font-size: 10px; letter-spacing: 5px; color: var(--neon-blue); font-weight: 900; margin-bottom: 20px; }
+    .casino-layout { width: 100%; max-width: 380px; padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 2; }
 
-    .key-status-card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 204, 0, 0.3);
-        padding: 10px 25px;
-        border-radius: 50px;
-        backdrop-filter: blur(10px);
-    }
-    .key-info { display: flex; align-items: center; gap: 12px; }
-    .key-icon-img { width: 30px; filter: drop-shadow(0 0 5px var(--gold)); }
-    .key-text span { display: block; font-size: 9px; color: #ccc; }
-    .key-text strong { font-size: 20px; color: #fff; }
+    .btn-back-minimal { position: absolute; top: 15px; left: 15px; color: #000; font-size: 20px; z-index: 10; }
 
-    /* GRID DE CAIXAS 3D */
-    .boxes-container {
-        display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;
-        width: 100%; max-width: 350px; margin-top: 40px;
+    .main-title { font-family: 'Goldman'; font-size: 30px; color: #000; margin: 0; }
+    .main-title span { color: #d40000; }
+    .casino-badge { background: #000; color: #ffcc00; font-size: 9px; padding: 2px 10px; border-radius: 20px; font-weight: 900; }
+
+    .roulette-wrapper { position: relative; margin: 20px 0; width: 100%; max-width: 300px; }
+    .roulette-outer-glow { background: #000; padding: 8px; border-radius: 50%; border: 4px solid #b38728; }
+    #wheelCanvas { width: 100%; height: auto; border-radius: 50%; transition: transform 5s cubic-bezier(0.15, 0, 0.1, 1); }
+
+    .pointer-diamond {
+        position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+        width: 25px; height: 35px; background: #d40000; clip-path: polygon(50% 100%, 0 0, 100% 0);
+        z-index: 30; border: 2px solid #fff;
     }
 
-    .box-wrapper { position: relative; height: 140px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-    
-    .box-3d { width: 80px; height: 70px; position: relative; transition: 0.3s; z-index: 2; }
-    .box-body { 
-        width: 100%; height: 100%; border-radius: 8px; position: relative;
-        display: flex; align-items: center; justify-content: center; font-size: 24px;
-        border: 2px solid rgba(255,255,255,0.2);
-        box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5);
-    }
-    .box-lid { 
-        position: absolute; top: -5px; left: -2px; width: 84px; height: 20px; 
-        background: #fff; border-radius: 5px; z-index: 3; transition: 0.5s;
+    .wheel-center-cap {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 50px; height: 50px; background: var(--gold-grad); border-radius: 50%; z-index: 20; border: 2px solid #000;
+        display: flex; align-items: center; justify-content: center; color: #000; font-size: 24px;
     }
 
-    /* Cores das caixas */
-    .color-1 .box-body { background: linear-gradient(135deg, #ff0055, #80002b); }
-    .color-2 .box-body { background: linear-gradient(135deg, #00f2ff, #007a80); }
-    .color-3 .box-body { background: linear-gradient(135deg, #ffcc00, #997a00); }
-    .color-4 .box-body { background: linear-gradient(135deg, #a020f0, #4b0082); }
-    .color-5 .box-body { background: linear-gradient(135deg, #00ff00, #006400); }
-    .color-6 .box-body { background: linear-gradient(135deg, #ff4500, #8b0000); }
-
-    .box-platform { 
-        width: 90px; height: 20px; background: rgba(0,0,0,0.4); 
-        border-radius: 50%; filter: blur(5px); margin-top: -10px;
+    .spin-main-btn {
+        margin-top: 15px; width: 100%; padding: 15px; border: none; border-radius: 12px;
+        background: #000; color: #ffcc00; font-family: 'Goldman'; font-size: 18px; font-weight: 900;
     }
 
-    /* Animação Abrir */
-    .opening .box-lid { transform: translateY(-40px) rotate(-15deg); opacity: 0; }
-    .opening .box-body { transform: scale(1.1); box-shadow: 0 0 30px var(--gold); }
+    .stat-box { background: #fff; padding: 10px 20px; border-radius: 15px; display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; margin-top: 15px;}
+    .icon-gold { color: #fbc02d; font-size: 20px; }
+    .stat-texts strong { font-size: 20px; color: #000; }
 
-    /* MODAL DE VITÓRIA PREMIUM */
-    .win-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-        display: flex; align-items: center; justify-content: center; z-index: 9999;
+    /* FEED VERTICAL */
+    .live-winners-vertical {
+        width: 100%; height: 120px; background: rgba(0,0,0,0.8); border-radius: 12px; margin-top: 15px;
+        overflow: hidden; border: 1px solid #ffcc00; position: relative;
     }
-    .win-content-premium {
-        width: 85%; max-width: 320px; background: #161129; border: 2px solid var(--gold);
-        border-radius: 20px; padding: 30px; text-align: center;
-        box-shadow: 0 0 50px rgba(255, 204, 0, 0.4);
-        animation: modalShow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    .winners-head { 
+        background: #d40000; color: #fff; font-size: 10px; font-weight: 900; 
+        padding: 4px; text-align: center; border-bottom: 1px solid #ffcc00;
     }
-    .jackpot-header { font-family: 'Monoton', cursive; font-size: 35px; color: var(--gold); }
-    .win-amount-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid var(--neon-blue); }
-    .val-usdt { font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
-    .val-brl { color: var(--wise-green); font-weight: bold; font-size: 16px; margin-top: 5px; }
-
-    .btn-collect {
-        width: 100%; background: var(--gold); border: none; padding: 15px; border-radius: 50px;
-        font-weight: 900; font-size: 14px; text-transform: uppercase; cursor: pointer;
+    .marquee-vertical { height: 95px; position: relative; overflow: hidden; }
+    .marquee-inner { animation: scrollUp 10s linear infinite; }
+    .winner-row { 
+        display: flex; justify-content: space-between; padding: 8px 15px; 
+        border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #fff; 
     }
+    .w-prize { color: #ffcc00; font-weight: bold; }
+    .blink { color: #00ff00; margin-right: 5px; animation: blink 1s infinite; }
 
-    /* MARQUEE DE VENCEDORES */
-    .winners-marquee { width: 100%; max-width: 350px; margin-top: 40px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; }
-    .marquee-title { font-size: 10px; font-weight: bold; color: var(--neon-pink); text-align: center; margin-bottom: 8px; }
-    .marquee-track { display: flex; gap: 20px; animation: scrollMarquee 15s linear infinite; }
-    .winner-pill { background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 20px; white-space: nowrap; font-size: 11px; }
-    .w-val { color: var(--gold); font-weight: bold; }
+    @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 
-    @keyframes scrollMarquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    @keyframes modalShow { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    /* MODAL */
+    .win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .jackpot-card { background: #fff; border: 5px solid #ffcc00; padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 320px; }
+    .amount-main { font-size: 32px; color: #d40000; font-weight: 900; margin: 10px 0; }
+    .amount-sub { color: #555; font-weight: bold; font-size: 18px; }
+    .btn-collect-gold { background: #000; color: #ffcc00; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 900; margin-top: 20px; width: 100%; }
 </style>
 
 <script>
-    const CAMBIO_WISE = 5.48; // O mesmo usado no seu menu
+    const prizes = {{ prizes_list|safe }}; 
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
     let isSpinning = false;
+    let currentRotation = 0;
 
-    function openBox(element) {
+    document.body.addEventListener('click', function() {
+        const music = document.getElementById('bg-music');
+        if (music.paused) music.play();
+    }, { once: true });
+
+    function drawWheel() {
+        const segments = prizes.length;
+        const arc = 2 * Math.PI / segments;
+        for (let i = 0; i < segments; i++) {
+            const angle = i * arc;
+            ctx.beginPath();
+            ctx.fillStyle = i % 2 === 0 ? '#000000' : '#d40000';
+            ctx.moveTo(200, 200);
+            ctx.arc(200, 200, 200, angle, angle + arc);
+            ctx.fill();
+            ctx.strokeStyle = '#ffcc00';
+            ctx.stroke();
+
+            ctx.save();
+            ctx.translate(200, 200);
+            ctx.rotate(angle + arc / 2);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 16px Montserrat";
+            ctx.fillText(prizes[i] + " Kz", 180, 10);
+            ctx.restore();
+        }
+    }
+
+    drawWheel();
+
+    function startSpinProcess() {
         const spins = parseInt(document.getElementById('roulette-spins').innerText);
         if (isSpinning || spins <= 0) return;
 
         isSpinning = true;
-        document.getElementById('snd-click').play();
-        element.classList.add('opening');
-
-        // Lógica de Embaralhamento: Muda a posição visual das caixas a cada clique
-        const container = document.getElementById('boxes-container');
-        const children = Array.from(container.children);
+        document.getElementById('snd-spin').play();
         
         fetch('{% url "spin_roulette" %}', {
             method: 'POST',
@@ -215,38 +216,29 @@
         .then(res => res.json())
         .then(data => {
             if(data.success) {
-                setTimeout(() => {
-                    // Fogos de Artifício (Confetti)
-                    confetti({
-                        particleCount: 150,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: ['#ffcc00', '#ff0055', '#00f2ff']
-                    });
+                const prizeIndex = prizes.indexOf(String(data.prize));
+                const segmentDeg = 360 / prizes.length;
+                const targetRotation = (360 * 10) + (360 - (prizeIndex * segmentDeg)) - (segmentDeg / 2);
+                
+                currentRotation += targetRotation;
+                canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-                    showPremiumWin(data.prize);
-                    document.getElementById('roulette-spins').innerText = data.remaining_spins;
-                    document.getElementById('snd-jackpot').play();
-                }, 600);
-            } else {
-                alert(data.message);
-                element.classList.remove('opening');
-                isSpinning = false;
+                setTimeout(() => {
+                    document.getElementById('snd-spin').pause();
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                    showWinModal(data.prize);
+                }, 5000);
             }
         });
     }
 
-    function showPremiumWin(amount) {
-        const usdt = parseFloat(amount);
-        const brl = usdt * CAMBIO_WISE;
-        
-        document.getElementById('modal-prize-usdt').innerText = usdt.toFixed(2) + " USDT";
-        document.getElementById('modal-prize-brl').innerText = "R$ " + brl.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    function showWinModal(amount) {
+        const val = parseFloat(amount);
+        // Exibe em Kwanza
+        document.getElementById('modal-prize-kz').innerText = val.toLocaleString('pt-BR') + " Kz";
+        // Conversão para R$ (Wise/Câmbio 5.48)
+        document.getElementById('modal-prize-brl').innerText = "R$ " + (val * 5.48).toLocaleString('pt-BR');
         document.getElementById('win-modal').style.display = 'flex';
-    }
-
-    function closeWinModal() {
-        location.reload(); // Recarrega para reorganizar as caixas e atualizar o saldo
     }
 </script>
 {% endblock %}

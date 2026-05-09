@@ -4,243 +4,241 @@
 {% block title %}Finanças | 100XMAGICO GLOBAL{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!-- Fontes e Ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap');
-    
     :root { 
-        --bg: #050308; 
-        --card-bg: rgba(22, 17, 41, 0.6); 
-        --primary: #ff2d75; 
-        --secondary: #00f2ff; 
-        --gold: #ffb800; 
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --text-dim: #a1a1a1;
+        --primary: #007AFF; 
+        --secondary: #00c853; 
+        --accent: #FF9500;
+        --bg-white: #FFFFFF;
+        --soft-gray: #F8F9FC;
+        --text-dark: #1C1C1E;
+        --border-color: #E5E5EA;
     }
 
     body { 
-        background: var(--bg); 
-        color: white; 
-        font-family: 'Poppins', sans-serif; 
+        background: var(--bg-white); 
+        color: var(--text-dark); 
+        font-family: 'Montserrat', sans-serif; 
         margin: 0; 
-        overflow-x: hidden; 
         -webkit-font-smoothing: antialiased;
     }
 
-    /* FUNDO PROFISSIONAL SEM IMAGEM NO TOPO */
-    .dashboard-bg {
-        background-image: 
-            radial-gradient(circle at top, #1e1345 0%, var(--bg) 80%),
-            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5V19SAAAAEHRSTlMAEBESExQVGBkaGxwdHh8g9S1ZkgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfmBQUIISgXN3MhAAAAUElEQVQ4y2NgYGRiYmZhhgFmFmYWVlY2dg5OLm4eXj7+AISBRE5uHl6wIKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCKmwCInwAAA9OQEbE9m48AAAAABJRU54ErkJggg==');
-        background-size: auto, 50px 50px;
+    .finance-wrapper {
         min-height: 100vh;
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-bottom: 80px;
+        background: radial-gradient(circle at top right, rgba(0,122,255,0.05), transparent);
+    }
+
+    /* HEADER PREMIUM */
+    .finance-header { 
+        width: 100%;
+        padding: 40px 20px 20px;
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between;
         box-sizing: border-box;
     }
 
-    /* HEADER CLEAN - IMAGEM REMOVIDA */
-    .brand-header { 
+    .back-btn {
+        width: 45px; height: 45px;
+        background: var(--soft-gray);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        text-decoration: none; color: var(--text-dark);
+        border: 1px solid var(--border-color);
+        transition: 0.3s;
+    }
+    .back-btn:active { transform: scale(0.9); }
+
+    .header-info { text-align: right; }
+    .header-info h1 { 
+        margin: 0; font-family: 'Outfit', sans-serif; font-weight: 900; 
+        font-size: 22px; color: var(--primary); letter-spacing: -1px;
+    }
+    .header-info span { font-size: 10px; font-weight: 700; color: #8E8E93; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* CONTAINER DE CARDS */
+    .stats-grid {
         width: 100%;
-        height: 110px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        background: transparent;
-        border-bottom: 1px solid var(--glass-border);
-        margin-bottom: 30px;
-        position: relative;
-    }
-
-    .back-nav { position: absolute; top: 25px; left: 15px; z-index: 10;}
-    .back-arrow {
-        color: white; font-size: 14px; background: rgba(255, 45, 117, 0.1);
-        width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; border: 1px solid rgba(255, 45, 117, 0.3);
-        text-decoration: none; transition: 0.3s;
-    }
-    .back-arrow:hover { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
-
-    .header-title {
-        font-family: 'Cinzel', serif;
-        font-size: 26px; 
-        font-weight: 700;
-        margin: 0; 
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
-    }
-
-    .stats-container {
-        width: 100%;
-        max-width: 480px;
+        max-width: 450px;
+        padding: 10px 20px;
         display: flex;
         flex-direction: column;
-        gap: 18px;
-        z-index: 5;
-        padding: 0 15px;
+        gap: 15px;
         box-sizing: border-box;
     }
 
-    .royal-card {
-        background: var(--card-bg);
-        border: 1px solid var(--glass-border);
-        padding: 22px;
-        border-radius: 20px;
+    /* ESTILIZAÇÃO DOS CARDS */
+    .finance-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 20px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        gap: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         position: relative;
         overflow: hidden;
-        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
     }
 
-    .royal-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-        background: rgba(22, 17, 41, 0.8);
+    /* FORMATOS DIFERENTES PARA OS ÍCONES */
+    .icon-shape {
+        width: 55px; height: 55px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; color: white;
     }
 
-    .card-info { display: flex; align-items: center; gap: 18px; }
-    
-    .card-icon {
-        width: 50px; height: 50px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid var(--glass-border);
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 22px;
-        position: relative;
+    /* Formato de Losango */
+    .shape-diamond { 
+        background: var(--primary); 
+        border-radius: 16px; 
+        transform: rotate(45deg);
+    }
+    .shape-diamond i { transform: rotate(-45deg); }
+
+    /* Formato de Círculo Moderno */
+    .shape-circle { 
+        background: var(--secondary); 
+        border-radius: 50% 50% 50% 10%; 
     }
 
-    .i-pink i { color: var(--primary); }
-    .i-teal i { color: var(--secondary); }
-    .i-gold i { color: var(--gold); }
-
-    .card-label {
-        display: block;
-        font-size: 11px;
-        color: var(--text-dim);
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        font-weight: 600;
-        margin-bottom: 2px;
+    /* Formato de Quadrado Arredondado */
+    .shape-squircle { 
+        background: var(--accent); 
+        border-radius: 35%; 
     }
 
-    .card-value {
-        display: block;
-        font-size: 19px;
-        font-weight: 700;
-        color: #fff;
-        line-height: 1.2;
+    .data-content { flex: 1; }
+    .data-content .label { 
+        display: block; font-size: 11px; font-weight: 700; 
+        color: #8E8E93; text-transform: uppercase; margin-bottom: 4px;
+    }
+    .data-content .main-value { 
+        display: block; font-size: 18px; font-weight: 800; 
+        color: var(--text-dark); font-family: 'Outfit';
+    }
+    .data-content .exchange-value { 
+        display: block; font-size: 13px; font-weight: 600; 
+        color: #008134; margin-top: 2px;
     }
 
-    .card-subvalue {
-        display: block;
-        font-size: 13px;
-        color: var(--secondary);
-        font-weight: 500;
-    }
-
-    .pro-footer {
-        margin-top: auto;
-        padding: 60px 0 30px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .secure-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(0, 255, 136, 0.05);
-        border: 1px solid rgba(0, 255, 136, 0.2);
-        padding: 5px 15px;
+    /* BADGE DE SEGURANÇA */
+    .security-badge {
+        margin-top: 30px;
+        background: #F2F2F7;
+        padding: 10px 20px;
         border-radius: 50px;
-        color: #00ff88;
-        font-size: 9px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        display: flex; align-items: center; gap: 10px;
+        color: #48484A; font-size: 11px; font-weight: 600;
+    }
+
+    .footer-note {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 10px;
+        color: #AEAEB2;
+        line-height: 1.5;
+        padding: 0 40px;
     }
 </style>
 
-<div class="dashboard-bg">
-    <div class="brand-header">
-        <div class="back-nav">
-            <a href="{% url 'home' %}" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
+<div class="finance-wrapper">
+    <!-- Header -->
+    <header class="finance-header">
+        <a href="{% url 'menu' %}" class="back-btn">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <div class="header-info">
+            <h1>100XMAGICO</h1>
+            <span>Extrato Digital de Ativos</span>
         </div>
-        <h1 class="header-title">100XMAGICO</h1>
-        <span style="font-size: 9px; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase;">Asset Management</span>
+    </header>
+
+    <!-- Seção de Ganhos -->
+    <div class="stats-grid">
+        
+        <!-- Acúmulo de Ganhos -->
+        <div class="finance-card">
+            <div class="icon-shape shape-diamond">
+                <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <div class="data-content">
+                <span class="label">Acúmulo de Ganhos</span>
+                <span class="main-value">Kz {{ user.subsidy_balance|default:"0.00" }}</span>
+                <span class="exchange-value" id="val-sub-brl">R$ 0,00</span>
+            </div>
+        </div>
+
+        <!-- Depósito Total -->
+        <div class="finance-card">
+            <div class="icon-shape shape-circle">
+                <i class="fa-solid fa-vault"></i>
+            </div>
+            <div class="data-content">
+                <span class="label">Depósito Total</span>
+                <span class="main-value">Kz {{ approved_deposit_total|default:"0.00" }}</span>
+                <span class="exchange-value" id="val-dep-brl">R$ 0,00</span>
+            </div>
+        </div>
+
+        <!-- Fundo Disponível -->
+        <div class="finance-card">
+            <div class="icon-shape shape-squircle">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="data-content">
+                <span class="label">Fundo Disponível</span>
+                <span class="main-value">Kz {{ user.available_balance|default:"0.00" }}</span>
+                <span class="exchange-value" id="val-bal-brl">R$ 0,00</span>
+            </div>
+        </div>
+
     </div>
 
-    <div class="stats-container">
-        <div class="royal-card">
-            <div class="card-info">
-                <div class="card-icon i-pink"><i class="fas fa-hand-holding-usd"></i></div>
-                <div>
-                    <span class="card-label">Acúmulo de Ganhos</span>
-                    <span class="card-value">USDT {{ user.subsidy_balance|default:"0.00" }}</span>
-                    <span class="card-subvalue" id="val-sub-brl">R$ 0,00</span>
-                </div>
-            </div>
-            <i class="fas fa-chart-line" style="color: #2ecc71; opacity: 0.3;"></i>
-        </div>
-
-        <div class="royal-card">
-            <div class="card-info">
-                <div class="card-icon i-teal"><i class="fas fa-plus-square"></i></div>
-                <div>
-                    <span class="card-label">Depósito Total</span>
-                    <span class="card-value">USDT {{ approved_deposit_total|default:"0" }}</span>
-                    <span class="card-subvalue" id="val-dep-brl">R$ 0,00</span>
-                </div>
-            </div>
-            <i class="fas fa-check-circle" style="color: var(--secondary); opacity: 0.3;"></i>
-        </div>
-
-        <div class="royal-card">
-            <div class="card-info">
-                <div class="card-icon i-gold"><i class="fas fa-crown"></i></div>
-                <div>
-                    <span class="card-label">Fundo Disponível</span>
-                    <span class="card-value">USDT {{ user.available_balance|default:"0.00" }}</span>
-                    <span class="card-subvalue" id="val-bal-brl">R$ 0,00</span>
-                </div>
-            </div>
-            <i class="fas fa-certificate" style="color: var(--gold); opacity: 0.3;"></i>
-        </div>
+    <!-- Rodapé de Segurança -->
+    <div class="security-badge">
+        <i class="fa-solid fa-shield-check" style="color: var(--secondary);"></i>
+        Ativos protegidos via Encriptação Wise
     </div>
 
-    <div class="pro-footer">
-        <div class="secure-tag"><i class="fas fa-shield-alt"></i> Secure Digital Assets</div>
-        <p style="font-size: 9px; color: rgba(255,255,255,0.2); margin-top: 10px; font-weight: 600;">100XMAGICO GLOBAL SERVICES © 2026</p>
+    <div class="footer-note">
+        Os valores em BRL são aproximados com base na taxa de câmbio em tempo real de 0.0065.
+        <br><strong>100XMAGICO GLOBAL © 2026</strong>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const taxaWise = 5.48;
-        function converter(valorRaw, elementId) {
-            let num = parseFloat(valorRaw.toString().replace(',', '.')) || 0;
-            let total = num * taxaWise;
-            document.getElementById(elementId).innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        // TAXA CONFORME ARQUIVO MENU.HTML
+        const taxaWise = 0.0065; 
+
+        function processarCambio(valorKz, elementId) {
+            // Limpa a string e converte para número
+            let limpo = valorKz.toString().replace(',', '.');
+            let num = parseFloat(limpo) || 0;
+            
+            // Calcula o valor em Real
+            let totalBrl = num * taxaWise;
+            
+            // Formata para moeda brasileira
+            document.getElementById(elementId).innerText = totalBrl.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            });
         }
-        converter("{{ user.subsidy_balance|default:'0' }}", "val-sub-brl");
-        converter("{{ approved_deposit_total|default:'0' }}", "val-dep-brl");
-        converter("{{ user.available_balance|default:'0' }}", "val-bal-brl");
+
+        // Executa as conversões
+        processarCambio("{{ user.subsidy_balance|default:'0' }}", "val-sub-brl");
+        processarCambio("{{ approved_deposit_total|default:'0' }}", "val-dep-brl");
+        processarCambio("{{ user.available_balance|default:'0' }}", "val-bal-brl");
     });
 </script>
 {% endblock %}
