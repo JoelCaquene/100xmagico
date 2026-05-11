@@ -94,6 +94,24 @@
     </div>
 </div>
 
+{# TELA DE CONCLUSÃO BONITONA (ESTILO CASSINO WIN) #}
+<div id="finish-overlay" class="modal-overlay" style="display: none; background: rgba(0,0,0,0.95);">
+    <div class="congrats-card">
+        <div class="glow-circle"></div>
+        <i class="fas fa-check-circle" id="check-anim"></i>
+        <h2 class="gold-gradient-text">CONCLUÍDO!</h2>
+        <div class="congrats-message">
+            Sua tarefa de hoje encontra-se concluída com sucesso. 
+            <br><br>
+            <span class="highlight">Aguarde até amanhã para novas avaliações!</span>
+        </div>
+        <div class="capture-box">
+            <p>📸 Faça uma captura de tela e envie no grupo oficial para validar seu bônus!</p>
+        </div>
+        <button onclick="location.href='{% url 'menu' %}'" class="btn-main gold-shine">VOLTAR AO MENU</button>
+    </div>
+</div>
+
 <script>
     const TAXA_WISE = 0.0065; 
     let selectedRating = 0;
@@ -156,8 +174,9 @@
                 .then(r => r.json())
                 .then(data => {
                     if(data.success) {
-                        alert(data.message);
-                        window.location.reload();
+                        // EXIBE A TELA BONITA EM VEZ DE ALERT
+                        closeModal();
+                        document.getElementById('finish-overlay').style.display = 'flex';
                     } else {
                         alert(data.message);
                         closeModal();
@@ -291,5 +310,40 @@
     }
     .btn-main.disabled { background: #555; color: #888; cursor: not-allowed; }
     .btn-cancel { background: none; border: none; color: #888; margin-top: 10px; font-weight: 600; cursor: pointer; }
+
+    /* ESTILOS DA TELA DE SUCESSO (CASSINO) */
+    .congrats-card {
+        background: radial-gradient(circle, #1a1a2e, #0a0a0c);
+        width: 85%; max-width: 380px; padding: 40px 20px;
+        border-radius: 30px; border: 3px solid var(--gold);
+        text-align: center; position: relative;
+        animation: cardAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes cardAppear { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    #check-anim { font-size: 80px; color: #00ff00; filter: drop-shadow(0 0 15px #00ff00); margin-bottom: 20px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+    .gold-gradient-text {
+        font-family: 'Goldman'; font-size: 28px; font-weight: 900;
+        background: linear-gradient(to bottom, #fff 20%, #ffcc00 50%, #b8860b 80%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+    }
+    .congrats-message { font-size: 14px; line-height: 1.6; color: #eee; margin-bottom: 20px; }
+    .highlight { color: var(--gold); font-weight: bold; }
+    .capture-box { background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--gold); border-radius: 10px; padding: 10px; margin-bottom: 25px; }
+    .capture-box p { margin: 0; font-size: 11px; color: var(--gold); }
+    
+    .gold-shine {
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+        position: relative; overflow: hidden;
+    }
+    .gold-shine::after {
+        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+        transform: rotate(45deg); animation: shine 3s infinite;
+    }
+    @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
 </style>
 {% endblock %}

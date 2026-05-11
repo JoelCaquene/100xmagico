@@ -4,200 +4,245 @@
 {% block title %}Saque | 100XMAGICO{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    :root {
+        --gold: #ffcc00;
+        --dark-bg: #0a0a0c;
+        --card-bg: #16161e;
+        --accent: #ff003c;
+    }
+
+    /* Reset para evitar rolagem horizontal */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body { 
+        margin: 0; padding: 0;
+        background: var(--dark-bg); 
+        font-family: 'Montserrat', sans-serif; 
+        color: white;
+        overflow-x: hidden; /* Trava horizontal */
+        width: 100%;
+    }
+
+    .magico-container { 
+        width: 100%; 
+        min-height: 100vh; 
+        display: flex; 
+        flex-direction: column;
+    }
+
+    /* NAVBAR */
+    .casino-navbar {
+        height: 65px; background: rgba(0,0,0,0.95);
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 15px; border-bottom: 2px solid var(--gold);
+        position: sticky; top: 0; z-index: 100;
+    }
+    .brand { font-family: 'Goldman', sans-serif; font-size: 16px; font-weight: 900; }
+    .brand span { color: var(--gold); }
+    .back-link { color: var(--gold); font-size: 1.1rem; text-decoration: none; }
+
+    .scroll-content { 
+        flex: 1; 
+        padding: 15px; 
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    .saque-wrapper { width: 100%; max-width: 450px; margin: 0 auto; }
+
+    /* CARD DE SALDO */
+    .balance-card-premium {
+        background: var(--card-bg); border-radius: 15px; padding: 20px 10px;
+        text-align: center; position: relative; overflow: hidden;
+        border: 1px solid rgba(255,204,0,0.3); margin-bottom: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+    .balance-card-premium p { font-size: 10px; letter-spacing: 1px; color: #aaa; margin: 0; }
+    .balance-card-premium h2 { font-family: 'Goldman'; font-size: 28px; margin: 8px 0; color: #fff; }
+    .balance-card-premium h2 small { font-size: 14px; color: var(--gold); }
+    .brl-badge { 
+        display: inline-block; background: rgba(0,255,0,0.1); color: #00ff00;
+        padding: 4px 12px; border-radius: 15px; font-weight: 700; font-size: 13px;
+        border: 1px solid rgba(0,255,0,0.2);
+    }
+
+    /* GRID DE VALORES */
+    .section-title { font-size: 11px; font-weight: 900; margin-bottom: 12px; color: #888; text-transform: uppercase; }
+    .values-grid { 
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px; 
+        margin-bottom: 20px; 
+    }
     
-    :root { 
-        --bg: #FFFFFF; 
-        --card: #F8F9FA; 
-        --primary: #0062FF; 
-        --success: #00C853;
-        --danger: #FF3B30;
-        --border: #E9ECEF;
-        --text-main: #1A1D23;
-        --text-dim: #6C757D;
+    .val-item {
+        background: var(--card-bg); border: 1px solid #2d2d3a;
+        padding: 12px 5px; border-radius: 12px; text-align: center;
+        transition: 0.2s; cursor: pointer;
+    }
+    .val-item .kz { display: block; font-size: 14px; font-weight: 800; color: #fff; }
+    .val-item .brl { display: block; font-size: 10px; color: #888; margin-top: 2px; }
+    
+    .val-item.active {
+        border-color: var(--gold); background: rgba(255,204,0,0.08);
+        transform: scale(1.02);
+    }
+    .val-item.active .kz { color: var(--gold); }
+
+    /* PAINEL DE CÁLCULO */
+    .calc-panel {
+        background: rgba(255,255,255,0.03); border-radius: 12px;
+        padding: 15px; border: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 20px;
+    }
+    .calc-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; color: #aaa; }
+    .main-result { border-top: 1px solid #333; padding-top: 10px; margin-top: 8px; font-weight: 900; font-size: 13px; }
+    .text-gold { color: var(--gold); }
+    
+    /* BOTÃO DE SAQUE REATIVADO */
+    .btn-saque-gold {
+        width: 100%; 
+        background: linear-gradient(to bottom, #ffcc00, #b8860b);
+        border: none; 
+        padding: 16px; 
+        border-radius: 12px;
+        font-family: 'Goldman'; 
+        font-weight: 900; 
+        font-size: 14px;
+        color: #000; 
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
     }
 
-    body { background: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; }
-
-    .main-container { min-height: 100vh; width: 100%; padding-bottom: 40px; background: #fff; }
-
-    /* HEADER */
-    .header-saque {
-        padding: 25px 20px; text-align: center;
-        border-bottom: 1px solid var(--border);
-        background: #fff; position: relative;
+    /* REGRAS */
+    .rules-container h3 { font-size: 11px; text-align: center; color: #555; margin-bottom: 12px; }
+    .rule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .rule-box {
+        background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px;
+        text-align: center; border: 1px solid #222;
     }
-    .header-saque h1 { font-weight: 800; font-size: 20px; margin: 0; color: var(--text-main); }
-    .back-nav { position: absolute; top: 20px; left: 15px; }
-    .back-arrow { 
-        color: var(--text-main); font-size: 18px; text-decoration: none; 
-        width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-        border: 1px solid var(--border); border-radius: 12px;
-    }
-
-    .saque-wrapper { width: 92%; max-width: 450px; margin: 20px auto; }
-
-    .card-ui {
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 24px; padding: 25px;
-    }
+    .rule-box i { color: var(--gold); font-size: 14px; margin-bottom: 5px; }
+    .rule-box p { font-size: 9px; margin: 0; color: #888; line-height: 1.3; }
 
     /* ALERTAS */
-    .django-messages { margin-bottom: 20px; }
     .alert {
-        padding: 14px; border-radius: 15px; font-size: 13px; text-align: center;
-        margin-bottom: 10px; border: 1px solid; font-weight: 600;
+        background: #4a0000; color: #fff; padding: 10px; border-radius: 8px;
+        font-size: 11px; margin-bottom: 15px; border-left: 3px solid var(--accent);
     }
-    .alert-error { background: #FFF5F5; color: var(--danger); border-color: #FEB2B2; }
-    .alert-success { background: #F0FFF4; color: var(--success); border-color: #9AE6B4; }
-
-    .balance-card {
-        background: #fff; border: 1px solid var(--border);
-        padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 25px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
-    .balance-card span { font-size: 11px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
-    .balance-card h2 { margin: 5px 0 0; font-size: 28px; font-weight: 800; color: var(--primary); }
-    .balance-brl { font-size: 14px; color: var(--success); font-weight: 700; margin-top: 5px; display: block; }
-
-    .amount-input-box {
-        background: #fff; border: 2px solid var(--primary); border-radius: 18px;
-        padding: 15px; margin-bottom: 15px; text-align: center;
-    }
-    .amount-display { 
-        background: transparent; border: none; color: var(--text-main); 
-        font-size: 26px; font-weight: 800; width: 100%; text-align: center; outline: none;
-    }
-
-    .values-grid {
-        display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 25px;
-    }
-    .val-btn {
-        background: #fff; border: 1px solid var(--border);
-        color: var(--text-main); padding: 15px; border-radius: 16px; cursor: pointer;
-        display: flex; flex-direction: column; align-items: center; transition: 0.2s;
-    }
-    .val-btn b { font-size: 15px; color: var(--text-main); }
-    .val-btn small { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-    .val-btn.active { background: var(--primary); border-color: var(--primary); }
-    .val-btn.active b, .val-btn.active small { color: #fff; }
-
-    .calc-box {
-        background: #fff; padding: 18px; border-radius: 18px; margin-bottom: 25px;
-        border: 1px solid var(--border);
-    }
-    .calc-line { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px; color: var(--text-dim); font-weight: 600; }
-    .calc-line.total { color: var(--text-main); font-size: 14px; font-weight: 800; border-top: 1px solid var(--border); padding-top: 10px; }
-
-    .btn-submit {
-        width: 100%; background: var(--primary);
-        color: #fff; border: none; padding: 18px; border-radius: 18px;
-        font-weight: 800; font-size: 15px; text-transform: uppercase; cursor: pointer;
-        box-shadow: 0 8px 20px rgba(0, 98, 255, 0.2);
-    }
-
-    .rules-list {
-        margin-top: 25px; padding: 15px; border-radius: 15px; background: #F2F2F7;
-    }
-    .rule-item { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; line-height: 1.4; }
-    .rule-item i { color: var(--primary); margin-top: 2px; }
 </style>
 
-<div class="main-container">
-    <div class="header-saque">
-        <div class="back-nav">
-            <a href="{% url 'menu' %}" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
-        </div>
-        <h1>Solicitar Saque</h1>
+<div class="magico-container">
+    
+    <div class="casino-navbar">
+        <a href="{% url 'menu' %}" class="back-link"><i class="fas fa-chevron-left"></i></a>
+        <div class="brand">RETIRADA<span>MÁGICA</span></div>
+        <i class="fas fa-university" style="color: var(--gold);"></i>
     </div>
 
-    <div class="saque-wrapper">
-        {% if messages %}
-        <div class="django-messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                <i class="fas fa-info-circle"></i> {{ message }}
+    <div class="scroll-content">
+        <div class="saque-wrapper">
+            
+            {% if messages %}
+            <div class="django-messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-info-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+            {% endif %}
 
-        <div class="card-ui">
-            <div class="balance-card">
-                <span>Saldo Disponível para Saque</span>
-                <h2 id="u-kz">{{ user.available_balance }} Kz</h2>
-                <span class="balance-brl" id="u-brl">R$ 0,00</span>
+            <div class="balance-card-premium">
+                <p>SALDO EM CARTEIRA</p>
+                <h2 id="u-kz">{{ user.available_balance }} <small>Kz</small></h2>
+                <div class="brl-badge" id="u-brl">R$ 0,00</div>
             </div>
 
             <form method="post" id="formSaque">
                 {% csrf_token %}
-                <div class="amount-input-box">
-                    <label style="font-size: 9px; color: var(--text-dim); font-weight: 800; text-transform: uppercase;">Valor Selecionado</label>
-                    <input type="text" id="display_amount" class="amount-display" value="0 Kz" readonly>
-                    <input type="hidden" name="amount" id="real_amount" value="0">
-                </div>
+                
+                <div class="section-title">Valor do Saque</div>
 
                 <div class="values-grid">
-                    <button type="button" class="val-btn" onclick="selectVal(this, 2000)"><b>2.000 Kz</b><small>R$ 13,00</small></button>
-                    <button type="button" class="val-btn" onclick="selectVal(this, 5000)"><b>5.000 Kz</b><small>R$ 32,50</small></button>
-                    <button type="button" class="val-btn" onclick="selectVal(this, 10000)"><b>10.000 Kz</b><small>R$ 65,00</small></button>
-                    <button type="button" class="val-btn" onclick="selectVal(this, 50000)"><b>50.000 Kz</b><small>R$ 325,00</small></button>
+                    <div class="val-item" onclick="selectVal(this, 2000)">
+                        <span class="kz">2.000 Kz</span>
+                        <span class="brl">R$ 13,00</span>
+                    </div>
+                    <div class="val-item" onclick="selectVal(this, 5000)">
+                        <span class="kz">5.000 Kz</span>
+                        <span class="brl">R$ 32,50</span>
+                    </div>
+                    <div class="val-item" onclick="selectVal(this, 10000)">
+                        <span class="kz">10.000 Kz</span>
+                        <span class="brl">R$ 65,00</span>
+                    </div>
+                    <div class="val-item" onclick="selectVal(this, 50000)">
+                        <span class="kz">50.000 Kz</span>
+                        <span class="brl">R$ 325,00</span>
+                    </div>
                 </div>
 
-                <div class="calc-box">
-                    <div class="calc-line"><span>Câmbio Wise</span><span>1.000 Kz ≈ R$ 6,50</span></div>
-                    <div class="calc-line"><span>Taxa de Saque (10%)</span><span id="taxaTxt">0 Kz</span></div>
-                    <div class="calc-line total"><span>Recebimento Estimado</span><span id="liquidoTxt">R$ 0,00</span></div>
+                <input type="hidden" name="amount" id="real_amount" value="0">
+
+                <div class="calc-panel">
+                    <div class="calc-row">
+                        <span>Taxa de Saque (10%)</span>
+                        <span id="taxaTxt" style="color: #fff;">0 Kz</span>
+                    </div>
+                    <div class="calc-row main-result">
+                        <span>RECEBIMENTO VIA PIX/WISE</span>
+                        <span id="liquidoTxt" class="text-gold">R$ 0,00</span>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-submit" id="btnConfirm">Confirmar Saque</button>
+                <!-- O BOTÃO VOLTOU -->
+                <button type="submit" class="btn-saque-gold" id="btnConfirm">
+                    CONFIRMAR RETIRADA
+                </button>
             </form>
 
-            <div class="rules-list">
-                <div class="rule-item">
-                    <i class="fas fa-clock"></i>
-                    <span><b>Horário Luanda:</b> 09:00h às 17:00h<br><b>Horário Brasil:</b> 05:00h às 13:00h</span>
-                </div>
-                <div class="rule-item">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Mínimo: 2000 Kz / R$ 13,00</span>
-                </div>
-                <div class="rule-item">
-                    <i class="fas fa-bolt"></i>
-                    <span>Processamento: 5 minutos a 5 horas</span>
-                </div>
-                <div class="rule-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Disponível de Segunda a Sábado</span>
+            <div class="rules-container">
+                <h3><i class="fas fa-scroll"></i> REGRAS DE CÂMBIO</h3>
+                <div class="rule-grid">
+                    <div class="rule-box">
+                        <i class="fas fa-history"></i>
+                        <p>09h - 17h (AO)<br>Seg a Sáb</p>
+                    </div>
+                    <div class="rule-box">
+                        <i class="fas fa-shield-alt"></i>
+                        <p>Câmbio Oficial<br>Wise 1k=6.50</p>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 <script>
-    // Taxa Wise consistente com o menu
     const CAMBIO_WISE = 0.0065; 
     const TAXA_PERCENT = 0.10;
 
     function updateHeaderBalance() {
-        const saldo = parseFloat("{{ user.available_balance }}".replace(',', '.')) || 0;
+        const saldoStr = "{{ user.available_balance }}".replace(',', '.');
+        const saldo = parseFloat(saldoStr) || 0;
         document.getElementById('u-brl').innerText = (saldo * CAMBIO_WISE).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    function selectVal(btn, val) {
-        document.querySelectorAll('.val-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        document.getElementById('display_amount').value = val.toLocaleString('pt-PT') + " Kz";
+    function selectVal(element, val) {
+        document.querySelectorAll('.val-item').forEach(b => b.classList.remove('active'));
+        element.classList.add('active');
         document.getElementById('real_amount').value = val;
 
         const vTaxa = val * TAXA_PERCENT;
         const vLiquidoBRL = (val - vTaxa) * CAMBIO_WISE;
 
-        document.getElementById('taxaTxt').innerText = vTaxa.toLocaleString('pt-PT') + " Kz";
+        document.getElementById('taxaTxt').innerText = "-" + vTaxa.toLocaleString('pt-PT') + " Kz";
         document.getElementById('liquidoTxt').innerText = vLiquidoBRL.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 

@@ -154,9 +154,9 @@ def saque(request):
     TAXA_SAQUE = Decimal('0.10')  
     CAMBIO_BRL_WISE = Decimal('0.0065') # Câmbio aplicado sobre o valor em Kz
     
-    # Horário de Luanda (UTC+1)
+    # Horário de Luanda (UTC+1) - Ajustado para 09:00 às 20:00
     START_TIME = time(9, 0, 0)
-    END_TIME = time(17, 0, 0)
+    END_TIME = time(20, 0, 0)
     
     # Define o fuso horário de Luanda para a validação
     luanda_tz = pytz.timezone('Africa/Luanda')
@@ -166,8 +166,8 @@ def saque(request):
     
     # Verifica se é dia de saque (Segunda a Sábado: 0 a 5)
     is_working_day = current_weekday <= 5
-    # Verifica se está no horário (09:00 às 17:00)
-    is_time_to_withdraw = START_TIME <= current_time <= END_TIME and is_working_day
+    # Verifica se está no horário (09:00 às 20:00)
+    is_time_to_withdraw = is_working_day and (START_TIME <= current_time <= END_TIME)
 
     # --- DADOS DA PLATAFORMA ---
     settings = PlatformSettings.objects.first()
@@ -176,7 +176,6 @@ def saque(request):
     
     # Cálculo para histórico na tela
     for record in withdrawal_records:
-        # record.amount é o BRUTO em Kz
         valor_liquido_kz = record.amount * (Decimal('1') - TAXA_SAQUE)
         record.amount_brl = valor_liquido_kz * CAMBIO_BRL_WISE
         record.liquido_display = valor_liquido_kz
@@ -184,11 +183,10 @@ def saque(request):
     has_bank_details = BankDetails.objects.filter(user=request.user).exists()
     today = now_luanda.date()
     
-    # Limite de 1 saque por dia
+    # Limite de 1 saque por dia (Verifica se já existe saque hoje)
     withdrawals_today_count = Withdrawal.objects.filter(
         user=request.user, 
-        created_at__date=today, 
-        status__in=['Pendente', 'Aprovado']
+        created_at__date=today
     ).count()
     
     can_withdraw_today = withdrawals_today_count == 0
@@ -202,9 +200,9 @@ def saque(request):
             if not is_working_day:
                 messages.error(request, 'Saques disponíveis apenas de Segunda a Sábado.')
             elif not is_time_to_withdraw:
-                messages.error(request, 'Fora do horário de saque (Luanda: 09:00 às 17:00).')
+                messages.error(request, 'Fora do horário de saque (Luanda: 09:00 às 20:00).')
             elif not can_withdraw_today:
-                messages.error(request, 'Você já solicitou um saque hoje. Limite: 1 por dia.')
+                messages.error(request, 'Você já realizou uma solicitação hoje. Limite: 1 por dia.')
             elif not has_bank_details:
                 messages.error(request, 'Por favor, adicione suas coordenadas bancárias primeiro.')
             elif amount_bruto < MIN_WITHDRAWAL_Kz:
@@ -216,7 +214,7 @@ def saque(request):
                 valor_liquido = amount_bruto * (Decimal('1') - TAXA_SAQUE)
                 valor_em_reais = valor_liquido * CAMBIO_BRL_WISE
                 
-                # Criar registro (Salvando o BRUTO para auditoria do admin)
+                # Criar registro
                 Withdrawal.objects.create(user=request.user, amount=amount_bruto)
                 
                 # Atualizar saldo do usuário
@@ -235,7 +233,7 @@ def saque(request):
         'has_bank_details': has_bank_details,
         'is_time_to_withdraw': is_time_to_withdraw,
         'MIN_WITHDRAWAL_AMOUNT': MIN_WITHDRAWAL_Kz,
-        'can_withdraw_today': can_withdraw_today,
+        'has_withdrawn_today': not can_withdraw_today, 
         'CAMBIO_BRL': CAMBIO_BRL_WISE,
     }
     return render(request, 'saque.html', context)

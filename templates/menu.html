@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}100xmagico - Tech Evaluation{% endblock %}
+{% block title %}100xmagico - Premium Casino Interface{% endblock %}
 
 {% block content %}
+<!-- Background com gradientes animados e profundidade -->
+<div class="casino-glow-bg"></div>
+<div class="neon-light-top"></div>
+
+<!-- Modal com animação de escala -->
 <div id="welcomeModal" class="modal-overlay">
     <div class="modal-img-container">
         <img src="{% static 'images/welcome_popup.png' %}" alt="Boas-vindas" class="img-welcome">
@@ -11,18 +16,21 @@
     </div>
 </div>
 
+<!-- Suporte Flutuante Estilizado -->
 <div class="floating-support">
     <a href="{{ whatsapp_link }}" class="btn-float wa-float"><i class="fa-brands fa-whatsapp"></i></a>
     <a href="https://t.me/+YhrQf0fKdQQ1ZDQ0" class="btn-float tg-float"><i class="fa-brands fa-telegram"></i></a>
 </div>
 
+<!-- Barra de Topo Ultra Moderna -->
 <div class="stats-top-bar">
-    <div class="stat-item">
-        <small>SALDO AOA</small>
+    <div class="stat-item main-balance">
+        <small data-i18n="saldo">SALDO AOA</small>
         <span class="glow-text">Kz {{ user.available_balance }}</span>
     </div>
+    <div class="stat-divider"></div>
     <div class="stat-item">
-        <small>CÂMBIO WISE</small>
+        <small data-i18n="cambio">CÂMBIO WISE</small>
         <span class="glow-text-alt" id="real-exchange-val">R$ 0,00</span>
     </div>
     <div class="stat-item">
@@ -36,81 +44,63 @@
 
 <div class="main-scroll-container">
     <div class="magic-header">
-        <h1 class="logo-text">100xmagico</h1>
-        <p class="logo-sub">TECH EVALUATION GLOBAL</p>
+        <h1 class="logo-text">100X<span class="gold-txt">MAGICO</span></h1>
+        <div class="badge-tech" data-i18n="sub">TECH EVALUATION GLOBAL</div>
     </div>
 
-    <div class="magic-carousel">
-        <div class="carousel-track">
-            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600" alt="Tech 1">
-            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" alt="Tech 2">
-            <img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?q=80&w=600" alt="Tech 3">
-            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600" alt="Tech 4">
+    <!-- Carrossel com borda neon -->
+    <div class="magic-carousel-wrapper">
+        <div class="magic-carousel">
+            <div class="carousel-track">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600" alt="Tech 1">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" alt="Tech 2">
+                <img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?q=80&w=600" alt="Tech 3">
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600" alt="Tech 4">
+            </div>
         </div>
     </div>
 
+    <!-- Grid de Ações Estilo Casino VIP -->
     <div class="action-grid">
         <a href="{% url 'deposito' %}" class="card-link">
-            <div class="icon-box i-blue"><i class="fa-solid fa-bolt-lightning"></i></div>
-            <span>Deposito</span>
+            <div class="icon-box i-blue"><i class="fa-solid fa-wallet"></i></div>
+            <span data-i18n="deposito">Deposito</span>
         </a>
         <a href="{% url 'tarefa' %}" class="card-link">
             <div class="icon-box i-purple"><i class="fa-solid fa-microchip"></i></div>
-            <span>Avaliar</span>
+            <span data-i18n="avaliar">Avaliar</span>
         </a>
         <a href="{% url 'roleta' %}" class="card-link">
-            <div class="icon-box i-orange"><i class="fa-solid fa-rocket"></i></div>
-            <span>Bônus</span>
+            <div class="icon-box i-orange"><i class="fa-solid fa-clover"></i></div>
+            <span data-i18n="roleta">Roleta</span>
         </a>
         <a href="{% url 'sobre' %}" class="card-link">
-            <div class="icon-box i-green"><i class="fa-solid fa-satellite-dish"></i></div>
-            <span>Empresa</span>
+            <div class="icon-box i-green"><i class="fa-solid fa-building"></i></div>
+            <span data-i18n="empresa">Empresa</span>
         </a>
     </div>
 
+    <!-- Seção de Cartões Tech com Gradientes -->
     <div class="tech-list-section">
-        <h3 class="section-title">Top 10 Tech Giants & Satellites</h3>
+        <h3 class="section-title"><i class="fa-solid fa-fire"></i> <span data-i18n="titulo_lista">Top 10 Tech Giants</span></h3>
         
         <div class="tech-card-container">
-            <div class="tech-card">
+            <!-- Apple -->
+            <div class="tech-card border-glow">
                 <div class="card-header"><i class="fa-brands fa-apple"></i> <h4>Apple Inc.</h4></div>
-                <p>Líder em ecossistemas fechados e hardware premium global.</p>
+                <p data-i18n="desc1">Líder em ecossistemas fechados e hardware premium global.</p>
+                <div class="card-status">Online</div>
             </div>
-            <div class="tech-card">
-                <div class="card-header"><i class="fa-brands fa-windows"></i> <h4>Microsoft</h4></div>
-                <p>Gigante de Cloud Computing, IA corporativa e produtividade.</p>
-            </div>
-            <div class="tech-card gold-card">
+            <!-- Starlink (Destaque Gold) -->
+            <div class="tech-card gold-card border-glow-gold">
                 <div class="card-header"><i class="fa-solid fa-satellite"></i> <h4>Starlink (SpaceX)</h4></div>
-                <p>Revolução em internet via satélite de baixa órbita terrestre.</p>
+                <p data-i18n="desc3">Revolução em internet via satélite de baixa órbita.</p>
+                <div class="card-status gold">VIP Access</div>
             </div>
-            <div class="tech-card">
-                <div class="card-header"><i class="fa-solid fa-memory"></i> <h4>NVIDIA</h4></div>
-                <p>O motor da Inteligência Artificial e processamento gráfico.</p>
-            </div>
-            <div class="tech-card">
-                <div class="card-header"><i class="fa-brands fa-amazon"></i> <h4>Amazon Tech</h4></div>
-                <p>Dominância em serviços de infraestrutura de rede AWS.</p>
-            </div>
-             <div class="tech-card">
-                <div class="card-header"><i class="fa-brands fa-google"></i> <h4>Alphabet (Google)</h4></div>
-                <p>Líder em processamento de dados e algoritmos de busca.</p>
-            </div>
-            <div class="tech-card">
-                <div class="card-header"><i class="fa-solid fa-car-side"></i> <h4>Tesla Automation</h4></div>
-                <p>Energia sustentável e robótica avançada aplicada.</p>
-            </div>
-            <div class="tech-card">
-                <div class="card-header"><i class="fa-brands fa-facebook-messenger"></i> <h4>Meta Reality</h4></div>
-                <p>Desenvolvimento de metaverso e redes de conexão global.</p>
-            </div>
-            <div class="tech-card">
-                <div class="card-header"><i class="fa-solid fa-circuit-board"></i> <h4>TSMC</h4></div>
-                <p>A maior fundição de semicondutores e chips do planeta.</p>
-            </div>
-            <div class="tech-card gold-card">
-                <div class="card-header"><i class="fa-solid fa-tower-broadcast"></i> <h4>Viasat Satellites</h4></div>
-                <p>Comunicações geoestacionárias e defesa tecnológica.</p>
+            <!-- Microsoft -->
+            <div class="tech-card border-glow">
+                <div class="card-header"><i class="fa-brands fa-windows"></i> <h4>Microsoft</h4></div>
+                <p data-i18n="desc2">Gigante de Cloud Computing e IA corporativa.</p>
             </div>
         </div>
     </div>
@@ -118,167 +108,223 @@
     <div style="height: 100px;"></div> 
 </div>
 
+<!-- Bottom Nav estilo Aplicativo Chinês -->
 <nav class="bottom-nav">
     <a href="{% url 'nivel' %}" class="nav-btn">
-        <i class="fa-solid fa-server"></i>
-        <span>Planos</span>
+        <div class="nav-icon-bg"><i class="fa-solid fa-layer-group"></i></div>
+        <span data-i18n="nav1">Planos</span>
     </a>
     <a href="{% url 'renda' %}" class="nav-btn active">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Cassino</span>
+        <div class="nav-icon-bg"><i class="fa-solid fa-chart-pie"></i></div>
+        <span data-i18n="nav2">Renda</span>
     </a>
     <a href="{% url 'equipa' %}" class="nav-btn">
-        <i class="fa-solid fa-share-nodes"></i>
-        <span>Afiliados</span>
+        <div class="nav-icon-bg"><i class="fa-solid fa-users-viewfinder"></i></div>
+        <span data-i18n="nav3">Equipe</span>
     </a>
     <a href="{% url 'perfil' %}" class="nav-btn">
-        <i class="fa-solid fa-gear"></i>
-        <span>Conta</span>
+        <div class="nav-icon-bg"><i class="fa-solid fa-user-ninja"></i></div>
+        <span data-i18n="nav4">Conta</span>
     </a>
 </nav>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600;800&display=swap');
+
     :root {
-        --tech-blue: #007AFF;
-        --tech-purple: #5856D6;
-        --gold: #FF9500;
-        --soft-white: #F2F2F7;
+        --casino-gold: #FFD700;
+        --gold-gradient: linear-gradient(135deg, #FFD700, #B8860B);
+        --neon-blue: #00E5FF;
+        --neon-purple: #BD00FF;
+        --deep-bg: #070912;
+        --glass: rgba(255, 255, 255, 0.06);
     }
 
     body {
         margin: 0;
-        background: #FFFFFF; /* FUNDO BRANCO */
-        color: #1C1C1E;
+        background: var(--deep-bg);
+        color: #fff;
         font-family: 'Poppins', sans-serif;
         overflow: hidden;
         width: 100vw;
     }
 
-    /* EFEITO DE BRILHO NO FUNDO */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle at 50% -20%, rgba(0,122,255,0.1), transparent);
-        z-index: -1;
+    /* Background FX */
+    .casino-glow-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 0%, #1a1f3c 0%, #070912 70%);
+        z-index: -2;
     }
 
-    /* BARRA TOPO PROFISSIONAL */
+    .neon-light-top {
+        position: fixed; top: -50px; left: 50%; transform: translateX(-50%);
+        width: 200px; height: 100px; background: var(--neon-blue);
+        filter: blur(80px); opacity: 0.3; z-index: -1;
+    }
+
+    /* Top Bar */
     .stats-top-bar {
-        position: fixed; top: 0; width: 100%; height: 65px;
-        background: rgba(255, 255, 255, 0.95);
+        position: fixed; top: 0; width: 100%; height: 70px;
+        background: rgba(7, 9, 18, 0.85);
         backdrop-filter: blur(15px);
-        display: flex; justify-content: space-around; align-items: center;
-        z-index: 1000; border-bottom: 1px solid #E5E5EA;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex; justify-content: space-between; align-items: center;
+        z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0 15px; box-sizing: border-box;
     }
 
-    .stat-item small { display: block; font-size: 10px; color: #8E8E93; font-weight: 600; }
-    .stat-item span { font-weight: 800; font-size: 14px; }
-    .glow-text { color: var(--tech-blue); }
-    .glow-text-alt { color: #008134; } /* Verde Wise */
+    .stat-divider { width: 1px; height: 30px; background: rgba(255,255,255,0.1); }
+    .stat-item small { display: block; font-size: 8px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-item span { font-weight: 800; font-size: 15px; font-family: 'Orbitron', sans-serif; }
+    .glow-text { color: var(--casino-gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+    .glow-text-alt { color: #00FF88; }
 
-    .lang-picker { border: none; background: #F2F2F7; padding: 5px 10px; border-radius: 8px; font-weight: bold; }
+    .lang-picker { 
+        background: #1a1f3c; color: #fff; border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 20px; padding: 2px 10px; font-size: 11px; outline: none;
+    }
 
+    /* Scroll Container */
     .main-scroll-container {
-        margin-top: 65px; height: calc(100vh - 135px);
-        overflow-y: auto; overflow-x: hidden; padding-bottom: 20px;
+        margin-top: 70px; height: calc(100vh - 140px);
+        overflow-y: auto; padding: 10px 0;
     }
 
-    .magic-header { text-align: center; padding: 25px 0; }
-    .logo-text { font-weight: 900; font-size: 32px; margin: 0; color: #000; letter-spacing: -1px; }
-    .logo-sub { font-size: 10px; font-weight: 700; color: var(--tech-blue); letter-spacing: 2px; }
+    /* Header */
+    .magic-header { text-align: center; margin-bottom: 15px; }
+    .logo-text { font-family: 'Orbitron', sans-serif; font-size: 26px; margin: 0; font-weight: 900; }
+    .badge-tech { 
+        display: inline-block; background: var(--gold-gradient); color: #000;
+        font-size: 9px; font-weight: 800; padding: 2px 12px; border-radius: 10px;
+        margin-top: 5px; text-transform: uppercase;
+    }
 
-    /* CARROSSEL */
-    .magic-carousel { width: 92%; margin: 10px auto; height: 150px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .carousel-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite ease-in-out; }
+    /* Carousel Premium */
+    .magic-carousel-wrapper { padding: 0 15px; }
+    .magic-carousel { 
+        width: 100%; height: 150px; border-radius: 15px; overflow: hidden; 
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+    }
+    .carousel-track { display: flex; width: 400%; height: 100%; animation: slide 12s infinite linear; }
     .carousel-track img { width: 25%; object-fit: cover; }
 
     @keyframes slide { 
-        0%, 20% { transform: translateX(0); }
-        25%, 45% { transform: translateX(-25%); }
-        50%, 70% { transform: translateX(-50%); }
-        75%, 95% { transform: translateX(-75%); }
+        0%, 20% { transform: translateX(0); } 
+        25%, 45% { transform: translateX(-25%); } 
+        50%, 70% { transform: translateX(-50%); } 
+        75%, 95% { transform: translateX(-75%); } 
     }
 
-    /* GRID AÇÕES MODERNOS */
-    .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 15px; }
-    .card-link { text-decoration: none; color: #1C1C1E; text-align: center; font-size: 11px; font-weight: 600; }
+    /* Action Grid */
+    .action-grid { 
+        display: grid; grid-template-columns: repeat(4, 1fr); 
+        gap: 12px; padding: 20px 15px; 
+    }
+    .card-link { text-decoration: none; color: #fff; text-align: center; transition: 0.3s; }
     .icon-box { 
-        width: 60px; height: 60px; margin: 0 auto 8px; border-radius: 18px; 
+        width: 55px; height: 55px; margin: 0 auto 8px; border-radius: 16px; 
         display: flex; align-items: center; justify-content: center; font-size: 24px;
-        box-shadow: 0 8px 15px rgba(0,0,0,0.08); transition: 0.3s; background: #fff;
+        background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+        position: relative; overflow: hidden;
     }
-    .icon-box:active { transform: scale(0.9); }
-    .i-blue { color: #007AFF; }
-    .i-purple { color: #AF52DE; }
-    .i-orange { color: #FF9500; }
-    .i-green { color: #34C759; }
+    /* Efeito de brilho interno nos ícones */
+    .icon-box::after {
+        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: rotate(45deg); animation: shine 3s infinite;
+    }
+    @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
 
-    /* TECH CARDS SECTION */
-    .tech-list-section { padding: 0 15px; }
-    .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; border-left: 4px solid var(--tech-blue); padding-left: 10px; }
-    .tech-card-container { display: flex; flex-direction: column; gap: 12px; }
+    .i-blue { color: var(--neon-blue); border-bottom: 3px solid var(--neon-blue); }
+    .i-purple { color: var(--neon-purple); border-bottom: 3px solid var(--neon-purple); }
+    .i-orange { color: #FF9500; border-bottom: 3px solid #FF9500; }
+    .i-green { color: #00FF88; border-bottom: 3px solid #00FF88; }
     
+    .card-link span { font-size: 10px; font-weight: 600; opacity: 0.9; }
+
+    /* Tech Cards */
+    .tech-list-section { padding: 0 15px; }
+    .section-title { font-family: 'Orbitron', sans-serif; font-size: 14px; margin-bottom: 15px; color: var(--neon-blue); display: flex; align-items: center; gap: 8px;}
     .tech-card { 
-        background: #F2F2F7; border-radius: 15px; padding: 15px; 
-        border: 1px solid #E5E5EA; transition: 0.3s;
-        animation: fadeInUp 0.5s ease backwards;
+        background: var(--glass); border-radius: 12px; padding: 15px; margin-bottom: 12px;
+        border-left: 4px solid var(--neon-blue); position: relative;
     }
-    .gold-card { background: #FFF9E5; border-color: #FFD700; }
-    .tech-card h4 { margin: 0; font-size: 14px; font-weight: 700; }
-    .tech-card p { margin: 5px 0 0; font-size: 11px; color: #48484A; line-height: 1.4; }
-    .card-header { display: flex; align-items: center; gap: 10px; color: #1C1C1E; margin-bottom: 5px; }
-    .card-header i { font-size: 18px; color: var(--tech-blue); }
+    .gold-card { border-left-color: var(--casino-gold); background: rgba(255, 215, 0, 0.03); }
+    .card-status { position: absolute; top: 12px; right: 12px; font-size: 8px; background: rgba(0,255,136,0.2); color: #00FF88; padding: 2px 8px; border-radius: 10px; }
+    .card-status.gold { background: rgba(255,215,0,0.2); color: var(--casino-gold); }
+    
+    .tech-card h4 { margin: 0; font-size: 14px; }
+    .tech-card p { margin: 6px 0 0; font-size: 11px; color: #999; line-height: 1.4; }
 
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* BOTTOM NAV */
+    /* Bottom Nav Moderno */
     .bottom-nav {
         position: fixed; bottom: 0; width: 100%; height: 75px;
-        background: #fff; border-top: 1px solid #E5E5EA;
+        background: #0d111f; border-top: 1px solid rgba(255,255,255,0.05);
         display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        padding-bottom: env(safe-area-inset-bottom);
     }
-    .nav-btn { text-decoration: none; color: #8E8E93; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .nav-btn i { font-size: 22px; }
-    .nav-btn span { font-size: 10px; font-weight: bold; }
-    .nav-btn.active { color: var(--tech-blue); }
+    .nav-btn { text-decoration: none; color: #666; display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+    .nav-icon-bg { font-size: 20px; transition: 0.3s; }
+    .nav-btn.active { color: var(--casino-gold); }
+    .nav-btn.active .nav-icon-bg { transform: translateY(-5px); filter: drop-shadow(0 0 8px var(--casino-gold)); }
+    .nav-btn span { font-size: 10px; font-weight: 700; }
 
-    /* MODAL POPUP */
-    .modal-overlay { 
-        position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
-        z-index: 9999; display: flex; align-items: center; justify-content: center;
-    }
-    .modal-img-container { position: relative; width: 85%; max-width: 400px; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .img-welcome { width: 100%; border-radius: 20px; display: block; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-    .close-modal-x { 
-        position: absolute; top: -15px; right: -15px; width: 35px; height: 35px; 
-        background: var(--tech-blue); border: none; color: white; border-radius: 50%;
-        font-size: 20px; font-weight: bold; cursor: pointer;
-    }
-    @keyframes pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    /* Modal Estilizado */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    .modal-img-container { width: 85%; max-width: 340px; transform: scale(1); animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .img-welcome { width: 100%; border-radius: 20px; border: 2px solid var(--casino-gold); box-shadow: 0 0 30px rgba(255,215,0,0.3); }
+    .close-modal-x { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: var(--casino-gold); border: none; border-radius: 50%; color: #000; font-weight: bold; cursor: pointer; }
 
-    /* SUPORTE */
+    /* Suporte */
     .floating-support { position: fixed; right: 15px; bottom: 90px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-    .btn-float { width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .btn-float { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.2); }
     .wa-float { background: #25D366; } .tg-float { background: #0088CC; }
-
 </style>
 
 <script>
-    function closeModal() { document.getElementById('welcomeModal').style.display = 'none'; }
-
-    // Simulação de Câmbio Wise R$
-    (function() {
-        const saldoAoa = parseFloat("{{ user.available_balance }}".replace(',', '.')) || 0;
-        const taxaWise = 0.0065; // Exemplo de taxa Kz para R$
-        const calc = saldoAoa * taxaWise;
-        document.getElementById('real-exchange-val').innerText = calc.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    })();
+    // Sistema de Idiomas Dinâmico
+    const translations = {
+        'pt': {
+            'saldo': 'SALDO AOA', 'cambio': 'CÂMBIO WISE', 'sub': 'TECH EVALUATION GLOBAL',
+            'deposito': 'Deposito', 'avaliar': 'Avaliar', 'roleta': 'Roleta', 'empresa': 'Empresa',
+            'titulo_lista': 'Top 10 Tech Giants', 'nav1': 'Planos', 'nav2': 'Renda', 'nav3': 'Equipe', 'nav4': 'Conta'
+        },
+        'en': {
+            'saldo': 'AOA BALANCE', 'cambio': 'WISE RATE', 'sub': 'GLOBAL TECH EVALUATION',
+            'deposito': 'Deposit', 'avaliar': 'Evaluate', 'roleta': 'Spin', 'empresa': 'Company',
+            'titulo_lista': 'Top 10 Tech Giants', 'nav1': 'Plans', 'nav2': 'Income', 'nav3': 'Team', 'nav4': 'Account'
+        },
+        'zh': {
+            'saldo': '余额 AOA', 'cambio': '汇率 WISE', 'sub': '全球技术评估',
+            'deposito': '充值', 'avaliar': '评估', 'roleta': '轮盘', 'empresa': '公司',
+            'titulo_lista': '十大科技巨头', 'nav1': '计划', 'nav2': '收益', 'nav3': '团队', 'nav4': '账户'
+        }
+    };
 
     function changeLanguage() {
         const lang = document.getElementById('langSelect').value;
-        alert("Idioma alterado para: " + lang);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang][key]) el.innerText = translations[lang][key];
+        });
     }
+
+    function closeModal() {
+        const modal = document.getElementById('welcomeModal');
+        modal.style.opacity = '0';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+
+    // Lógica de Câmbio Mantida
+    (function() {
+        const saldoAoa = parseFloat("{{ user.available_balance }}".replace(',', '.')) || 0;
+        const taxaWise = 0.0065; 
+        const calc = saldoAoa * taxaWise;
+        const exchangeEl = document.getElementById('real-exchange-val');
+        if(exchangeEl) {
+            exchangeEl.innerText = calc.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+    })();
 </script>
 {% endblock %}
