@@ -135,7 +135,7 @@ LOGIN_URL = 'login'
 
 if not DEBUG:
     # Essencial para o Render identificar o HTTPS vindo do proxy
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     
     # Cookies seguros
