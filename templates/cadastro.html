@@ -15,7 +15,11 @@
         
         body { 
             background: radial-gradient(circle at 50% 0%, #500 0%, #000 100%); 
-            color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+            color: #fff; 
+            min-height: 100vh; /* Ajustado para permitir expansão em telas pequenas */
+            overflow-y: auto;  /* Permitir scroll vertical caso o conteúdo passe da tela */
+            display: flex; 
+            flex-direction: column;
         }
 
         /* HEADER */
@@ -78,6 +82,7 @@
         .footer-nav {
             background: #000; padding: 15px; display: flex; gap: 10px;
             border-top: 1px solid rgba(255,207,64,0.2);
+            margin-top: auto; /* Garante que o rodapé fique embaixo se sobrar espaço */
         }
 
         .btn-in {
@@ -89,6 +94,7 @@
             flex: 1; background: linear-gradient(45deg, #d90429, #ff4d4d);
             border: none; border-radius: 15px; color: #fff; font-weight: 900;
             font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer;
         }
 
         .legal { font-size: 9px; color: #666; text-align: center; margin-top: 5px; }

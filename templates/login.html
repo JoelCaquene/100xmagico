@@ -15,7 +15,11 @@
         
         body { 
             background: radial-gradient(circle at 50% 0%, #500 0%, #000 100%); 
-            color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+            color: #fff; 
+            min-height: 100vh; /* Permite que a página estique em ecrãs pequenos */
+            overflow-y: auto;  /* Habilita o scroll vertical se o teclado tapar os botões */
+            display: flex; 
+            flex-direction: column;
         }
 
         /* HEADER */
@@ -83,6 +87,7 @@
         .footer-nav {
             background: #000; padding: 15px; display: flex; gap: 10px;
             border-top: 1px solid rgba(255,207,64,0.2);
+            margin-top: auto; /* Empurra o rodapé para a extremidade inferior da tela */
         }
 
         .btn-reg-link {
