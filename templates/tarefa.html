@@ -78,13 +78,21 @@
             <i class="fas fa-star" data-v="5"></i>
         </div>
 
-        {# BOTÕES DINÂMICOS CONFORME AS PERMISSÕES #}
+{# BOTÕES DINÂMICOS CONFORME AS PERMISSÕES #}
         {% if can_do_task %}
             <button id="btn-confirm" class="btn-main">CONFIRMAR AVALIAÇÃO</button>
         {% else %}
-            {% if tasks_completed_today >= 1 %}
+            {% if not is_valid_day %}
+                {# SE FOR DOMINGO #}
+                <button class="btn-main disabled" style="background: #333; color: #888;" disabled>SISTEMA EM MANUTENÇÃO</button>
+                <p style="font-size: 11px; color: #ffcc00; margin-top: 8px; font-weight: bold;">
+                    <i class="fas fa-calendar-times"></i> TAREFAS INDISPONÍVEIS AOS DOMINGOS
+                </p>
+            {% elif tasks_completed_today >= 1 %}
+                {# SE JÁ FEZ A TAREFA HOJE #}
                 <button class="btn-main disabled" disabled>TAREFA DE HOJE CONCLUÍDA</button>
             {% else %}
+                {# SE O BLOQUEIO FOR REALMENTE POR FIM DO ESTÁGIO #}
                 <button class="btn-main disabled" style="background: #800000; color: #fff;" disabled>LIMITE DE ESTÁGIO ATINGIDO</button>
                 <p style="font-size: 10px; color: #ffcc00; margin-top: 8px;">ATIVE UM NÍVEL VIP PARA CONTINUAR</p>
             {% endif %}

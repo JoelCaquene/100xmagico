@@ -275,6 +275,9 @@ def tarefa(request):
     user = request.user
     today = timezone.localdate()
     
+    # Verifica se hoje é um dia válido (0 = Segunda, 5 = Sábado). Domingo é 6.
+    is_valid_day = today.weekday() < 6
+    
     # 1. Status VIP
     active_user_levels = UserLevel.objects.filter(user=user, is_active=True).select_related('level')
     has_active_level = active_user_levels.exists()
@@ -284,11 +287,10 @@ def tarefa(request):
     tasks_completed_today = Task.objects.filter(user=user, completed_at__date=today).count()
     
     # 3. Lógica de Estagiário Protegida
-    # Só é estagiário se: Não é VIP E não expirou o estágio E tem menos de 2 tarefas
     is_intern = not has_active_level and not user.is_intern_expired and total_tasks_ever < 2
 
-    # 4. Variável mestre para o Botão do HTML
-    can_do_task = (has_active_level or is_intern) and tasks_completed_today < 1
+    # 4. Variável mestre para o Botão do HTML (agora inclui a validação do dia)
+    can_do_task = is_valid_day and (has_active_level or is_intern) and tasks_completed_today < 1
 
     context = {
         'has_active_level': has_active_level,
@@ -297,14 +299,23 @@ def tarefa(request):
         'tasks_completed_today': tasks_completed_today,
         'total_tasks_ever': total_tasks_ever,
         'is_intern_expired': user.is_intern_expired,
+        'is_valid_day': is_valid_day, # Podes usar isto no HTML para mostrar um aviso como "Tarefas indisponíveis aos domingos"
     }
     return render(request, 'tarefa.html', context)
+
 
 @login_required
 @require_POST
 def process_task(request):
     user = request.user
     today = timezone.localdate()
+    
+    # Bloqueio de segurança no backend para o Domingo
+    if today.weekday() >= 6:
+        return JsonResponse({
+            'success': False, 
+            'message': 'As tarefas só estão disponíveis de segunda a sábado.'
+        })
     
     try:
         # Bloqueio 1: Já fez a tarefa de hoje?
@@ -330,9 +341,7 @@ def process_task(request):
             # SE ESTA FOR A SEGUNDA TAREFA, MARCAMOS COMO EXPIRADO PARA SEMPRE
             if total_tasks_ever + 1 >= 2:
                 user.is_intern_expired = True
-                # O user.save() será chamado logo abaixo
         else:
-            # Caso o usuário tente burlar o front-end
             return JsonResponse({
                 'success': False, 
                 'message': 'Estágio expirado. Ative um VIP para continuar a lucrar.'
@@ -341,7 +350,7 @@ def process_task(request):
         # Salva a tarefa e paga o usuário
         Task.objects.create(user=user, earnings=total_task_earnings)
         user.available_balance += total_task_earnings
-        user.save() # Salva o saldo e o status is_intern_expired
+        user.save()
 
         # Distribui comissão apenas se for VIP
         if is_vip_task:
