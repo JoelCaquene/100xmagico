@@ -24,14 +24,26 @@
 
     {# ÁREA DE CONTEÚDO COM SCROLL SUAVE #}
     <div class="scroll-content">
-        <div class="hero-banner">
-            <div class="banner-overlay">
-                <h2><i class="fas fa-magic"></i> TAREFAS MÁGICAS</h2>
+        
+        {# COMUNICADO OFICIAL DE MANUTENÇÃO / ORGANIZAÇÃO #}
+        <div class="comunicado-bloqueio">
+            <div class="comunicado-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="comunicado-texto">
+                <h4>COMUNICADO OFICIAL</h4>
+                <p>A nossa plataforma hoje está na fase de organização dos grupos Angolanos e Brasileiros. A tarefa será apenas realizada amanhã. Agradecemos a sua compreensão. Retornaremos no dia 5.</p>
             </div>
         </div>
 
-        {# GRID DE FILMES #}
-        <div class="movie-grid" id="movie-grid">
+        <div class="hero-banner" style="margin-top: 10px; opacity: 0.6;">
+            <div class="banner-overlay">
+                <h2><i class="fas fa-magic"></i> TAREFAS SUSPENSAS HOJE</h2>
+            </div>
+        </div>
+
+        {# GRID DE FILMES (BLOQUEADO) #}
+        <div class="movie-grid" id="movie-grid" style="opacity: 0.5; pointer-events: none;">
             {# Gerado via JS #}
         </div>
     </div>
@@ -47,7 +59,7 @@
         </div>
     </div>
 
-{# MODAL DE AVALIAÇÃO PREMIUM #}
+{# MODAL DE AVALIAÇÃO PREMIUM (MODIFICADO PARA MANUTENÇÃO) #}
 <div id="modal-rating" class="modal-overlay">
     <div class="modal-card">
         <div class="modal-img-container">
@@ -56,49 +68,18 @@
         </div>
         <h3 id="modal-title" style="margin-top: 10px;">Título do Filme</h3>
         
-        {# LÓGICA DE EXIBIÇÃO DO STATUS DE ESTAGIÁRIO #}
-        <div style="margin: 10px 0;">
-            {% if is_intern %}
-                <p style="color: #00ff00; font-weight: bold; font-size: 13px; margin: 0;">
-                    <i class="fas fa-user-graduate"></i> MODO ESTAGIÁRIO ATIVO
-                </p>
-                <p style="font-size: 11px; color: #aaa;">Tarefa {{ total_tasks_ever|add:1 }} de 2</p>
-            {% elif not has_active_level %}
-                <p style="color: #ff003c; font-weight: bold; font-size: 13px; margin: 0;">
-                    <i class="fas fa-exclamation-triangle"></i> ESTÁGIO FINALIZADO
-                </p>
-            {% endif %}
+        <div style="margin: 20px 15px;">
+            <p style="color: #ffcc00; font-weight: bold; font-size: 13px; line-height: 1.5; margin: 0;">
+                <i class="fas fa-users-cog"></i> SISTEMA EM ORGANIZAÇÃO
+            </p>
+            <p style="font-size: 12px; color: #ccc; margin-top: 8px; line-height: 1.4;">
+                A nossa plataforma hoje está na fase de organização dos grupos Angolanos e Brasileiros. A tarefa será apenas realizada amanhã. Agradecemos a sua compreensão. Disponível dia 5.
+            </p>
         </div>
 
-        <div class="stars-row">
-            <i class="fas fa-star" data-v="1"></i>
-            <i class="fas fa-star" data-v="2"></i>
-            <i class="fas fa-star" data-v="3"></i>
-            <i class="fas fa-star" data-v="4"></i>
-            <i class="fas fa-star" data-v="5"></i>
-        </div>
-
-{# BOTÕES DINÂMICOS CONFORME AS PERMISSÕES #}
-        {% if can_do_task %}
-            <button id="btn-confirm" class="btn-main">CONFIRMAR AVALIAÇÃO</button>
-        {% else %}
-            {% if not is_valid_day %}
-                {# SE FOR DOMINGO #}
-                <button class="btn-main disabled" style="background: #333; color: #888;" disabled>SISTEMA EM MANUTENÇÃO</button>
-                <p style="font-size: 11px; color: #ffcc00; margin-top: 8px; font-weight: bold;">
-                    <i class="fas fa-calendar-times"></i> TAREFAS INDISPONÍVEIS AOS DOMINGOS
-                </p>
-            {% elif tasks_completed_today >= 1 %}
-                {# SE JÁ FEZ A TAREFA HOJE #}
-                <button class="btn-main disabled" disabled>TAREFA DE HOJE CONCLUÍDA</button>
-            {% else %}
-                {# SE O BLOQUEIO FOR REALMENTE POR FIM DO ESTÁGIO #}
-                <button class="btn-main disabled" style="background: #800000; color: #fff;" disabled>LIMITE DE ESTÁGIO ATINGIDO</button>
-                <p style="font-size: 10px; color: #ffcc00; margin-top: 8px;">ATIVE UM NÍVEL VIP PARA CONTINUAR</p>
-            {% endif %}
-        {% endif %}
+        <button class="btn-main disabled" style="background: #333; color: #888;" disabled>INDISPONÍVEL HOJE</button>
         
-        <button onclick="closeModal()" class="btn-cancel">CANCELAR</button>
+        <button onclick="closeModal()" class="btn-cancel">VOLTAR</button>
     </div>
 </div>
 
@@ -139,7 +120,7 @@
         const calcBrl = saldoAoa * TAXA_WISE;
         document.getElementById('val-brl').innerText = calcBrl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-        // Renderizar Filmes
+        // Renderizar Filmes (Bloqueados para clique)
         const grid = document.getElementById('movie-grid');
         movies.forEach(m => {
             const el = document.createElement('div');
@@ -148,56 +129,11 @@
                 <img src="${m.img}" alt="${m.t}" class="m-img">
                 <div class="m-overlay">
                     <h4>${m.t}</h4>
-                    <button onclick="openModal('${m.t}', '${m.img}')">AVALIAR</button>
+                    <button style="background: #444; color: #888; cursor: not-allowed;" onclick="alert('A nossa plataforma hoje esta na fase de organização dos grupos, Angolanos e Brasileiro a tarefa será apenas realizada amanha, agradecemos a sua compreenção, e abre no dia 5.')">BLOQUEADO</button>
                 </div>
             `;
             grid.appendChild(el);
         });
-
-        // Lógica de Estrelas
-        const stars = document.querySelectorAll('.stars-row i');
-        stars.forEach(s => {
-            s.onclick = function() {
-                selectedRating = this.dataset.v;
-                stars.forEach(st => st.classList.remove('active'));
-                for(let i=0; i<selectedRating; i++) stars[i].classList.add('active');
-            }
-        });
-
-        // Botão Confirmar
-        const btnConfirm = document.getElementById('btn-confirm');
-        if(btnConfirm) {
-            btnConfirm.onclick = function() {
-                if(selectedRating == 0) return alert("Selecione uma nota!");
-                this.disabled = true;
-                this.innerText = "ENVIANDO...";
-
-                fetch("{% url 'process_task' %}", {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json', 
-                        'X-CSRFToken': '{{ csrf_token }}' 
-                    }
-                })
-                .then(r => r.json())
-                .then(data => {
-                    if(data.success) {
-                        // EXIBE A TELA BONITA EM VEZ DE ALERT
-                        closeModal();
-                        document.getElementById('finish-overlay').style.display = 'flex';
-                    } else {
-                        alert(data.message);
-                        closeModal();
-                        this.disabled = false;
-                        this.innerText = "CONFIRMAR AVALIAÇÃO";
-                    }
-                })
-                .catch(err => {
-                    alert("Erro na conexão.");
-                    this.disabled = false;
-                });
-            };
-        }
     });
 
     function openModal(t, img) {
@@ -209,7 +145,6 @@
     function closeModal() {
         document.getElementById('modal-rating').style.display = 'none';
         selectedRating = 0;
-        document.querySelectorAll('.stars-row i').forEach(s => s.classList.remove('active'));
     }
 </script>
 
@@ -250,6 +185,37 @@
         background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0c 100%);
     }
 
+    /* ESTILO DO NOVO COMUNICADO DE BLOQUEIO DO TOPO */
+    .comunicado-bloqueio {
+        background: linear-gradient(135deg, #2a1a08 0%, #161003 100%);
+        border: 2px solid var(--gold);
+        margin: 15px;
+        padding: 15px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+    }
+    .comunicado-icon i {
+        font-size: 30px;
+        color: var(--gold);
+        animation: pulse 2s infinite;
+    }
+    .comunicado-texto h4 {
+        margin: 0 0 5px 0;
+        color: var(--gold);
+        font-family: 'Goldman', sans-serif;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+    .comunicado-texto p {
+        margin: 0;
+        font-size: 12px;
+        color: #e0e0e0;
+        line-height: 1.5;
+    }
+
     .hero-banner {
         height: 120px;
         background: linear-gradient(45deg, #ff003c, #800000);
@@ -278,11 +244,6 @@
     }
 
     .m-overlay h4 { margin: 0 0 10px; font-size: 13px; font-weight: 700; height: 32px; overflow: hidden; }
-    .m-overlay button {
-        background: var(--gold); border: none; color: #000;
-        padding: 8px 0; width: 100%; border-radius: 20px;
-        font-weight: 900; font-size: 11px; text-transform: uppercase;
-    }
 
     .casino-bottom {
         position: fixed; bottom: 0; width: 100%;
@@ -307,10 +268,6 @@
     .modal-img-container { position: relative; height: 180px; }
     .modal-img-container img { width: 100%; height: 100%; object-fit: cover; }
     .img-gradient { position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(transparent, var(--card-bg)); }
-
-    .stars-row { font-size: 30px; margin: 15px 0; color: #333; }
-    .stars-row i { margin: 0 5px; cursor: pointer; transition: 0.3s; }
-    .stars-row i.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
 
     .btn-main {
         width: 80%; background: var(--gold); color: #000; border: none; padding: 15px;
