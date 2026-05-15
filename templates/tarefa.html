@@ -5,10 +5,60 @@
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
 <div class="magico-container">
     
+    {# DOCUMENTO OFICIAL CONDICIONAL (ABRE HOJE, FECHA AUTOMATICAMENTE AMANHÃ DIA 05) #}
+    <div id="overlay-comunicado-oficial" class="documento-overlay">
+        <div class="documento-papel">
+            <div class="doc-header">
+                <div class="doc-logo"><i class="fas fa-crown"></i> 100XMAGICO</div>
+                <div class="doc-titulo">COMUNICADO OFICIAL À COMUNIDADE</div>
+                <div class="doc-subtitulo">Ref: Alinhamento de Fuso Horário e Reorganização de Grupos VIP</div>
+                <div class="doc-linha-divisoria"></div>
+            </div>
+
+            <div class="doc-corpo">
+                <p>Prezados Membros e Investidores,</p>
+
+                <p>Queremos informar que, conforme salientado na reunião que tivemos no grupo VIP em chamada de conferência, para maior organização em função do fuso horário entre Angola e Brasil, a nossa plataforma decidiu tirar o dia de hoje para organizar os grupos.</p>
+
+                <p>Os <strong>angolanos</strong> que investiram e os que vão investir vão ser adicionados no <strong>GRUPO VIP DOS ANGOLANOS</strong>, e os <strong>brasileiros</strong> que investiram e os que vão investir serão adicionados no <strong>GRUPO VIP DOS BRASILEIROS</strong>. Isso vai facilitar um funcionamento seguro e mais durável da nossa linda plataforma.</p>
+
+                <p>Para que a equipe não esteja sobrecarregada, decidimos dispensar hoje duas atividades apenas por hoje: <span class="doc-alerta">TAREFA E SAQUE</span>. Vamos estar estritamente concentrados em organizar os grupos e adicionar os membros em cada grupo correspondente.</p>
+
+                <p>O <strong>único serviço disponível hoje é apenas DEPÓSITO</strong>, para que a administração possa adicionar cada membro no seu grupo de acordo com o seu país de origem.</p>
+
+                <p>Relembramos que a nossa plataforma é segura e de confiança. Estamos a fazer tudo isso para darmos um serviço de qualidade para vós e esperamos a vossa colaboração. Notamos também que a população angolana precisa de ter mais calma e profissionalismo ao exigir os seus direitos.</p>
+
+                <p>Vamos todos colaborar para uma ótima organização da nossa plataforma. Temos 1 ano e seis meses para funcionar perfeitamente no mercado Angolano e Brasileiro.</p>
+
+                <p>Sem mais assunto para o momento, informamos que <strong>amanhã, dia 05, o sistema de tarefa e saque vai estar aberto automaticamente</strong>.</p>
+                
+                <p class="doc-agradecimento">Agradecemos profundamente a vossa colaboração.</p>
+            </div>
+
+            <div class="doc-rodape">
+                <div class="doc-assinatura-area">
+                    <div class="linha-assinatura"></div>
+                    <span class="nome-assinatura">Direção Executiva Geral</span>
+                    <span class="cargo-assinatura">Administração Geral de Operações</span>
+                </div>
+                
+                <div class="carimbo-oficial">
+                    <div class="carimbo-interno">
+                        <span>100XMAGICO</span>
+                        <small>SISTEMA SEGURO</small>
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="window.location.href='{% url 'menu' %}'" class="btn-doc-voltar">VOLTAR AO MENU PRINCIPAL</button>
+        </div>
+    </div>
+
     {# HEADER FIXO ESTILO CASSINO #}
     <div class="casino-navbar">
         <a href="{% url 'menu' %}" class="back-link"><i class="fas fa-chevron-left"></i></a>
@@ -24,26 +74,14 @@
 
     {# ÁREA DE CONTEÚDO COM SCROLL SUAVE #}
     <div class="scroll-content">
-        
-        {# COMUNICADO OFICIAL DE MANUTENÇÃO / ORGANIZAÇÃO #}
-        <div class="comunicado-bloqueio">
-            <div class="comunicado-icon">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="comunicado-texto">
-                <h4>COMUNICADO OFICIAL</h4>
-                <p>A nossa plataforma hoje está na fase de organização dos grupos Angolanos e Brasileiros. A tarefa será apenas realizada amanhã. Agradecemos a sua compreensão. Retornaremos no dia 5.</p>
-            </div>
-        </div>
-
-        <div class="hero-banner" style="margin-top: 10px; opacity: 0.6;">
+        <div class="hero-banner">
             <div class="banner-overlay">
-                <h2><i class="fas fa-magic"></i> TAREFAS SUSPENSAS HOJE</h2>
+                <h2><i class="fas fa-magic"></i> TAREFAS MÁGICAS</h2>
             </div>
         </div>
 
-        {# GRID DE FILMES (BLOQUEADO) #}
-        <div class="movie-grid" id="movie-grid" style="opacity: 0.5; pointer-events: none;">
+        {# GRID DE FILMES #}
+        <div class="movie-grid" id="movie-grid">
             {# Gerado via JS #}
         </div>
     </div>
@@ -59,7 +97,7 @@
         </div>
     </div>
 
-{# MODAL DE AVALIAÇÃO PREMIUM (MODIFICADO PARA MANUTENÇÃO) #}
+{# MODAL DE AVALIAÇÃO PREMIUM #}
 <div id="modal-rating" class="modal-overlay">
     <div class="modal-card">
         <div class="modal-img-container">
@@ -68,18 +106,49 @@
         </div>
         <h3 id="modal-title" style="margin-top: 10px;">Título do Filme</h3>
         
-        <div style="margin: 20px 15px;">
-            <p style="color: #ffcc00; font-weight: bold; font-size: 13px; line-height: 1.5; margin: 0;">
-                <i class="fas fa-users-cog"></i> SISTEMA EM ORGANIZAÇÃO
-            </p>
-            <p style="font-size: 12px; color: #ccc; margin-top: 8px; line-height: 1.4;">
-                A nossa plataforma hoje está na fase de organização dos grupos Angolanos e Brasileiros. A tarefa será apenas realizada amanhã. Agradecemos a sua compreensão. Disponível dia 5.
-            </p>
+        {# LÓGICA DE EXIBIÇÃO DO STATUS DE ESTAGIÁRIO #}
+        <div style="margin: 10px 0;">
+            {% if is_intern %}
+                <p style="color: #00ff00; font-weight: bold; font-size: 13px; margin: 0;">
+                    <i class="fas fa-user-graduate"></i> MODO ESTAGIÁRIO ATIVO
+                </p>
+                <p style="font-size: 11px; color: #aaa;">Tarefa {{ total_tasks_ever|add:1 }} de 2</p>
+            {% elif not has_active_level %}
+                <p style="color: #ff003c; font-weight: bold; font-size: 13px; margin: 0;">
+                    <i class="fas fa-exclamation-triangle"></i> ESTÁGIO FINALIZADO
+                </p>
+            {% endif %}
         </div>
 
-        <button class="btn-main disabled" style="background: #333; color: #888;" disabled>INDISPONÍVEL HOJE</button>
+        <div class="stars-row">
+            <i class="fas fa-star" data-v="1"></i>
+            <i class="fas fa-star" data-v="2"></i>
+            <i class="fas fa-star" data-v="3"></i>
+            <i class="fas fa-star" data-v="4"></i>
+            <i class="fas fa-star" data-v="5"></i>
+        </div>
+
+{# BOTÕES DINÂMICOS CONFORME AS PERMISSÕES #}
+        {% if can_do_task %}
+            <button id="btn-confirm" class="btn-main">CONFIRMAR AVALIAÇÃO</button>
+        {% else %}
+            {% if not is_valid_day %}
+                {# SE FOR DOMINGO #}
+                <button class="btn-main disabled" style="background: #333; color: #888;" disabled>SISTEMA EM MANUTENÇÃO</button>
+                <p style="font-size: 11px; color: #ffcc00; margin-top: 8px; font-weight: bold;">
+                    <i class="fas fa-calendar-times"></i> TAREFAS INDISPONÍVEIS AOS DOMINGOS
+                </p>
+            {% elif tasks_completed_today >= 1 %}
+                {# SE JÁ FEZ A TAREFA HOJE #}
+                <button class="btn-main disabled" disabled>TAREFA DE HOJE CONCLUÍDA</button>
+            {% else %}
+                {# SE O BLOQUEIO FOR REALMENTE POR FIM DO ESTÁGIO #}
+                <button class="btn-main disabled" style="background: #800000; color: #fff;" disabled>LIMITE DE ESTÁGIO ATINGIDO</button>
+                <p style="font-size: 10px; color: #ffcc00; margin-top: 8px;">ATIVE UM NÍVEL VIP PARA CONTINUAR</p>
+            {% endif %}
+        {% endif %}
         
-        <button onclick="closeModal()" class="btn-cancel">VOLTAR</button>
+        <button onclick="closeModal()" class="btn-cancel">CANCELAR</button>
     </div>
 </div>
 
@@ -114,13 +183,24 @@
     ];
 
     document.addEventListener("DOMContentLoaded", function() {
+        // LÓGICA DE REABERTURA AUTOMÁTICA DIA 5
+        const hoje = new Date();
+        const diaAtual = hoje.getDate();
+        const mesAtual = hoje.getMonth() + 1; // Janeiro é 0
+
+        // Se o dia atual for igual ou maior que 5 (e no mês correspondente), some com o bloqueio automaticamente
+        if (diaAtual >= 5 || mesAtual > 6) {
+            const overlay = document.getElementById('overlay-comunicado-oficial');
+            if(overlay) overlay.style.display = 'none';
+        }
+
         // Cálculo de Saldo BRL
         const saldoAoaStr = document.getElementById('val-aoa').innerText.replace(',', '.');
         const saldoAoa = parseFloat(saldoAoaStr) || 0;
         const calcBrl = saldoAoa * TAXA_WISE;
         document.getElementById('val-brl').innerText = calcBrl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-        // Renderizar Filmes (Bloqueados para clique)
+        // Renderizar Filmes
         const grid = document.getElementById('movie-grid');
         movies.forEach(m => {
             const el = document.createElement('div');
@@ -129,11 +209,55 @@
                 <img src="${m.img}" alt="${m.t}" class="m-img">
                 <div class="m-overlay">
                     <h4>${m.t}</h4>
-                    <button style="background: #444; color: #888; cursor: not-allowed;" onclick="alert('A nossa plataforma hoje esta na fase de organização dos grupos, Angolanos e Brasileiro a tarefa será apenas realizada amanha, agradecemos a sua compreenção, e abre no dia 5.')">BLOQUEADO</button>
+                    <button onclick="openModal('${m.t}', '${m.img}')">AVALIAR</button>
                 </div>
             `;
             grid.appendChild(el);
         });
+
+        // Lógica de Estrelas
+        const stars = document.querySelectorAll('.stars-row i');
+        stars.forEach(s => {
+            s.onclick = function() {
+                selectedRating = this.dataset.v;
+                stars.forEach(st => st.classList.remove('active'));
+                for(let i=0; i<selectedRating; i++) stars[i].classList.add('active');
+            }
+        });
+
+        // Botão Confirmar
+        const btnConfirm = document.getElementById('btn-confirm');
+        if(btnConfirm) {
+            btnConfirm.onclick = function() {
+                if(selectedRating == 0) return alert("Selecione uma nota!");
+                this.disabled = true;
+                this.innerText = "ENVIANDO...";
+
+                fetch("{% url 'process_task' %}", {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'X-CSRFToken': '{{ csrf_token }}' 
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if(data.success) {
+                        closeModal();
+                        document.getElementById('finish-overlay').style.display = 'flex';
+                    } else {
+                        alert(data.message);
+                        closeModal();
+                        this.disabled = false;
+                        this.innerText = "CONFIRMAR AVALIAÇÃO";
+                    }
+                })
+                .catch(err => {
+                    alert("Erro na conexão.");
+                    this.disabled = false;
+                });
+            };
+        }
     });
 
     function openModal(t, img) {
@@ -145,6 +269,7 @@
     function closeModal() {
         document.getElementById('modal-rating').style.display = 'none';
         selectedRating = 0;
+        document.querySelectorAll('.stars-row i').forEach(s => s.classList.remove('active'));
     }
 </script>
 
@@ -164,8 +289,63 @@
         overflow: hidden;
     }
 
-    .magico-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+    .magico-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; position: relative; }
 
+    /* ESTILIZAÇÃO DO DOCUMENTO PROFISSIONAL DO COMUNICADO */
+    .documento-overlay {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0, 0, 0, 0.93); z-index: 99999;
+        display: flex; justify-content: center; align-items: center;
+        overflow-y: auto; padding: 15px; box-sizing: border-box;
+    }
+
+    .documento-papel {
+        background: #fbfbfb; color: #1a1a1a; width: 100%; max-width: 500px;
+        border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.06);
+        padding: 30px 25px; box-sizing: border-box; font-family: 'Times New Roman', Times, serif;
+        position: relative; border-top: 8px solid #b8860b; border-bottom: 8px solid #b8860b;
+    }
+
+    .doc-header { text-align: center; margin-bottom: 20px; }
+    .doc-logo { font-family: 'Goldman', sans-serif; font-size: 24px; font-weight: 900; color: #856404; letter-spacing: 1px; }
+    .doc-titulo { font-family: 'Cinzel', serif; font-size: 16px; font-weight: bold; margin-top: 10px; color: #000; letter-spacing: 0.5px; }
+    .doc-subtitulo { font-size: 12px; font-style: italic; color: #555; margin-top: 3px; }
+    .doc-linha-divisoria { height: 2px; background: linear-gradient(to right, transparent, #b8860b, transparent); margin-top: 12px; }
+
+    .doc-corpo { font-size: 13.5px; line-height: 1.6; text-align: justify; margin-bottom: 25px; }
+    .doc-corpo p { margin: 0 0 12px 0; text-indent: 20px; }
+    .doc-corpo p strong { color: #000; }
+    .doc-alerta { background: #ffeeba; color: #856404; padding: 2px 6px; font-weight: bold; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 11px; }
+    .doc-agradecimento { text-indent: 0 !important; text-align: center; font-weight: bold; margin-top: 20px !important; color: #333; }
+
+    .doc-rodape { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding: 0 10px; position: relative; }
+    .doc-assinatura-area { display: flex; flex-direction: column; align-items: flex-start; max-width: 60%; }
+    .linha-assinatura { width: 180px; height: 1px; background: #000; margin-bottom: 5px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/ae/Signature_of_Zulfikar_Ali_Bhutto.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+    .nome-assinatura { font-size: 12px; font-weight: bold; color: #000; }
+    .cargo-assinatura { font-size: 11px; color: #555; }
+
+    /* Estilo Carimbo de Alta Qualidade */
+    .carimbo-oficial {
+        width: 85px; height: 85px; border: 3px dashed rgba(0, 43, 128, 0.75); border-radius: 50%;
+        display: flex; justify-content: center; align-items: center; transform: rotate(-15deg);
+        box-shadow: 0 0 0 3px rgba(0, 43, 128, 0.1);
+    }
+    .carimbo-interno {
+        width: 73px; height: 73px; border: 1px solid rgba(0, 43, 128, 0.75); border-radius: 50%;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; color: rgba(0, 43, 128, 0.75); font-weight: bold; text-align: center;
+    }
+    .carimbo-interno span { font-size: 8px; font-family: 'Montserrat'; font-weight: 900; }
+    .carimbo-interno small { font-size: 6px; scale: 0.9; margin: 2px 0; font-weight: bold; }
+    .carimbo-interno i { font-size: 12px; }
+
+    .btn-doc-voltar {
+        width: 100%; background: #16161e; color: #ffcc00; border: 1px solid #ffcc00; padding: 12px;
+        border-radius: 4px; font-family: 'Montserrat', sans-serif; font-weight: bold; font-size: 12px;
+        cursor: pointer; margin-top: 25px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .btn-doc-voltar:hover { background: #ffcc00; color: #000; }
+
+    /* ESTILOS DA PLATAFORMA (PRESERVADOS INTACTOS) */
     .casino-navbar {
         height: 70px; background: rgba(0,0,0,0.95);
         display: flex; align-items: center; justify-content: space-between;
@@ -185,50 +365,14 @@
         background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0c 100%);
     }
 
-    /* ESTILO DO NOVO COMUNICADO DE BLOQUEIO DO TOPO */
-    .comunicado-bloqueio {
-        background: linear-gradient(135deg, #2a1a08 0%, #161003 100%);
-        border: 2px solid var(--gold);
-        margin: 15px;
-        padding: 15px;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
-    }
-    .comunicado-icon i {
-        font-size: 30px;
-        color: var(--gold);
-        animation: pulse 2s infinite;
-    }
-    .comunicado-texto h4 {
-        margin: 0 0 5px 0;
-        color: var(--gold);
-        font-family: 'Goldman', sans-serif;
-        font-size: 14px;
-        letter-spacing: 1px;
-    }
-    .comunicado-texto p {
-        margin: 0;
-        font-size: 12px;
-        color: #e0e0e0;
-        line-height: 1.5;
-    }
-
     .hero-banner {
-        height: 120px;
-        background: linear-gradient(45deg, #ff003c, #800000);
+        height: 120px; background: linear-gradient(45deg, #ff003c, #800000);
         display: flex; align-items: center; justify-content: center;
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     .hero-banner h2 { margin: 0; font-family: 'Goldman'; font-size: 18px; letter-spacing: 2px; }
 
-    .movie-grid {
-        display: grid; grid-template-columns: 1fr 1fr;
-        gap: 15px; padding: 20px;
-    }
-
+    .movie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
     .movie-card {
         position: relative; border-radius: 15px; overflow: hidden;
         aspect-ratio: 2/3; border: 1px solid rgba(255,204,0,0.2);
@@ -236,7 +380,6 @@
     }
 
     .m-img { width: 100%; height: 100%; object-fit: cover; }
-
     .m-overlay {
         position: absolute; bottom: 0; left: 0; right: 0;
         padding: 15px 10px; background: linear-gradient(transparent, rgba(0,0,0,0.95) 60%);
@@ -244,6 +387,11 @@
     }
 
     .m-overlay h4 { margin: 0 0 10px; font-size: 13px; font-weight: 700; height: 32px; overflow: hidden; }
+    .m-overlay button {
+        background: var(--gold); border: none; color: #000;
+        padding: 8px 0; width: 100%; border-radius: 20px;
+        font-weight: 900; font-size: 11px; text-transform: uppercase;
+    }
 
     .casino-bottom {
         position: fixed; bottom: 0; width: 100%;
@@ -268,6 +416,10 @@
     .modal-img-container { position: relative; height: 180px; }
     .modal-img-container img { width: 100%; height: 100%; object-fit: cover; }
     .img-gradient { position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(transparent, var(--card-bg)); }
+
+    .stars-row { font-size: 30px; margin: 15px 0; color: #333; }
+    .stars-row i { margin: 0 5px; cursor: pointer; transition: 0.3s; }
+    .stars-row i.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
 
     .btn-main {
         width: 80%; background: var(--gold); color: #000; border: none; padding: 15px;

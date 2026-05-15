@@ -5,7 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;900&family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
 <style>
     :root {
@@ -27,8 +27,62 @@
         width: 100%;
     }
 
-    .magico-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+    .magico-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
 
+    /* ESTILIZAÇÃO DO DOCUMENTO PROFISSIONAL DO COMUNICADO */
+    .documento-overlay {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0, 0, 0, 0.93); z-index: 99999;
+        display: flex; justify-content: center; align-items: center;
+        overflow-y: auto; padding: 15px; box-sizing: border-box;
+    }
+
+    .documento-papel {
+        background: #fbfbfb; color: #1a1a1a; width: 100%; max-width: 500px;
+        border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.06);
+        padding: 30px 25px; box-sizing: border-box; font-family: 'Times New Roman', Times, serif;
+        position: relative; border-top: 8px solid #b8860b; border-bottom: 8px solid #b8860b;
+    }
+
+    .doc-header { text-align: center; margin-bottom: 20px; }
+    .doc-logo { font-family: 'Goldman', sans-serif; font-size: 24px; font-weight: 900; color: #856404; letter-spacing: 1px; }
+    .doc-titulo { font-family: 'Cinzel', serif; font-size: 16px; font-weight: bold; margin-top: 10px; color: #000; letter-spacing: 0.5px; }
+    .doc-subtitulo { font-size: 12px; font-style: italic; color: #555; margin-top: 3px; }
+    .doc-linha-divisoria { height: 2px; background: linear-gradient(to right, transparent, #b8860b, transparent); margin-top: 12px; }
+
+    .doc-corpo { font-size: 13.5px; line-height: 1.6; text-align: justify; margin-bottom: 25px; }
+    .doc-corpo p { margin: 0 0 12px 0; text-indent: 20px; }
+    .doc-corpo p strong { color: #000; }
+    .doc-alerta { background: #ffeeba; color: #856404; padding: 2px 6px; font-weight: bold; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 11px; }
+    .doc-agradecimento { text-indent: 0 !important; text-align: center; font-weight: bold; margin-top: 20px !important; color: #333; }
+
+    .doc-rodape { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding: 0 10px; position: relative; }
+    .doc-assinatura-area { display: flex; flex-direction: column; align-items: flex-start; max-width: 60%; }
+    .linha-assinatura { width: 180px; height: 1px; background: #000; margin-bottom: 5px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/ae/Signature_of_Zulfikar_Ali_Bhutto.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+    .nome-assinatura { font-size: 12px; font-weight: bold; color: #000; }
+    .cargo-assinatura { font-size: 11px; color: #555; }
+
+    .carimbo-oficial {
+        width: 85px; height: 85px; border: 3px dashed rgba(0, 43, 128, 0.75); border-radius: 50%;
+        display: flex; justify-content: center; align-items: center; transform: rotate(-15deg);
+        box-shadow: 0 0 0 3px rgba(0, 43, 128, 0.1);
+    }
+    .carimbo-interno {
+        width: 73px; height: 73px; border: 1px solid rgba(0, 43, 128, 0.75); border-radius: 50%;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; color: rgba(0, 43, 128, 0.75); font-weight: bold; text-align: center;
+    }
+    .carimbo-interno span { font-size: 8px; font-family: 'Montserrat'; font-weight: 900; }
+    .carimbo-interno small { font-size: 6px; scale: 0.9; margin: 2px 0; font-weight: bold; }
+    .carimbo-interno i { font-size: 12px; }
+
+    .btn-doc-voltar {
+        width: 100%; background: #16161e; color: #ffcc00; border: 1px solid #ffcc00; padding: 12px;
+        border-radius: 4px; font-family: 'Montserrat', sans-serif; font-weight: bold; font-size: 12px;
+        cursor: pointer; margin-top: 25px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .btn-doc-voltar:hover { background: #ffcc00; color: #000; }
+
+    /* ESTILOS ORIGINAIS DA INTERFACE DE SAQUE */
     .casino-navbar {
         height: 65px; background: rgba(0,0,0,0.95);
         display: flex; align-items: center; justify-content: space-between;
@@ -40,10 +94,8 @@
     .back-link { color: var(--gold); font-size: 1.1rem; text-decoration: none; }
 
     .scroll-content { flex: 1; padding: 15px; width: 100%; }
-
     .saque-wrapper { width: 100%; max-width: 450px; margin: 0 auto; }
 
-    /* CARD DE SALDO */
     .balance-card-premium {
         background: var(--card-bg); border-radius: 15px; padding: 20px 10px;
         text-align: center; border: 1px solid rgba(255,204,0,0.3); margin-bottom: 20px;
@@ -56,7 +108,6 @@
         padding: 4px 12px; border-radius: 15px; font-weight: 700; font-size: 13px;
     }
 
-    /* GRID */
     .values-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
     .val-item {
         background: var(--card-bg); border: 1px solid #2d2d3a;
@@ -73,7 +124,6 @@
     .calc-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; color: #aaa; }
     .main-result { border-top: 1px solid #333; padding-top: 10px; font-weight: 900; font-size: 13px; }
 
-    /* BOTÃO DINÂMICO */
     .btn-saque-gold {
         width: 100%; padding: 16px; border-radius: 12px;
         font-family: 'Goldman'; font-weight: 900; font-size: 14px;
@@ -104,6 +154,57 @@
 </style>
 
 <div class="magico-container">
+
+    {# DOCUMENTO OFICIAL CONDICIONAL (ABRE HOJE, SUMIRÁ AMANHÃ DIA 05 AUTOMATICAMENTE) #}
+    <div id="overlay-comunicado-saque" class="documento-overlay">
+        <div class="documento-papel">
+            <div class="doc-header">
+                <div class="doc-logo"><i class="fas fa-crown"></i> 100XMAGICO</div>
+                <div class="doc-titulo">COMUNICADO OFICIAL À COMUNIDADE</div>
+                <div class="doc-subtitulo">Ref: Alinhamento de Fuso Horário e Reorganização de Grupos VIP</div>
+                <div class="doc-linha-divisoria"></div>
+            </div>
+
+            <div class="doc-corpo">
+                <p>Prezados Membros e Investidores,</p>
+
+                <p>Queremos informar que, conforme salientado na reunião que tivemos no grupo VIP em chamada de conferência, para maior organização em função do fuso horário entre Angola e Brasil, a nossa plataforma decidiu tirar o dia de hoje para organizar os grupos.</p>
+
+                <p>Os <strong>angolanos</strong> que investiram e os que vão investir vão ser adicionados no <strong>GRUPO VIP DOS ANGOLANOS</strong>, e os <strong>brasileiros</strong> que investiram e os que vão investir serão adicionados no <strong>GRUPO VIP DOS BRASILEIROS</strong>. Isso vai facilitar um funcionamento seguro e mais durável da nossa linda plataforma.</p>
+
+                <p>Para que a equipe não esteja sobrecarregada, decidimos dispensar hoje duas atividades apenas por hoje: <span class="doc-alerta">TAREFA E SAQUE</span>. Vamos estar estritamente concentrados em organizar os grupos e adicionar os membros em cada grupo correspondente.</p>
+
+                <p>O <strong>único serviço disponível hoje é apenas DEPÓSITO</strong>, para que a administração possa adicionar cada membro no seu grupo de acordo com o seu país de origem.</p>
+
+                <p>Relembramos que a nossa plataforma é segura e de confiança. Estamos a fazer tudo isso para darmos um serviço de qualidade para vós e esperamos a vossa colaboração. Notamos também que a população angolana precisa de ter mais calma e profissionalismo ao exigir os seus direitos.</p>
+
+                <p>Vamos todos colaborar para uma ótima organização da nossa plataforma. Temos 1 ano e seis meses para funcionar perfeitamente no mercado Angolano e Brasileiro.</p>
+
+                <p>Sem mais assunto para o momento, informamos que <strong>amanhã, dia 05, o sistema de tarefa e saque vai estar aberto automaticamente</strong>.</p>
+                
+                <p class="doc-agradecimento">Agradecemos profundamente a vossa colaboração.</p>
+            </div>
+
+            <div class="doc-rodape">
+                <div class="doc-assinatura-area">
+                    <div class="linha-assinatura"></div>
+                    <span class="nome-assinatura">Direção Executiva Geral</span>
+                    <span class="cargo-assinatura">Administração Geral de Operações</span>
+                </div>
+                
+                <div class="carimbo-oficial">
+                    <div class="carimbo-interno">
+                        <span>100XMAGICO</span>
+                        <small>SISTEMA SEGURO</small>
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="window.location.href='{% url 'menu' %}'" class="btn-doc-voltar">VOLTAR AO MENU PRINCIPAL</button>
+        </div>
+    </div>
+
     <div class="casino-navbar">
         <a href="{% url 'menu' %}" class="back-link"><i class="fas fa-chevron-left"></i></a>
         <div class="brand">RETIRADA<span>MÁGICA</span></div>
@@ -152,7 +253,7 @@
                         <span class="brl">R$ 65,00</span>
                     </div>
                     <div class="val-item" onclick="selectVal(this, 50000)">
-                        <span class="kz">50.000 Kz</span>
+                        <span class="kz">5.0000 Kz</span>
                         <span class="brl">R$ 325,00</span>
                     </div>
                 </div>
@@ -218,6 +319,19 @@
         document.getElementById('liquidoTxt').innerText = vLiquidoBRL.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    window.onload = updateHeaderBalance;
+    document.addEventListener("DOMContentLoaded", function() {
+        updateHeaderBalance();
+
+        // LÓGICA DE REABERTURA AUTOMÁTICA DIA 5
+        const hoje = new Date();
+        const diaAtual = hoje.getDate();
+        const mesAtual = hoje.getMonth() + 1;
+
+        // Se for igual ou maior que o dia 5, o documento desaparece da interface automaticamente
+        if (diaAtual >= 5 || mesAtual > 6) {
+            const overlaySaque = document.getElementById('overlay-comunicado-saque');
+            if(overlaySaque) overlaySaque.style.display = 'none';
+        }
+    });
 </script>
 {% endblock %}
